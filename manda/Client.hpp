@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/06 17:39:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/06 17:47:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ class Client{
 		Client();
 		~Client();
 
-		void setUsername();
-		void setNickname();
+		void setNickname(const std::string nick);
+		void setUsername(const std::string user);
 };

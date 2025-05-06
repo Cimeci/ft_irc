@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/06 17:36:44 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/06 17:48:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void Irc::connection(){
 		input = std::string(buffer);
     	if (bytes_received > 0 && !strcmp(input.substr(0, 5).c_str(), "NICK ")) {
     	    std::cout << "Nick input : " << input;
-			clientBook[client_socket].set
+			clientBook[client_socket]->setNickname(input.substr(5, input.size() - 6));
 			break;
     	}
 		else {
