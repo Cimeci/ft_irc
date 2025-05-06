@@ -6,13 +6,13 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:55:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/05 16:02:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:51:53 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
-# include "colors.hpp"
+# include "../includes/colors.hpp"
 
 # include <iostream>
 # include <vector>
@@ -48,6 +48,7 @@ class Gamble{
 		std::string getEmojiFromCardCode(std::string code);
 
 		std::string generateCard();
+		bool isDoublonCard(std::string card);
 
 		int gambleAtoi(char nb);
 

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:41:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/05 16:55:50 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:07:02 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,24 @@ void Gamble::setBank(size_t newAmount){bank = newAmount;}
 std::vector<std::string> Gamble::getCardPack() const{return cardsPack;}
 std::string Gamble::getCard(const size_t index) const{return cardsPack[index];}
 
+bool Gamble::isDoublonCard(std::string card){
+	for (size_t i = 0; i < cardsPack.size(); i++)
+	{
+		if (card == cardsPack[i])
+			return true;
+	}
+	return false;
+}
+
 void Gamble::setCardsPack(){
 	std::string card;
 	int i = 0;
 	while (1)
 	{
-		std::vector<std::string> it = cardsPack.size();
 		card = generateCard();
-		std::cout << card << " | ";
-		for (; card != it; ++it)
-		if (j == cardsPack.size() - 1){
-			i++;
+		if (!isDoublonCard(card)){
 			cardsPack.push_back(card);
+			i++;
 		}
 		if (i > 3)
 			break;
