@@ -6,17 +6,22 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/06 17:28:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:48:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
-# include <iostream>
-# include <cstring>
+# include "../includes/colors.hpp"
+
 # include <unistd.h>
 # include <arpa/inet.h>
 # include <sys/socket.h>
+# include <poll.h>
+
+# include <iostream>
+# include <cstring>
+# include <vector>
 # include <cstdlib>
 # include <map>
 
@@ -29,11 +34,11 @@
 class Irc{
 	private:
 		
-		int client_socket;
 		int server_socket;
 		int _port;
 		std::string _password;
 		std::map<int, Client *> clientBook;
+		std::vector<pollfd> _pollfds;
 	
 	public:
 		bool setParameters(const int port, const std::string password);
@@ -42,8 +47,13 @@ class Irc{
 		int server();
 		int clients();
 		
-		void connection();
+		void handleNewConnection();
+		void handleClientData(int fd);
 		
+		void handlePassword(int client_socket);
+		void handleNickname(int client_socket);
+		void handleUsername(int client_socket);
 
+		void handleClient(int client_socket);
 
 };

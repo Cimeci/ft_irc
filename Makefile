@@ -11,9 +11,12 @@ OBJDIRHELP = obj_help
 
 # SRCS SECTION #
 
-SRC = manda/server.cpp\
+SRC = manda/main.cpp\
+		manda/server.cpp\
 		manda/parsing.cpp\
-		manda/main.cpp\
+		manda/connection.cpp\
+		manda/Client.cpp\
+		manda/handleClient.cpp\
 
 SRC_BONUS = bonus/gamble.cpp\
 
