@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/07 14:43:19 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:38:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 # include <iostream>
 # include <string>
-# include <vector>
+# include <map>
+# include "Channel.hpp"
 
 class Client {
 	public:
@@ -30,8 +31,7 @@ class Client {
 	    std::string _nickname;
 	    State _state;
 
-		std::vector<std::string> _channels;
-		bool _isOperator;
+		std::map<Channel *, bool> _channels;
 	
 	public:
 	    Client();
