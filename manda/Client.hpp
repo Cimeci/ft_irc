@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/07 17:38:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/08 10:16:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 # include <iostream>
 # include <string>
 # include <map>
-# include "Channel.hpp"
+
+class Channel;
 
 class Client {
 	public:
@@ -31,17 +32,19 @@ class Client {
 	    std::string _nickname;
 	    State _state;
 
+		
+	public:
+		Client();
+		~Client();
+		
+		void setNickname(const std::string nick);
+		void setUsername(const std::string user);
+		
+		std::string getNickname() const;
+		std::string getUsername() const;
+		State getState() const;
+		void setState(State state);
+		
 		std::map<Channel *, bool> _channels;
 	
-	public:
-	    Client();
-	    ~Client();
-	
-	    void setNickname(const std::string nick);
-	    void setUsername(const std::string user);
-	
-	    std::string getNickname() const;
-	    std::string getUsername() const;
-	    State getState() const;
-	    void setState(State state);
 };

@@ -16,7 +16,10 @@ SRC = manda/main.cpp\
 		manda/parsing.cpp\
 		manda/connection.cpp\
 		manda/Client.cpp\
+		manda/Channel.cpp\
 		manda/handleClient.cpp\
+		manda/commands.cpp\
+		manda/utils.cpp\
 
 SRC_BONUS = bonus/gamble.cpp\
 

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/07 15:12:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/08 15:19:09 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,23 @@
 # include <arpa/inet.h>
 # include <sys/socket.h>
 # include <poll.h>
-
 # include <iostream>
 # include <cstring>
 # include <vector>
 # include <cstdlib>
 # include <map>
+# include <string>
+
+class Client;
+class Channel;
 
 # include "Client.hpp"
 # include "Channel.hpp"
 
-#define PORT 6667
-#define BUFFER_SIZE 1024
-#define MAX_PORT 65535
+# define PORT 6667
+# define BUFFER_SIZE 1024
+# define MAX_PORT 65535
+# define HEXCHAT_OPT "CAP LS 302"
 
 class Irc{
 	private:
@@ -42,7 +46,7 @@ class Irc{
 		std::vector<pollfd> _pollfds;
 		
 		std::map<int, Client *> clientBook;
-		std::map<std::string, Channel*> _channels;
+		std::map<std::string, Channel *> _channels;
 	
 	public:
 		bool setParameters(const int port, const std::string password);
@@ -52,9 +56,9 @@ class Irc{
 		void handleNewConnection();
 		void handleClientData(int fd);
 		
-		void handlePassword(int client_socket);
-		void handleNickname(int client_socket);
-		void handleUsername(int client_socket);
+		void handlePassword(int client_socket, std::string input);
+		void handleNickname(int client_socket, std::string input);
+		void handleUsername(int client_socket, std::string input);
 
 		void handleClient(int client_socket);
 
@@ -64,3 +68,5 @@ class Irc{
 		void handleTopic(int fd, const std::string& channelName, const std::string& topic);
 
 };
+
+std::vector<std::string> ft_split(std::string str, const std::string c);

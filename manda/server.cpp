@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/07 13:48:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:12:26 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,29 +99,45 @@ void Irc::handleNewConnection() {
     Client *new_client_obj = new Client();
     clientBook[new_client] = new_client_obj;
 
-	std::string welcome = "\033[38;5;214mWelcome to the IRC server from the Climbers team's.\033[0m\n\nPlease enter PASS / NICK / USER to connect\r\n";
-	send(new_client, welcome.c_str(), welcome.length(), 0);
+	std::string openInput = "Please enter PASS / NICK / USER to connect\r\n";
+	send(new_client, openInput.c_str(), openInput.length(), 0);
 }
 
 void Irc::handleClientData(int fd) {
     Client *client = clientBook[fd];
-	// std::string response;
-
-    switch(client->getState()) {
-        case Client::CONNECTED:
-            handlePassword(fd);
-            break;
-        case Client::AUTHENTICATED:
-            handleNickname(fd);
-            break;
-        case Client::REGISTERED:
-            handleUsername(fd);
-            break;
-		case Client::USER:
-			handleClient(fd);
-			break;
-        default:
-            close(fd);
-            break;
+    char buffer[BUFFER_SIZE];
+    std::string input;
+	
+    memset(buffer, 0, BUFFER_SIZE);
+    int bytes_received = recv(fd, buffer, BUFFER_SIZE - 1, 0);
+    if (bytes_received <= 0) {
+		return;
+    }
+	input = std::string(buffer);
+	std::vector<std::string> split = ft_split(input, "\n");
+	if (split[0] == HEXCHAT_OPT){
+		std::cout << YELLOW << "<server>" << " start_input : " << split[0] << split[1] << split[2] << split[3] << RESET << std::endl;
+		handlePassword(fd, split[1]);
+		handleNickname(fd, split[2]);
+		handleUsername(fd, split[3]);
+	}
+	else {
+		switch(client->getState()) {
+			case Client::CONNECTED:
+				handlePassword(fd, input);
+				break;
+			case Client::AUTHENTICATED:
+				handleNickname(fd, input);
+				break;
+			case Client::REGISTERED:
+				handleUsername(fd, input);
+				break;
+			case Client::USER:
+				handleClient(fd);
+				break;
+			default:
+				close(fd);
+				break;	
+		}
     }
 }

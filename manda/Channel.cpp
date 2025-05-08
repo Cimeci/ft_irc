@@ -6,26 +6,29 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/07 15:22:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/08 10:23:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Channel.hpp"
+# include "irc.hpp"
 
-Channel::Channel(const std::string& name):_name(name){
-	_topic = "channel";
+Channel::Channel(const std::string& name) : _name(name), _topic("") {}
+
+void Channel::addClient(int client_fd) { _clients[client_fd] = false; }
+
+void Channel::removeClient(int client_fd) { _clients.erase(client_fd); }
+
+void Channel::broadcast(const std::string& message, int sender_fd) {
+    for (std::map<int, bool>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+        if (it->first != sender_fd) { // Ne pas envoyer à l'émetteur
+            send(it->first, message.c_str(), message.length(), 0);
+        }
+    }
 }
 
-void Channel::addClient(int client_fd){
-	_clients[client_fd] = false;	
-}
+std::string Channel::getName() const { return _name; }
 
-void Channel::removeClient(int client_fd){}
+void Channel::setTopic(const std::string& topic) { _topic = topic; }
 
-void Channel::broadcast(const std::string& message, int sender_fd){}
-
-std::string Channel::getName() const{}
-
-void Channel::setTopic(const std::string& topic){}
-
-std::string Channel::getTopic() const{}
+std::string Channel::getTopic() const { return _topic; }
