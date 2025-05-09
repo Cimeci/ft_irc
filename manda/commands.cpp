@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/08 18:22:13 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:09:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
     }
 //* user //
 	else {
-        for (std::map<int, Client*>::iterator it = clientBook.begin(); it != clientBook.end(); ++it) {
+		for (std::map<int, Client*>::iterator it = clientBook.begin(); it != clientBook.end(); ++it) {
+			// std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
             if (it->second->getNickname() == target) {
                 std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + target + " :" + message + "\r\n";
                 send(it->first, formatted_msg.c_str(), formatted_msg.length(), 0);

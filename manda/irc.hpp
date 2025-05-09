@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/08 15:19:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:41:38 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <cstdlib>
 # include <map>
 # include <string>
+# include <algorithm>
 
 class Client;
 class Channel;
@@ -34,6 +35,7 @@ class Channel;
 # define PORT 6667
 # define BUFFER_SIZE 1024
 # define MAX_PORT 65535
+# define MAX_CLIENTS 1000
 # define HEXCHAT_OPT "CAP LS 302"
 
 class Irc{
@@ -60,7 +62,7 @@ class Irc{
 		void handleNickname(int client_socket, std::string input);
 		void handleUsername(int client_socket, std::string input);
 
-		void handleClient(int client_socket);
+		void handleClient(int client_socket, std::string input);
 
 		void handleJoin(int fd, const std::string& channelName);
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/08 18:13:22 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/09 10:27:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,7 @@
 # include "Channel.hpp"
 # include "Client.hpp"
 
-void Irc::handleClient(int client_socket) {
-    char buffer[BUFFER_SIZE];
-    std::string input;
-    
-    memset(buffer, 0, BUFFER_SIZE);
-    int bytes_received = recv(client_socket, buffer, BUFFER_SIZE - 1, 0);
-    
-    if (bytes_received <= 0) {
-        return;
-    }
-    
-    input = std::string(buffer, bytes_received);
+void Irc::handleClient(int client_socket, std::string input) {
     
     size_t end = input.find("\n");
     if (end != std::string::npos) {

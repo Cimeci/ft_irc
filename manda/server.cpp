@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/08 16:12:26 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:01:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,13 @@ void Irc::handleNewConnection() {
         return;
     }
 
+	if (_pollfds.size() > MAX_CLIENTS) {
+		std::cerr << "Too many clients\n";
+		close(new_client);
+		return;
+	}
+	
+
     char client_ip[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &(client_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
     
@@ -108,36 +115,57 @@ void Irc::handleClientData(int fd) {
     char buffer[BUFFER_SIZE];
     std::string input;
 	
+	std::cout << "Currently : " << _pollfds.size() << " clients has connected" << std::endl;
     memset(buffer, 0, BUFFER_SIZE);
     int bytes_received = recv(fd, buffer, BUFFER_SIZE - 1, 0);
-    if (bytes_received <= 0) {
-		return;
-    }
-	input = std::string(buffer);
-	std::vector<std::string> split = ft_split(input, "\n");
-	if (split[0] == HEXCHAT_OPT){
-		std::cout << YELLOW << "<server>" << " start_input : " << split[0] << split[1] << split[2] << split[3] << RESET << std::endl;
-		handlePassword(fd, split[1]);
-		handleNickname(fd, split[2]);
-		handleUsername(fd, split[3]);
-	}
-	else {
-		switch(client->getState()) {
-			case Client::CONNECTED:
-				handlePassword(fd, input);
+	if (bytes_received <= 0) {
+		std::cout << "Client disconnected: fd " << fd << std::endl;
+		close(fd);
+		delete clientBook[fd];
+		clientBook.erase(fd);
+		for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
+			if (it->fd == fd) {
+				_pollfds.erase(it);
 				break;
-			case Client::AUTHENTICATED:
-				handleNickname(fd, input);
-				break;
-			case Client::REGISTERED:
-				handleUsername(fd, input);
-				break;
-			case Client::USER:
-				handleClient(fd);
-				break;
-			default:
-				close(fd);
-				break;	
+			}
 		}
-    }
+		return;
+	}
+	
+	input = std::string(buffer);
+	std::vector<std::string> split;
+	if (input.find("\r\n") != std::string::npos)
+		split = ft_split(input, "\r\n");
+	else
+		split = ft_split(input, "\n");
+	for (size_t i = 0; i < split.size(); i++)
+		std::cout << RED << "split : " << split[i] << RESET << std::endl; 	
+	for (size_t i = 0; i < split.size(); i++)
+	{
+		if (split[i] == HEXCHAT_OPT);
+		else {
+			switch(client->getState()) {
+				case Client::CONNECTED:
+					handlePassword(fd, split[i]);
+					break;
+				case Client::AUTHENTICATED:
+					handleNickname(fd, split[i]);
+					break;
+				case Client::REGISTERED:
+					handleUsername(fd, split[i]);
+					break;
+				case Client::USER:
+				{
+					std::string::size_type pos = split[i].find(' ');
+					if (pos != std::string::npos)
+						std::transform(split[i].begin(), split[i].begin() + pos, split[i].begin(), ::toupper);
+					handleClient(fd, split[i]);
+					break;
+				}
+				default:
+					close(fd);
+					break;	
+			}
+		}
+	}
 }

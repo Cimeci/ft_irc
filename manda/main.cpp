@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:40:45 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/06 15:29:39 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/09 09:57:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,5 @@ int main(int argc, char **argv)
 
 	if (!irc.setParameters(atoi(argv[1]), argv[2])) { return 1; }
 
-	// irc.parsing();
 	irc.server();
 }

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:17 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/08 16:01:06 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:48:04 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,13 @@
 std::vector<std::string> ft_split(std::string str, const std::string c){
 	std::vector<std::string> split;
 	size_t end = 0;
-	size_t new_end = str.find(c) + 1;
+	size_t new_end;
 
-	std::cout << "[DEBUG]" << "str : " << BLUE << str << RESET << std::endl;
-	while (end < str.size()){
-		std::cout << "[DEBUG] :" << end << " : to_push : " << str.substr(end, new_end - end) << std::endl;
+	while ((new_end = str.find(c, end)) != std::string::npos) {
 		split.push_back(str.substr(end, new_end - end));
-		std::cout << "[DEBUG] :" << str[end] << " | " << str[new_end] << std::endl;
-		end = new_end;
-		new_end = str.find(c, end) + 1;
+		end = new_end + c.size();
 	}
+	if (end < str.size())
+		split.push_back(str.substr(end));
 	return split;
-} 
+}
