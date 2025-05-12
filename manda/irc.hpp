@@ -6,13 +6,14 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/09 15:41:38 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:17:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
 # include "../includes/colors.hpp"
+# include "../includes/error.hpp"
 
 # include <unistd.h>
 # include <arpa/inet.h>
@@ -40,7 +41,7 @@ class Channel;
 
 class Irc{
 	private:
-		
+		const std::string serverName;
 		int server_socket;
 		int _port;
 		std::string _password;
@@ -51,6 +52,7 @@ class Irc{
 		std::map<std::string, Channel *> _channels;
 	
 	public:
+		Irc(): serverName(":irc.climbers.ni") {}
 		bool setParameters(const int port, const std::string password);
 		
 		int server();
@@ -68,6 +70,8 @@ class Irc{
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);
 		void handlePart(int fd, const std::string& channelName);
 		void handleTopic(int fd, const std::string& channelName, const std::string& topic);
+
+		void sendMessage(int fd, std::string msg);
 
 };
 
