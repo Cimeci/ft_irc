@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/09 17:09:22 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/12 10:28:38 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 void Irc::handleJoin(int fd, const std::string& channelName) {
     Client* client = clientBook[fd];
-    
-//* check if the channel currently exist // 
+
+//* check if the channel currently exist //
     if (_channels.find(channelName) == _channels.end()) {
         _channels[channelName] = new Channel(channelName);
     }
-    
+
 //* add client to channel //
     _channels[channelName]->addClient(fd);
     client->_channels[_channels[channelName]] = true;
-    
+
 //* send confirmation //
     std::string response = ":" + client->getNickname() + " JOIN " + channelName + "\r\n";
     send(fd, response.c_str(), response.length(), 0);
-    
+
 //* send actual topic //
     std::string topic = _channels[channelName]->getTopic();
     if (!topic.empty()) {
@@ -38,7 +38,7 @@ void Irc::handleJoin(int fd, const std::string& channelName) {
 
 void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& message) {
     Client* sender = clientBook[fd];
-    
+
 //* channel //
     if (target[0] == '#' || target[0] == '&') {
         if (_channels.find(target) != _channels.end()) {
@@ -61,11 +61,11 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 
 void Irc::handlePart(int fd, const std::string& channelName) {
     Client* client = clientBook[fd];
-    
+
     if (_channels.find(channelName) != _channels.end()) {
         _channels[channelName]->removeClient(fd);
         client->_channels.erase(_channels[channelName]);
-        
+
         std::string response = ":" + client->getNickname() + " PART " + channelName + "\r\n";
         send(fd, response.c_str(), response.length(), 0);
     }
@@ -74,7 +74,7 @@ void Irc::handlePart(int fd, const std::string& channelName) {
 void Irc::handleTopic(int fd, const std::string& channelName, const std::string& topic) {
     if (_channels.find(channelName) != _channels.end()) {
         _channels[channelName]->setTopic(topic);
-        
+
         Client* client = clientBook[fd];
         std::string response = ":" + client->getNickname() + " TOPIC " + channelName + " :" + topic + "\r\n";
         _channels[channelName]->broadcast(response, fd);
