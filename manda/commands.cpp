@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 16:57:39 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/13 17:22:28 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void Irc::handleWho(int fd, const std::string& channelName){
 		// names += "@~" + it->second->getNickname() + " ";
 	}
 	
-	sendMessage(fd, RPL_NAMEREPLY(clientBook[fd]->getNickname(), _channels[channelName]->getSymbol(), channelName, names));
+	sendMessage(fd, RPL_NAMEREPLY(clientBook[fd]->getNickname(), _channels[channelName]->getSymbol(), channelName));
 	sendMessage(fd, RPL_ENDOFNAMES(clientBook[fd]->getNickname(), channelName));
 
 }
