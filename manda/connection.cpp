@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   connection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 11:11:46 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:20:11 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ void Irc::handlePassword(int client_socket, std::string input) {
 	}
 	else if (input.length() < 6)
 	{
-		response = server_name + ERR_NEEDMOREPARAMS("*");
+		response = serverName + ERR_NEEDMOREPARAMS("*");
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error password: no password" << std::endl;
 	}
 	else if (!strcmp(input.substr(0, 5).c_str(), "PASS ")){
-		response = server_name + ERR_PASSWDMISMATCH("*");
+		response = serverName + ERR_PASSWDMISMATCH("*");
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error password : input : " << input.substr(5, input.size() - 5) << std::endl;
 	}
 	else {
-		response = server_name + ERR_UNKNOWNCOMMAND("*", input);
+		response = serverName + ERR_UNKNOWNCOMMAND("*", input);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error keyword : input : " << input.substr(0, input.size()) << std::endl;
 	}
@@ -44,11 +44,11 @@ void Irc::handleNickname(int client_socket, std::string input) {
 
 	std::cout << "input length: " << input.length() << std::endl;
 	if (input.length() <= 5) {
-		response = server_name + ERR_NONICKNAMEGIVEN("*");
+		response = serverName + ERR_NONICKNAMEGIVEN("*");
 		send(client_socket, response.c_str(), response.length(), 0);
 	}
 	else if (valueExist(input.substr(5, input.length() - 5))) {
-		response = server_name + ERR_NICKNAMEINUSE("*", input.substr(5, input.size() - 5));
+		response = serverName + ERR_NICKNAMEINUSE("*", input.substr(5, input.size() - 5));
 		send(client_socket, response.c_str(), response.length(), 0);
 	}
 	else if (!strcmp(input.substr(0, 5).c_str(), "NICK ") && input.length() > 5) {
@@ -59,7 +59,7 @@ void Irc::handleNickname(int client_socket, std::string input) {
 		send(client_socket, response.c_str(), response.length(), 0);
 	}
 	else {
-		response = server_name + ERR_UNKNOWNCOMMAND("*", input);
+		response = serverName + ERR_UNKNOWNCOMMAND("*", input);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error nickname : input : " << input.substr(0, 5) << std::endl;
 	}
@@ -69,13 +69,13 @@ void Irc::successfulRegistration(int client_socket){
 	std::string nick = clientBook[client_socket]->getNickname();
 	std::string user = clientBook[client_socket]->getUsername();
 
-	std::string response = server_name + RPL_WELCOME(user, nick, nick);
+	std::string response = serverName + RPL_WELCOME(user, nick, nick);
 	send(client_socket, response.c_str(), response.length(), 0);
-	response = server_name + RPL_YOURHOST(nick, server_name);
+	response = serverName + RPL_YOURHOST(nick, serverName);
 	send(client_socket, response.c_str(), response.length(), 0);
-	response = server_name + RPL_CREATED(nick, getTime());
+	response = serverName + RPL_CREATED(nick, getTime());
 	send(client_socket, response.c_str(), response.length(), 0);
-	response = server_name + RPL_MYINFO(nick, server_name);
+	response = serverName + RPL_MYINFO(nick, serverName);
 	send(client_socket, response.c_str(), response.length(), 0);
 }
 
@@ -84,7 +84,7 @@ void Irc::handleUsername(int client_socket, std::string input) {
 	std::string user;
 
 	if (input.length() <= 5){
-		response = server_name + ERR_NEEDMOREPARAMS(clientBook[client_socket]->getNickname());
+		response = serverName + ERR_NEEDMOREPARAMS(clientBook[client_socket]->getNickname());
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error username : input : " << input.substr(0, 5) << std::endl;
 	}
@@ -100,7 +100,7 @@ void Irc::handleUsername(int client_socket, std::string input) {
 		std::cout << clientBook[client_socket]->getUsername() << " has been connected on Irc server" << std::endl;
 	}
 	else {
-		response = server_name + ERR_UNKNOWNCOMMAND(clientBook[client_socket]->getNickname(), input);
+		response = serverName + ERR_UNKNOWNCOMMAND(clientBook[client_socket]->getNickname(), input);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error username : input : " << input.substr(0, 5) << std::endl;
 	}

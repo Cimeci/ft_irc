@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/09 11:18:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:27:51 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,19 @@ class Client {
 	        REGISTERED,
 			USER
 	    };
+		enum banState {
+			NOT,
+			BANEXCEPTION,
+			BAN,
+		};
+		enum Grade {
+			MEMBER = 0,
+			VOICE,
+			HALFOPERATOR,
+			OPERATOR,
+			ADMIN,
+			OWNER,
+		};
 	
 	private:
 		std::string _username;
@@ -34,6 +47,7 @@ class Client {
 		std::string _servername;
 		std::string _realname;
 	    State _state;
+		banState _banState;
 
 		
 	public:
@@ -48,9 +62,19 @@ class Client {
 		
 		std::string getNickname() const;
 		std::string getUsername() const;
+		std::string getHostname() const;
+		std::string getServername() const;
+		std::string getRealname() const;
+
+		
 		State getState() const;
 		void setState(State state);
+
+		banState getBanState() const;
+		void setBanState(banState banState);
 		
-		std::map<Channel *, bool> _channels;
+		char getPrefix(Grade g);
+
+		std::map<Channel *, Grade> _clientChannels;
 	
 };

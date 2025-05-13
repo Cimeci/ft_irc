@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 10:59:28 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:19:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
 # include "../includes/colors.hpp"
+# include "../includes/error.hpp"
 
 # include <unistd.h>
 # include <arpa/inet.h>
@@ -52,7 +53,7 @@ class Channel;
 
 class Irc{
 	private:
-		const std::string server_name;
+		const std::string serverName;
 		int server_socket;
 		int _port;
 		std::string _password;
@@ -63,7 +64,7 @@ class Irc{
 		std::map<std::string, Channel *> _channels;
 
 	public:
-		Irc(): server_name(":irc.climbers.ni") {}
+		Irc(): serverName(":irc.climbers.ni") {}
 		bool setParameters(const int port, const std::string password);
 
 		int server();
@@ -78,9 +79,13 @@ class Irc{
 		void handleClient(int client_socket, std::string input);
 
 		void handleJoin(int fd, const std::string& channelName);
+		void handleWho(int fd, const std::string& channelName);
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);
 		void handlePart(int fd, const std::string& channelName);
 		void handleTopic(int fd, const std::string& channelName, const std::string& topic);
+
+		
+		void sendMessage(int fd, std::string msg);
 
 		bool valueExist(std::string value);
 		void successfulRegistration(int client_socket);
