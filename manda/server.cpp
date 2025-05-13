@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/09 16:01:43 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:51:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int Irc::server() {
 		std::cerr << "Error socket()\n";
 		return 1;
 	}
-	
+
 	int opt = 1;
 	setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
@@ -39,36 +39,47 @@ int Irc::server() {
         close(server_socket);
         return 1;
     }
-	
+
 	// Initialize poll structure for server socket
 	pollfd server_pollfd;
 	server_pollfd.fd = server_socket;
 	server_pollfd.events = POLLIN;
 	_pollfds.push_back(server_pollfd);
-	
+
 	std::cout << "Server listening on port " << _port << "...\n";
-	
+
 	while (true) {
 		int poll_count = poll(_pollfds.data(), _pollfds.size(), -1);
 		if (poll_count < 0) {
 			std::cerr << "Error poll()\n";
 			break;
 		}
-	
-		// Check all file descriptors
+
 		for (size_t i = 0; i < _pollfds.size(); i++) {
+			if (_pollfds[i].revents & POLLOUT) {
+				Client* client = clientBook[_pollfds[i].fd];
+				if (!client) continue;
+				if (client->hasDataToSend()){
+					send(_pollfds[i].fd, client->getBuffer().c_str(), client->getBuffer().length(), 0);
+
+				}
+				if (client->getShouldClose()) {
+					std::cout << "Closing client socket: " << _pollfds[i].fd << std::endl;
+					close(_pollfds[i].fd);
+					clientBook.erase(_pollfds[i].fd);
+					_pollfds.erase(_pollfds.begin() + i);
+					--i;
+				}
+			}
 			if (_pollfds[i].revents & POLLIN) {
 				if (_pollfds[i].fd == server_socket) {
-					// New connection
 					handleNewConnection();
 				} else {
-					// Client data
 					handleClientData(_pollfds[i].fd);
 				}
 			}
 		}
 	}
-	
 	close(server_socket);
 	return 0;
 }
@@ -76,7 +87,7 @@ int Irc::server() {
 void Irc::handleNewConnection() {
     sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
-    
+
     int new_client = accept(server_socket, (sockaddr*)&client_addr, &client_len);
     if (new_client < 0) {
         std::cerr << "Error accept()\n";
@@ -88,12 +99,12 @@ void Irc::handleNewConnection() {
 		close(new_client);
 		return;
 	}
-	
+
 
     char client_ip[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &(client_addr.sin_addr), client_ip, INET_ADDRSTRLEN);
-    
-    std::cout << "New connection from " << client_ip << ":" 
+
+    std::cout << "New connection from " << client_ip << ":"
               << ntohs(client_addr.sin_port) << "\n";
 
     // Add new client to poll structure
@@ -114,7 +125,7 @@ void Irc::handleClientData(int fd) {
     Client *client = clientBook[fd];
     char buffer[BUFFER_SIZE];
     std::string input;
-	
+
 	std::cout << "Currently : " << _pollfds.size() << " clients has connected" << std::endl;
     memset(buffer, 0, BUFFER_SIZE);
     int bytes_received = recv(fd, buffer, BUFFER_SIZE - 1, 0);
@@ -131,7 +142,7 @@ void Irc::handleClientData(int fd) {
 		}
 		return;
 	}
-	
+
 	input = std::string(buffer);
 	std::vector<std::string> split;
 	if (input.find("\r\n") != std::string::npos)
@@ -139,7 +150,7 @@ void Irc::handleClientData(int fd) {
 	else
 		split = ft_split(input, "\n");
 	for (size_t i = 0; i < split.size(); i++)
-		std::cout << RED << "split : " << split[i] << RESET << std::endl; 	
+		std::cout << RED << "split : " << split[i] << RESET << std::endl;
 	for (size_t i = 0; i < split.size(); i++)
 	{
 		if (split[i] == HEXCHAT_OPT);
@@ -164,7 +175,7 @@ void Irc::handleClientData(int fd) {
 				}
 				default:
 					close(fd);
-					break;	
+					break;
 			}
 		}
 	}

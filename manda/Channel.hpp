@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/12 17:13:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:36:48 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,17 @@ class Channel{
 
 	public:
 		Channel(const std::string& name);
-	
+
     	void addClient(int client_fd, Client &Client);
 		bool isClientInChannel(int client_fd) const;
     	void removeClient(int client_fd);
-		
+
 		void broadcast(const std::string& message, int sender_fd);
-	
+
 		std::string getName() const;
-		
+
+		std::map<int, Client*>& getClients() { return _clients; }
+
 		void setTopic(const std::string& topic);
 		std::string getTopic() const;
 
@@ -42,6 +44,6 @@ class Channel{
 		std::string getSymbol() const;
 
 		const std::map<int, Client *> &getClients() const;
-		
-	
+
+
 };
