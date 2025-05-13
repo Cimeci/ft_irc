@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/12 16:27:51 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/13 13:40:04 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,7 @@ class Client {
 		enum Grade {
 			MEMBER = 0,
 			VOICE,
-			HALFOPERATOR,
 			OPERATOR,
-			ADMIN,
-			OWNER,
 		};
 	
 	private:
