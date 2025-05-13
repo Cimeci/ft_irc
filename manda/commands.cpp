@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 11:13:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/13 11:19:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 
 void Irc::handlePart(int fd, const std::string& channelName) {
     Client* client = clientBook[fd];
-    
+
     if (_channels.find(channelName) != _channels.end()) {
         _channels[channelName]->removeClient(fd);
         client->_clientChannels.erase(_channels[channelName]);
@@ -114,7 +114,7 @@ void Irc::handlePart(int fd, const std::string& channelName) {
 void Irc::handleTopic(int fd, const std::string& channelName, const std::string& topic) {
     if (_channels.find(channelName) != _channels.end()) {
         _channels[channelName]->setTopic(topic);
-        
+
         Client* client = clientBook[fd];
         std::string response = ":" + client->getNickname() + " TOPIC " + channelName + " :" + topic + "\r\n";
         _channels[channelName]->broadcast(response, fd);
