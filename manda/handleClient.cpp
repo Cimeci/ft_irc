@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleClient.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:06:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:26:11 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,25 @@ void Irc::sendMessage(int fd, std::string msg)
 	send(fd, msg.c_str(), msg.length(), 0);
 }
 
-
 void Irc::handleClient(int client_socket, std::string input) {
-    
-    size_t end = input.find("\n");
-    if (end != std::string::npos)
-        input = input.substr(0, end);
-    
-    size_t space1 = input.find(' ');
+
+	size_t end = input.find("\n");
+	if (end != std::string::npos)
+		input = input.substr(0, end);
+
+	size_t space1 = input.find(' ');
 	size_t space2 = input.find(' ', space1 + 1);
 	size_t space3 = input.find(':', space1);
-    std::string command = input.substr(0, space1);
-	
+	std::string command = input.substr(0, space1);
+
 	std::string target;
 	if (space1 != std::string::npos && input.substr(space1 + 1, space2 - space1 - 1)[0] != ':')
 		target = input.substr(space1 + 1, space2 - space1 - 1);
-	
+
 	std::string message;
 	if (space3 != std::string::npos)
 		message = input.substr(space3 + 1);
-    
+
     if (command == "JOIN") {
         handleJoin(client_socket, target, message);
     }
@@ -60,6 +59,6 @@ void Irc::handleClient(int client_socket, std::string input) {
 		handleMode(client_socket, target);
 	}
 	else if (command == "QUIT") {
-		close(client_socket);
+		handleQuit(client_socket);
 	}
 }
