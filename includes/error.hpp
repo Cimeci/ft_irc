@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 16:07:30 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:49:29 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 # define ERR_NOSUCHNICK								(serverName + " 401 " + sender->getNickname() + " " + target + " :" + "No such nick/channel" + "\r\n")
 # define ERR_NORECIPIENT							(serverName + " 411 " + sender->getNickname() + " :No recipient given (PRIVMSG)\r\n")
 # define ERR_NOTEXTTOSEND							(serverName + " 412 " + sender->getNickname() + " :No text to send\r\n")
-
-# define ERR_NEEDMOREPARAMS(client, cmd) 			(serverName + " 461 " + client + " " + cmd + " :Not enough parameters\r\n")
 
 # define ERR_BANNEDFROMCHAN(client, channel)		(serverName + " 474 " + client + " " + channel + " :Cannot join channel (+b)\r\n")
 # define ERR_BADCHANNELKEY(client, channel)			(": 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")

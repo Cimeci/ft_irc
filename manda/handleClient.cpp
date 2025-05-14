@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 15:27:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:06:52 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,7 @@ void Irc::handleClient(int client_socket, std::string input) {
 		message = input.substr(space3 + 1);
     
     if (command == "JOIN") {
-        handleJoin(client_socket, target);
-    }
-    else if (command == "PRIVMSG") {
-		std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
-        handlePrivMsg(client_socket, target, message);
+        handleJoin(client_socket, target, message);
     }
     else if (command == "PART") {
         handlePart(client_socket, target);
@@ -56,6 +52,13 @@ void Irc::handleClient(int client_socket, std::string input) {
 	else if (command == "WHO") {
         handleWho(client_socket, target);
     }
+	else if (command == "PRIVMSG") {
+		std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
+        handlePrivMsg(client_socket, target, message);
+    }
+	else if (command == "MODE") {
+		handleMode(client_socket, target);
+	}
 	else if (command == "QUIT") {
 		close(client_socket);
 	}

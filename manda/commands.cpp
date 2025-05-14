@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 17:22:28 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:08:28 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
 			_channels[channelGroup[i]]->addClient(fd, *client);
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
-			if (!passChanGroup[j].empty())
+			if (!passChanGroup.empty() && !passChanGroup[j].empty())
 				j++;
 		}
-		else if (!passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
+		else if (!passChanGroup.empty() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
 			_channels[channelGroup[i]]->addClient(fd, *client);
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::MEMBER;
 			j++;
 		}
-		else if (!_channels[channelGroup[i]]->getPassword().empty() && passChanGroup[j].empty()){
+		else if (!passChanGroup.empty() && !_channels[channelGroup[i]]->getPassword().empty() && passChanGroup[j].empty()){
 			sendMessage(fd, ERR_BADCHANNELKEY(client->getNickname(), channelGroup[i])); continue ;
 		}
 		if (_channels.find(channelGroup[i]) == _channels.end()) {
@@ -146,4 +146,8 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
         std::string response = ":" + client->getNickname() + " TOPIC " + channelName + " :" + topic + "\r\n";
         _channels[channelName]->broadcast(response, fd);
     }
+}
+
+void Irc::handleMode(int fd, const std::string &target){
+	
 }
