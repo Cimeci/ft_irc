@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:26:11 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:03:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ void Irc::handleClient(int client_socket, std::string input) {
 		std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
         handlePrivMsg(client_socket, target, message);
     }
-	else if (command == "MODE") {
-		handleMode(client_socket, target);
-	}
 	else if (command == "QUIT") {
 		handleQuit(client_socket);
 	}
