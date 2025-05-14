@@ -6,14 +6,14 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 16:20:12 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:56:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "irc.hpp"
 
 void Irc::handleJoin(int fd, const std::string& channelName) {
-    Client *client = clientBook[fd];
+	Client *client = clientBook[fd];
 	std::cout << BLUE << "[DEBUG] " << channelName << RESET << std::endl;
 
 
@@ -61,8 +61,8 @@ void Irc::handleWho(int fd, const std::string& channelName){
 }
 
 void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& message) {
-    Client* sender = clientBook[fd];
-    std::string formatted_msg;
+	Client* sender = clientBook[fd];
+	std::string formatted_msg;
 
 	std::cout << BLUE << "[DEBUG] " << target << " | " << message << RESET << std::endl;
 
@@ -77,59 +77,53 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 			sendMessage(fd, ERR_NOTEXTTOSEND);
 
 		//* channel //
-    	else if (targetGroup[i][0] == '#' || targetGroup[i][0] == '&') {
-    	    if (_channels.find(targetGroup[i]) != _channels.end()) {
-    	        std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n";
-    	        _channels[targetGroup[i]]->broadcast(formatted_msg, fd);
-    	    }
+		else if (targetGroup[i][0] == '#' || targetGroup[i][0] == '&') {
+			if (_channels.find(targetGroup[i]) != _channels.end()) {
+				std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n";
+				_channels[targetGroup[i]]->broadcast(formatted_msg, fd);
+			}
 			else
 				sendMessage(fd, ERR_NOSUCHNICK);
-    	}
+		}
 		//* user //
 		else {
 			bool isSend = false;
 			for (std::map<int, Client*>::iterator it = clientBook.begin(); it != clientBook.end(); ++it) {
-    	        if (it->second->getNickname() == targetGroup[i]) {
+				if (it->second->getNickname() == targetGroup[i]) {
 					sendMessage(it->first, ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n");
 					isSend = true;
-    	        }
-    	    }
+				}
+			}
 			if (isSend == false)
 				sendMessage(fd, ERR_NOSUCHNICK);
-    	}
+		}
 	}
 }
 
 void Irc::handlePart(int fd, const std::string& channelName) {
-    Client* client = clientBook[fd];
+	Client* client = clientBook[fd];
 
-    if (_channels.find(channelName) != _channels.end()) {
-        _channels[channelName]->removeClient(fd);
-        client->_clientChannels.erase(_channels[channelName]);
+	if (_channels.find(channelName) != _channels.end()) {
+		_channels[channelName]->removeClient(fd);
+		client->_clientChannels.erase(_channels[channelName]);
 
 		sendMessage(fd, ":" + client->getNickname() + " PART " + channelName + "\r\n");
-    }
+	}
 }
 
 void Irc::handleTopic(int fd, const std::string& channelName, const std::string& topic) {
-    if (_channels.find(channelName) != _channels.end()) {
-        _channels[channelName]->setTopic(topic);
+	if (_channels.find(channelName) != _channels.end()) {
+		_channels[channelName]->setTopic(topic);
 
-        Client* client = clientBook[fd];
-        std::string response = ":" + client->getNickname() + " TOPIC " + channelName + " :" + topic + "\r\n";
-        _channels[channelName]->broadcast(response, fd);
-    }
+		Client* client = clientBook[fd];
+		std::string response = ":" + client->getNickname() + " TOPIC " + channelName + " :" + topic + "\r\n";
+		_channels[channelName]->broadcast(response, fd);
+	}
 }
 
 void Irc::handleQuit(int fd) {
 	Client *client = clientBook[fd];
 
-	for (std::map<int, Client*>::iterator it = clientBook.begin(); it != clientBook.end(); ){
-		if (it->second && client->getNickname() == it->second->getNickname())
-			clientBook.erase(it++);
-		else
-			++it;
-	}
 	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
 		Channel *channel = it->second;

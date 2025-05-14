@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 16:51:07 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:04:23 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,19 @@ int Irc::server() {
 			std::cerr << "Error poll()\n";
 			break;
 		}
-
 		for (size_t i = 0; i < _pollfds.size(); i++) {
 			if (_pollfds[i].revents & POLLOUT) {
 				Client* client = clientBook[_pollfds[i].fd];
 				if (!client) continue;
 				if (client->hasDataToSend()){
 					send(_pollfds[i].fd, client->getBuffer().c_str(), client->getBuffer().length(), 0);
-
+					_pollfds[i].events &= ~POLLOUT;
 				}
 				if (client->getShouldClose()) {
 					std::cout << "Closing client socket: " << _pollfds[i].fd << std::endl;
-					close(_pollfds[i].fd);
+					delete clientBook[_pollfds[i].fd];
 					clientBook.erase(_pollfds[i].fd);
+					close(_pollfds[i].fd);
 					_pollfds.erase(_pollfds.begin() + i);
 					--i;
 				}
@@ -149,8 +149,6 @@ void Irc::handleClientData(int fd) {
 		split = ft_split(input, "\r\n");
 	else
 		split = ft_split(input, "\n");
-	for (size_t i = 0; i < split.size(); i++)
-		std::cout << RED << "split : " << split[i] << RESET << std::endl;
 	for (size_t i = 0; i < split.size(); i++)
 	{
 		if (split[i] == HEXCHAT_OPT);

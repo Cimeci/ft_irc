@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   connection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 11:20:11 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:08:45 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void Irc::handlePassword(int client_socket, std::string input) {
 void Irc::handleNickname(int client_socket, std::string input) {
 	std::string response;
 
-	std::cout << "input length: " << input.length() << std::endl;
 	if (input.length() <= 5) {
 		response = serverName + ERR_NONICKNAMEGIVEN("*");
 		send(client_socket, response.c_str(), response.length(), 0);
@@ -89,7 +88,6 @@ void Irc::handleUsername(int client_socket, std::string input) {
 		std::cout << "error username : input : " << input.substr(0, 5) << std::endl;
 	}
 	else if (!strcmp(input.substr(0, 5).c_str(), "USER ") && input.size() > 5) {
-		std::cout << "User input : " << input.substr(5, input.length() - 5) << std::endl;
 		user = input.substr(input.find(" ") + 1, input.size());
 		user = user.substr(0, user.find(" "));
 		clientBook[client_socket]->setUsername(user);
