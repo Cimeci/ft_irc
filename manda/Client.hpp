@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:23:22 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:06:29 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ class Client {
 		};
 		enum Grade {
 			MEMBER = 0,
-			VOICE,
 			OPERATOR,
 		};
 

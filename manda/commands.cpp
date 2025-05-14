@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:25:34 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:51:28 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void Irc::handleWho(int fd, const std::string& channelName){
 			names += prefix + it->second->getNickname() + " ";
 		else
 			names += it->second->getNickname() + " ";
-		// names += "@~" + it->second->getNickname() + " ";
 	}
 
 	sendMessage(fd, RPL_NAMEREPLY(clientBook[fd]->getNickname(), _channels[channelName]->getSymbol(), channelName));
@@ -98,16 +97,16 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 	{
 		//* error empty //
 		if (targetGroup[i].empty())
-			sendMessage(fd, ERR_NORECIPIENT);
+			sendMessage(fd, ERR_NORECIPIENT(sender->getNickname()));
 		else if (message.empty())
-			sendMessage(fd, ERR_NOTEXTTOSEND);
+			sendMessage(fd, ERR_NOTEXTTOSEND(sender->getNickname()));
 		else if (targetGroup[i][0] == '#' || targetGroup[i][0] == '&') {
 			if (_channels.find(targetGroup[i]) != _channels.end()) {
 				std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n";
 				_channels[targetGroup[i]]->broadcast(formatted_msg, fd);
 			}
 			else
-				sendMessage(fd, ERR_NOSUCHNICK);
+				sendMessage(fd, ERR_NOSUCHNICK(sender->getNickname(), target));
 		}
 		else {
 			bool isSend = false;
@@ -118,7 +117,7 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 				}
 			}
 			if (isSend == false)
-				sendMessage(fd, ERR_NOSUCHNICK);
+				sendMessage(fd, ERR_NOSUCHNICK(sender->getNickname(), target));
 		}
 	}
 }
@@ -167,6 +166,42 @@ void Irc::handleQuit(int fd) {
 	}
 }
 
-void Irc::handleMode(int fd, const std::string &target){
+void Irc::handleMode(int fd, const std::string &channelName, const std::string &mode){
+	if (_channels.find(channelName) == _channels.end()) {
+		sendMessage(fd, ERR_NOSUCHCHANNEL(clientBook[fd]->getNickname(), channelName)); return ;
+	}
+	if (channelName[0] != '#' && channelName[0] != '&') {
+		sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), channelName)); return ;
+	}
+	std::vector<std::string> modeGroup = ft_split(mode, " ");
+	if (modeGroup[0][0] == '+')
+	{
+		size_t OptionMode = 1;
+		for (size_t i = 1; i < modeGroup[0].size(); i++) {
+			std::string modeoption = "itkol";
+			size_t j;
+			for(j = 0; j < modeGroup[0].size() && modeGroup[0][i] != modeoption[j]; j++);
+			
+			switch (j) {
+				case 0 :
+					_channels[channelName]->setInvitaion(true); break;
+				case 1 :
+					_channels[channelName]->setIsOpTopic(true); break;
+				case 2 :
+					_channels[channelName]->setPassword(modeGroup[OptionMode]); OptionMode++; break;
+				case 3 :
+					clientBook[fd]->_clientChannels[_channels[channelName]] = Client::OPERATOR; break;
+				case 4 :
+					if (atoi(modeGroup[OptionMode].c_str()) > 0 && atoi(modeGroup[OptionMode].c_str()) < 10000 && clientBook[fd]->_clientChannels[_channels[channelName]] == Client::OPERATOR)
+						_channels[channelName]->setLimitClients(atoi(modeGroup[OptionMode].c_str())); OptionMode++; break;
+						
+				default :
+			}
+		}
 
+	}
+	else if (modeGroup[0][0] == '-')
+	{
+		
+	}
 }
