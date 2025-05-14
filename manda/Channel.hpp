@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 14:36:48 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:23:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ class Channel{
 		std::string _topic;
 		std::string _symbol;
 		std::map<int, Client *> _clients;
+
+		std::string _password;
 
 	public:
 		Channel(const std::string& name);
@@ -42,6 +44,9 @@ class Channel{
 
 		void setSymbol(const std::string& symbol);
 		std::string getSymbol() const;
+
+		void setPassword(const std::string& password);
+		std::string getPassword() const;
 
 		const std::map<int, Client *> &getClients() const;
 

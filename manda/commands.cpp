@@ -6,29 +6,43 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 10:56:08 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:25:34 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "irc.hpp"
 
-void Irc::handleJoin(int fd, const std::string& channelName) {
-	Client *client = clientBook[fd];
+void Irc::handleJoin(int fd, const std::string& channelName, const std::string& passChannel) {
+    Client *client = clientBook[fd];
 	std::cout << BLUE << "[DEBUG] " << channelName << RESET << std::endl;
 
-
 	std::vector<std::string> channelGroup = ft_split(channelName, ",");
+	std::vector<std::string> passChanGroup = ft_split(passChannel, ",");
+	size_t j = 0;
 	for (size_t i = 0; i < channelGroup.size(); i++)
 	{
-		//* if the channel currently exist //
-			//* create it, add Client and grade him OWNER  //
-		//* else //
-			//* add Client and grade him MEMBER  //
+		if (channelGroup[i][0] != '&' && channelGroup[i][0] != '#'){
+			sendMessage(fd, ERR_BADCHANMASK(channelGroup[i])); continue ;
+		}
 		if (_channels.find(channelGroup[i]) == _channels.end()) {
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
 			_channels[channelGroup[i]]->addClient(fd, *client);
-			client->_clientChannels[_channels[channelGroup[i]]] = Client::OWNER;
-
+			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
+			if (!passChanGroup.empty() && !passChanGroup[j].empty())
+				j++;
+		}
+		else if (!passChanGroup.empty() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
+			_channels[channelGroup[i]]->addClient(fd, *client);
+			client->_clientChannels[_channels[channelGroup[i]]] = Client::MEMBER;
+			j++;
+		}
+		else if (!passChanGroup.empty() && !_channels[channelGroup[i]]->getPassword().empty() && passChanGroup[j].empty()){
+			sendMessage(fd, ERR_BADCHANNELKEY(client->getNickname(), channelGroup[i])); continue ;
+		}
+		if (_channels.find(channelGroup[i]) == _channels.end()) {
+			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
+			_channels[channelGroup[i]]->addClient(fd, *client);
+			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
 		}
 		else {
 			_channels[channelGroup[i]]->addClient(fd, *client);
@@ -36,12 +50,21 @@ void Irc::handleJoin(int fd, const std::string& channelName) {
 		}
 
 		//* send confirmation //
-		sendMessage(fd, ":" + client->getNickname() + " JOIN " + channelGroup[i] + "\r\n");
+		sendMessage(fd, ":" + client->getNickname() + "!" + client->getUsername() + "@host" + " JOIN " + channelGroup[i] + "\r\n");
+
+		//* send MODE //
+		sendMessage(fd, serverName + " MODE " + channelGroup[i] + " +nt\r\n");
+		sendMessage(fd, RPL_CHANNELMODEIS(client->getNickname(), channelName, "+nt"));
+
 
 		//* send actual topic //
 		std::string topic = _channels[channelGroup[i]]->getTopic();
-		if (!topic.empty())
-			sendMessage(fd, client->getNickname() + " " + channelGroup[i] + " :" + topic + "\r\n");
+		if (topic.empty())
+			sendMessage(fd, RPL_NOTOPIC(client->getNickname(), channelGroup[i])); // 331
+		else
+			sendMessage(fd, RPL_TOPIC(client->getNickname(), channelGroup[i], topic)); // 332
+
+		handleWho(fd, channelGroup[i]);
 	}
 }
 
@@ -51,13 +74,16 @@ void Irc::handleWho(int fd, const std::string& channelName){
 	std::string names;
 
 	for (std::map<int, Client *>::const_iterator it = members.begin(); it != members.end(); ++it) {
-		names += it->second->getPrefix(it->second->_clientChannels[_channels[channelName]]) + it->second->getNickname() + " ";
+		char prefix = it->second->getPrefix(it->second->_clientChannels[_channels[channelName]]);
+		if (prefix != '\0')
+			names += prefix + it->second->getNickname() + " ";
+		else
+			names += it->second->getNickname() + " ";
 		// names += "@~" + it->second->getNickname() + " ";
 	}
 
-	sendMessage(fd, RPL_NAMEREPLY(clientBook[fd]->getNickname(), _channels[channelName]->getSymbol(), channelName, names));
+	sendMessage(fd, RPL_NAMEREPLY(clientBook[fd]->getNickname(), _channels[channelName]->getSymbol(), channelName));
 	sendMessage(fd, RPL_ENDOFNAMES(clientBook[fd]->getNickname(), channelName));
-
 }
 
 void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& message) {
@@ -75,8 +101,6 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 			sendMessage(fd, ERR_NORECIPIENT);
 		else if (message.empty())
 			sendMessage(fd, ERR_NOTEXTTOSEND);
-
-		//* channel //
 		else if (targetGroup[i][0] == '#' || targetGroup[i][0] == '&') {
 			if (_channels.find(targetGroup[i]) != _channels.end()) {
 				std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n";
@@ -85,7 +109,6 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 			else
 				sendMessage(fd, ERR_NOSUCHNICK);
 		}
-		//* user //
 		else {
 			bool isSend = false;
 			for (std::map<int, Client*>::iterator it = clientBook.begin(); it != clientBook.end(); ++it) {
@@ -142,4 +165,8 @@ void Irc::handleQuit(int fd) {
 			break;
 		}
 	}
+}
+
+void Irc::handleMode(int fd, const std::string &target){
+
 }

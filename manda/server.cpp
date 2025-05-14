@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:04:23 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:27:30 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ void Irc::handleNewConnection() {
     std::cout << "New connection from " << client_ip << ":"
               << ntohs(client_addr.sin_port) << "\n";
 
-    // Add new client to poll structure
+
+	std::cout << "Currently : " << _pollfds.size() - 1 << " clients has connected" << std::endl;
+
+	// Add new client to poll structure
     pollfd new_pollfd;
     new_pollfd.fd = new_client;
     new_pollfd.events = POLLIN;
@@ -126,7 +129,6 @@ void Irc::handleClientData(int fd) {
     char buffer[BUFFER_SIZE];
     std::string input;
 
-	std::cout << "Currently : " << _pollfds.size() << " clients has connected" << std::endl;
     memset(buffer, 0, BUFFER_SIZE);
     int bytes_received = recv(fd, buffer, BUFFER_SIZE - 1, 0);
 	if (bytes_received <= 0) {
@@ -149,6 +151,10 @@ void Irc::handleClientData(int fd) {
 		split = ft_split(input, "\r\n");
 	else
 		split = ft_split(input, "\n");
+	std::cout << "------ split input -----" << std::endl;
+	for (size_t i = 0; i < split.size(); i++)
+		std::cout << "split : " << split[i] << std::endl;
+	std::cout << "------------------------" << std::endl;
 	for (size_t i = 0; i < split.size(); i++)
 	{
 		if (split[i] == HEXCHAT_OPT);

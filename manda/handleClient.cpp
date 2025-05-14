@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 15:34:08 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:26:11 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,26 @@ void Irc::handleClient(int client_socket, std::string input) {
 	if (space3 != std::string::npos)
 		message = input.substr(space3 + 1);
 
-	if (command == "JOIN") {
-		handleJoin(client_socket, target);
-	}
+    if (command == "JOIN") {
+        handleJoin(client_socket, target, message);
+    }
+    else if (command == "PART") {
+        handlePart(client_socket, target);
+    }
+    else if (command == "TOPIC") {
+        handleTopic(client_socket, target, message);
+    }
+	else if (command == "WHO") {
+        handleWho(client_socket, target);
+    }
 	else if (command == "PRIVMSG") {
 		std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
-		handlePrivMsg(client_socket, target, message);
-	}
-	else if (command == "PART") {
-		handlePart(client_socket, target);
-	}
-	else if (command == "TOPIC") {
-		handleTopic(client_socket, target, message);
-	}
-	else if (command == "WHO") {
-		handleWho(client_socket, target);
+        handlePrivMsg(client_socket, target, message);
+    }
+	else if (command == "MODE") {
+		handleMode(client_socket, target);
 	}
 	else if (command == "QUIT") {
 		handleQuit(client_socket);
-		std::string response = "Quit :Leaving\r\n";
-		send(client_socket, response.c_str(), response.length(), 0);
-		// close(client_socket);
 	}
 }

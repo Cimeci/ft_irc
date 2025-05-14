@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/12 17:12:55 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:20:02 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ void Channel::setSymbol(const std::string& symbol) { _symbol = symbol; }
 
 std::string Channel::getSymbol() const { return _symbol; }
 
+void Channel::setPassword(const std::string& password) { _password = password; }
+
+std::string Channel::getPassword() const { return _password; }
+ 
 const std::map<int, Client *>& Channel::getClients() const {
     return _clients;
 }
