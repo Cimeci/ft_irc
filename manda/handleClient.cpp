@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 14:49:49 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:38:26 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,8 @@ void Irc::handleClient(int client_socket, std::string input) {
 	}
 	else if (command == "QUIT") {
 		handleQuit(client_socket);
+	}
+	else if (command == "KICK") {
+		handleKick(client_socket, input.substr(space1, input.length()));
 	}
 }
