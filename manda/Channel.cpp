@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 16:20:02 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:50:22 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void Channel::removeClient(int client_fd) {
 bool Channel::isClientInChannel(int client_fd) const {
 	return _clients.find(client_fd) != _clients.end();
 }
-
-
 
 void Channel::broadcast(const std::string& message, int sender_fd) {
 	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
@@ -51,7 +49,7 @@ std::string Channel::getSymbol() const { return _symbol; }
 void Channel::setPassword(const std::string& password) { _password = password; }
 
 std::string Channel::getPassword() const { return _password; }
- 
+
 const std::map<int, Client *>& Channel::getClients() const {
     return _clients;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 10:49:29 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:25:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 // noa //
 
-# define RPL_WELCOME(client, nick, user)			(std::string(" 001 ") + client + std::string(" :Welcome to the IRC Network, ") + nick + std::string(" [!") + user + std::string("@host]\r\n"))
-# define RPL_YOURHOST(client, server) 				(std::string(" 002 ") + client + std::string(" :Your host is ") + server + std::string(", running version 1\r\n"))
-# define RPL_CREATED(client, date) 					(std::string(" 003 ") + client + std::string(" :This server was created ") + date + std::string("\r\n"))
-# define RPL_MYINFO(client, server) 				(std::string(" 004 ") + client + std::string(" ") + server + std::string("<available user modes> <available channel modes> [<channel modes with a parameter>]\r\n"))
-# define ERR_UNKNOWNCOMMAND(client, cmd) 			(std::string(" 421 ") + client + std::string(" ") + cmd + std::string(" :Unknown command\r\n"))
-# define ERR_NONICKNAMEGIVEN(client) 				(std::string(" 431 ") + client + std::string(" :No nickname given\r\n"))
-# define ERR_NICKNAMEINUSE(client, nick) 			(std::string(" 433 ") + client + std::string(" ") + nick + std::string(" :Nickname is already in use\r\n"))
-# define ERR_NEEDMOREPARAMS(client) 				(std::string(" 461 ") + client + std::string(" PASS :Not enough parameters\r\n"))
-# define ERR_PASSWDMISMATCH(client) 				(std::string(" 464 ") + client + std::string(" :Password incorrect\r\n"))
+# define RPL_WELCOME(client, nick, user)			(" 001 " + client + " :Welcome to the IRC Network, " + nick + " [!" + user + "@host]\r\n")
+# define RPL_YOURHOST(client, server) 				(" 002 " + client + " :Your host is " + server + ", running version 1\r\n")
+# define RPL_CREATED(client, date) 					(" 003 " + client + " :This server was created " + date + "\r\n")
+# define RPL_MYINFO(client, server) 				(" 004 " + client + " " + server + "<available user modes> <available channel modes> [<channel modes with a parameter>]\r\n")
+# define ERR_NOSUCHCHANNEL(nick, channel)			(" 403 " + nick + " " + channel + " :No such channel\r\n")
+# define ERR_UNKNOWNCOMMAND(client, cmd) 			(" 421 " + client + " " + cmd + " :Unknown command\r\n")
+# define ERR_NONICKNAMEGIVEN(client) 				(" 431 " + client + " :No nickname given\r\n")
+# define ERR_NICKNAMEINUSE(client, nick) 			(" 433 " + client + " " + nick + " :Nickname is already in use\r\n")
+# define ERR_NOTONCHANNEL(client, channel)			(" 442 " + client + " " + channel + " :You're not on that channel\r\n")
+# define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " PASS :Not enough parameters\r\n")
+# define ERR_PASSWDMISMATCH(client) 				(" 464 " + client + " :Password incorrect\r\n")
+
+# define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
 
 // ilan //
 

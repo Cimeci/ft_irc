@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:25:39 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:15:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,23 @@
 
 void Irc::handlePassword(int client_socket, std::string input) {
 	std::string response;
+	std::string defaultNick = "*";
 
 	if (!strcmp(input.substr(0, 5).c_str(), "PASS ") && !strcmp(_password.c_str(), input.substr(5, input.size() - 5).c_str())) {
 		clientBook[client_socket]->setState(Client::AUTHENTICATED);
 	}
 	else if (input.length() < 6) {
-		response = serverName + ERR_NEEDMOREPARAMS("*");
+		response = serverName + ERR_NEEDMOREPARAMS(defaultNick);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error password: no password" << std::endl;
 	}
 	else if (!strcmp(input.substr(0, 5).c_str(), "PASS ")) {
-		response = serverName + ERR_PASSWDMISMATCH("*");
+		response = serverName + ERR_PASSWDMISMATCH(defaultNick);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error password : input : " << input.substr(5, input.size() - 5) << std::endl;
 	}
 	else {
-		response = serverName + ERR_UNKNOWNCOMMAND("*", input);
+		response = serverName + ERR_UNKNOWNCOMMAND(defaultNick, input);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error keyword : input : " << input.substr(0, input.size()) << std::endl;
 	}
@@ -37,13 +38,14 @@ void Irc::handlePassword(int client_socket, std::string input) {
 
 void Irc::handleNickname(int client_socket, std::string input) {
 	std::string response;
+	std::string defaultNick = "*";
 
 	if (input.length() <= 5) {
-		response = serverName + ERR_NONICKNAMEGIVEN("*");
+		response = serverName + ERR_NONICKNAMEGIVEN(defaultNick);
 		send(client_socket, response.c_str(), response.length(), 0);
 	}
 	else if (valueExist(input.substr(5, input.length() - 5))) {
-		response = serverName + ERR_NICKNAMEINUSE("*", input.substr(5, input.size() - 5));
+		response = serverName + ERR_NICKNAMEINUSE(defaultNick, input.substr(5, input.size() - 5));
 		send(client_socket, response.c_str(), response.length(), 0);
 	}
 	else if (!strcmp(input.substr(0, 5).c_str(), "NICK ") && input.length() > 5) {
@@ -51,7 +53,7 @@ void Irc::handleNickname(int client_socket, std::string input) {
 		clientBook[client_socket]->setState(Client::REGISTERED);
 	}
 	else {
-		response = serverName + ERR_UNKNOWNCOMMAND("*", input);
+		response = serverName + ERR_UNKNOWNCOMMAND(defaultNick, input);
 		send(client_socket, response.c_str(), response.length(), 0);
 		std::cout << "error nickname : input : " << input.substr(0, 5) << std::endl;
 	}
