@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 14:12:07 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:35:52 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ class Irc{
 
 		std::map<int, Client *> clientBook;
 		std::map<std::string, Channel *> _channels;
+		std::map<std::string, int> nicknameToFd;
+
 
 	public:
 		Irc(): serverName(":irc.climbers.ni") {}
@@ -83,5 +85,5 @@ class Irc{
 		void successfulRegistration(int client_socket);
 };
 
-std::vector<std::string> ft_split(std::string str, const std::string c);
+std::vector<std::string> ft_split(std::string str, const std::string &c);
 std::string getTime(void);

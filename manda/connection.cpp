@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   connection.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 10:15:06 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 11:28:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void Irc::handleNickname(int client_socket, std::string input) {
 	}
 	else if (!strcmp(input.substr(0, 5).c_str(), "NICK ") && input.length() > 5) {
 		clientBook[client_socket]->setNickname(input.substr(5, input.length() - 5));
+		nicknameToFd[input.substr(5, input.length() - 5)] = client_socket; 
 		clientBook[client_socket]->setState(Client::REGISTERED);
 	}
 	else {
