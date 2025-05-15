@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 15:35:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:19:11 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define RPL_NOTOPIC(client, channel)				(serverName + " 331 " + client + " " + channel + " :No topic is set\r\n")
 # define RPL_TOPIC(client, channel, topic)			(serverName + " 332 " + client + " " + channel + " :" + topic + "\r\n")
 # define RPL_CHANNELMODEIS(nick, channel, modes) 	(serverName + " 324 " + nick + " " + channel + " " + modes + "\r\n")
+# define RPL_INVITING(client, nick, channel) 		(serverName + " 341 " + client + " " + nick + " " + channel + "\r\n")
 # define RPL_NAMEREPLY(nick, symbol, channel)		(serverName + " 353 " + nick + " " + symbol + " " + channel + " :" + names + "\r\n")
 # define RPL_ENDOFNAMES(nick, channel) 				(serverName + " 366 " + nick + " " + channel + " :End of /NAMES list.\r\n")
 
@@ -32,7 +33,10 @@
 # define ERR_NICKNAMEINUSE(client, nick) 			(" 433 " + client + " " + nick + " :Nickname is already in use\r\n")
 # define ERR_USERNOTINCHANNEL(client, nick, channel)(" 441 " + client + " " + nick + " " + channel + " :They aren't on that channel\r\n")
 # define ERR_NOTONCHANNEL(client, channel)			(" 442 " + client + " " + channel + " :You're not on that channel\r\n")
-# define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " PASS :Not enough parameters\r\n")
+# define ERR_USERONCHANNEL(client, nick, channel)	(" 443 " + client + " " + nick + " " + channel + " :is already on channel\r\n")
+
+
+# define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " :Not enough parameters\r\n")
 # define ERR_PASSWDMISMATCH(client) 				(" 464 " + client + " :Password incorrect\r\n")
 
 // ilan //

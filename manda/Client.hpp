@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 12:06:29 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:34:45 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ class Client {
 		bool hasDataToSend() {return !_buffer.empty();}
 
 		std::map<Channel *, Grade> _clientChannels;
+		std::map<Channel *, bool> _invitationChannels;
 
 };
