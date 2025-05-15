@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 09:24:51 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:47:26 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ class Irc{
 		void handleQuit(int fd);
 		void handleWho(int fd, const std::string& channelName);
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);
-		void handleMode(int fd, const std::string &target);
+		void handleMode(int fd, const std::string &channelName, const std::string &mode);
 
 		void sendMessage(int fd, std::string msg);
 

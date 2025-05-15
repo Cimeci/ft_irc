@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:23:16 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:47:02 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ class Channel{
 		std::map<int, Client *> _clients;
 
 		std::string _password;
+		bool _invitation;
+		bool _isOpTopic;
+		size_t _limitClients;
+		
 
 	public:
 		Channel(const std::string& name);
@@ -48,6 +52,15 @@ class Channel{
 		void setPassword(const std::string& password);
 		std::string getPassword() const;
 
+		void setInvitaion(const bool info);
+		bool getInvitation() const;
+
+		void setIsOpTopic(const bool info);
+		bool getIsOpTopic() const;
+
+		void setLimitClients(const size_t info);
+		size_t getLimitClients() const;
+		
 		const std::map<int, Client *> &getClients() const;
 
 

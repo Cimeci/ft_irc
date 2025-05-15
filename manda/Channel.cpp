@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 12:50:22 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:48:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Channel.hpp"
 # include "irc.hpp"
 
-Channel::Channel(const std::string& name) : _name(name), _topic(""), _symbol("=") {}
+Channel::Channel(const std::string& name) : _name(name), _topic(""), _symbol("="), _password(""), _invitation(false) {}
 
 void Channel::addClient(int client_fd, Client &client) {
 	if (!isClientInChannel(client_fd))
@@ -38,17 +38,36 @@ void Channel::broadcast(const std::string& message, int sender_fd) {
 
 std::string Channel::getName() const { return _name; }
 
+
 void Channel::setTopic(const std::string& topic) { _topic = topic; }
 
 std::string Channel::getTopic() const { return _topic; }
+
 
 void Channel::setSymbol(const std::string& symbol) { _symbol = symbol; }
 
 std::string Channel::getSymbol() const { return _symbol; }
 
+
 void Channel::setPassword(const std::string& password) { _password = password; }
 
 std::string Channel::getPassword() const { return _password; }
+
+
+void Channel::setInvitaion(const bool info) { _invitation = info; }
+
+bool Channel::getInvitation() const { return _invitation; }
+
+
+void Channel::setIsOpTopic(const bool info) { _isOpTopic = info; }
+
+bool Channel::getIsOpTopic() const { return _isOpTopic; }
+ 
+
+void Channel::setLimitClients(const size_t limit) { _limitClients = limit; }
+
+size_t Channel::getLimitClients() const { return _limitClients; }
+
 
 const std::map<int, Client *>& Channel::getClients() const {
     return _clients;

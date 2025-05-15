@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:22:14 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/13 13:40:19 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:06:48 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void Client::setBanState(banState banState){_banState = banState;}
 char Client::getPrefix(Grade g){
 	switch (g){
         case OPERATOR:		return '@';
-        case VOICE:			return '+';
         default:			return '\0'; 
 	}
 }
