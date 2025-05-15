@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 15:35:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:52:43 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # define RPL_NOTOPIC(client, channel)				(serverName + " 331 " + client + " " + channel + " :No topic is set\r\n")
 # define RPL_TOPIC(client, channel, topic)			(serverName + " 332 " + client + " " + channel + " :" + topic + "\r\n")
+# define RPL_TOPICWHOTIME(client, channel, user, t)(" 333 " + client + " " + channel + " " + client + "!~" + user + "@localhost " + t + "\r\n")
 # define RPL_CHANNELMODEIS(nick, channel, modes) 	(serverName + " 324 " + nick + " " + channel + " " + modes + "\r\n")
 # define RPL_NAMEREPLY(nick, symbol, channel)		(serverName + " 353 " + nick + " " + symbol + " " + channel + " :" + names + "\r\n")
 # define RPL_ENDOFNAMES(nick, channel) 				(serverName + " 366 " + nick + " " + channel + " :End of /NAMES list.\r\n")
@@ -46,3 +47,4 @@
 
 # define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
 # define KICK(nick, user, channel, target)			(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + nick + "\r\n")
+# define TOPIC(nick, user, channel, topic)			(":" + nick + "!~" + user + "@localhost TOPIC " + channel + " :" + topic + "\r\n")
