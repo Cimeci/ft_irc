@@ -6,14 +6,14 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 10:48:22 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:29:17 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Channel.hpp"
 # include "irc.hpp"
 
-Channel::Channel(const std::string& name) : _name(name), _topic(""), _symbol("="), _password(""), _invitation(false) {}
+Channel::Channel(const std::string& name) : _name(name), _topic(""), _symbol("="), _invitation(false), _isOpTopic(true), _limitClients(10000), _password("") {}
 
 void Channel::addClient(int client_fd, Client &client) {
 	if (!isClientInChannel(client_fd))
@@ -67,6 +67,21 @@ bool Channel::getIsOpTopic() const { return _isOpTopic; }
 void Channel::setLimitClients(const size_t limit) { _limitClients = limit; }
 
 size_t Channel::getLimitClients() const { return _limitClients; }
+
+
+std::string Channel::getModeInString() const{
+	std::string mode = "+";
+	
+	if (_invitation)
+		mode += "i";
+	if (_isOpTopic)
+		mode += "t";
+	if (_limitClients < 10000)
+		mode += "l";
+	if (!_password.empty())
+		mode += "k";
+	return mode;
+}
 
 
 const std::map<int, Client *>& Channel::getClients() const {

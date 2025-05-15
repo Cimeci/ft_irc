@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 10:47:23 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:24:49 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@
 
 // ilan //
 
-# define ERR_NOSUCHNICK(client, channel)			(serverName + " 401 " + client + " " + channel + " :" + "No such nick/channel" + "\r\n")
-# define ERR_NORECIPIENT(client)					(serverName + " 411 " + client + " :No recipient given (PRIVMSG)\r\n")
-# define ERR_NOTEXTTOSEND(client)					(serverName + " 412 " + client + " :No text to send\r\n")
-
-# define ERR_BANNEDFROMCHAN(client, channel)		(serverName + " 474 " + client + " " + channel + " :Cannot join channel (+b)\r\n")
-# define ERR_BADCHANNELKEY(client, channel)			(serverName + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
-# define ERR_NOSUCHCHANNEL(client, channel)			(serverName + " 403 " + client + " " + channel + " :No such channel\r\n")
-# define ERR_BADCHANMASK(channel) 					(serverName + " 476 " + channel + " :Bad Channel Mask\r\n")
 # define RPL_CHANNELMODEIS(nick, channel, modes) 	(serverName + " 324 " + nick + " " + channel + " " + modes + "\r\n")
 # define RPL_NOTOPIC(client, channel)				(serverName + " 331 " + client + " " + channel + " :No topic is set\r\n")
 # define RPL_TOPIC(client, channel, topic)			(serverName + " 332 " + client + " " + channel + " :" + topic + "\r\n")
 # define RPL_NAMEREPLY(nick, symbol, channel)		(serverName + " 353 " + nick + " " + symbol + " " + channel + " :" + names + "\r\n")
 # define RPL_ENDOFNAMES(nick, channel) 				(serverName + " 366 " + nick + " " + channel + " :End of /NAMES list.\r\n")
+# define ERR_NOSUCHNICK(client, channel)			(serverName + " 401 " + client + " " + channel + " :" + "No such nick/channel" + "\r\n")
+# define ERR_NORECIPIENT(client)					(serverName + " 411 " + client + " :No recipient given (PRIVMSG)\r\n")
+# define ERR_NOTEXTTOSEND(client)					(serverName + " 412 " + client + " :No text to send\r\n")
+# define ERR_INVITEONLYCHAN(nick, channel)			(serverName + " 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n")
+# define ERR_BADCHANNELKEY(client, channel)			(serverName + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
+# define ERR_BADCHANMASK(channel) 					(serverName + " 476 " + channel + " :Bad Channel Mask\r\n")
+# define ERR_CHANOPRIVSNEEDED(nick, channel)		(serverName + " 482 " + nick + " " + channel + " :You're not channel operator\r\n")
+# define ERR_UMODEUNKNOWNFLAG(client)				(serverName + " 501 " + client + " :Unknown MODE flag\r\n")

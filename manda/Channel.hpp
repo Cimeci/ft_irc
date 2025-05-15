@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 12:47:02 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:05:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ class Channel{
 		std::string _symbol;
 		std::map<int, Client *> _clients;
 
-		std::string _password;
 		bool _invitation;
 		bool _isOpTopic;
 		size_t _limitClients;
+		std::string _password;
 		
 
 	public:
@@ -61,6 +61,8 @@ class Channel{
 		void setLimitClients(const size_t info);
 		size_t getLimitClients() const;
 		
+		std::string getModeInString() const;
+
 		const std::map<int, Client *> &getClients() const;
 
 

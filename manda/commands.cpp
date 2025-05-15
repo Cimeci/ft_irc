@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 10:47:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:28:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,42 @@
 
 void Irc::handleJoin(int fd, const std::string& channelName, const std::string& passChannel) {
     Client *client = clientBook[fd];
-	std::cout << BLUE << "[DEBUG] " << channelName << RESET << std::endl;
 
 	std::vector<std::string> channelGroup = ft_split(channelName, ",");
 	std::vector<std::string> passChanGroup = ft_split(passChannel, ",");
 	size_t j = 0;
 	for (size_t i = 0; i < channelGroup.size(); i++)
 	{
-		if (channelGroup[i][0] != '&' && channelGroup[i][0] != '#'){
-			sendMessage(fd, ERR_BADCHANMASK(channelGroup[i])); continue ;
+		std::cout << BLUE << "[DEBUG] " << RESET << "channelName='" << channelName << "'" << std::endl;
+		if (channelGroup[i].empty()) {
+			sendMessage(fd, ERR_BADCHANMASK(channelGroup[i]));
+			continue;
 		}
+		if (channelGroup[i][0] != '&' && channelGroup[i][0] != '#') {
+			sendMessage(fd, ERR_BADCHANMASK(channelGroup[i]));
+			continue;
+		}
+		// if (!passChanGroup[j].empty())
+		// 	std::cout << BLUE << "[DEBUG] " << RESET << " if password" << passChanGroup[j] << " | " << _channels[channelGroup[i]]->getPassword() << std::endl;
 		if (_channels.find(channelGroup[i]) == _channels.end()) {
+			std::cout << BLUE << "[DEBUG] " << RESET << "here owner of the channel" << std::endl;
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
 			_channels[channelGroup[i]]->addClient(fd, *client);
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
 			if (!passChanGroup.empty() && !passChanGroup[j].empty())
 				j++;
 		}
-		else if (!passChanGroup.empty() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
+		else if (!passChanGroup.empty() && j < passChanGroup.size() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
+			std::cout << BLUE << "[DEBUG] " << RESET << "go here for password" << std::endl;
 			_channels[channelGroup[i]]->addClient(fd, *client);
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::MEMBER;
 			j++;
 		}
-		else if (!passChanGroup.empty() && !_channels[channelGroup[i]]->getPassword().empty() && passChanGroup[j].empty()){
+		else if (!_channels[channelGroup[i]]->getPassword().empty()){
 			sendMessage(fd, ERR_BADCHANNELKEY(client->getNickname(), channelGroup[i])); continue ;
 		}
-		if (_channels.find(channelGroup[i]) == _channels.end()) {
-			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
-			_channels[channelGroup[i]]->addClient(fd, *client);
-			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
+		else if (_channels[channelGroup[i]]->getInvitation() == true){
+			sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
 		}
 		else {
 			_channels[channelGroup[i]]->addClient(fd, *client);
@@ -52,9 +59,8 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 		//* send confirmation //
 		sendMessage(fd, ":" + client->getNickname() + "!" + client->getUsername() + "@host" + " JOIN " + channelGroup[i] + "\r\n");
 
-		//* send MODE //
-		sendMessage(fd, serverName + " MODE " + channelGroup[i] + " +nt\r\n");
-		sendMessage(fd, RPL_CHANNELMODEIS(client->getNickname(), channelName, "+nt"));
+		// * send MODE //
+		handleMode(fd, channelGroup[i], "");
 
 
 		//* send actual topic //
@@ -89,7 +95,6 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 	Client* sender = clientBook[fd];
 	std::string formatted_msg;
 
-	std::cout << BLUE << "[DEBUG] " << target << " | " << message << RESET << std::endl;
 
 	std::vector<std::string> targetGroup = ft_split(target, ",");
 
@@ -101,7 +106,7 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 		else if (message.empty())
 			sendMessage(fd, ERR_NOTEXTTOSEND(sender->getNickname()));
 		else if (targetGroup[i][0] == '#' || targetGroup[i][0] == '&') {
-			if (_channels.find(targetGroup[i]) != _channels.end()) {
+			if (sender->_clientChannels.find(_channels[targetGroup[i]]) != sender->_clientChannels.end()) {
 				std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n";
 				_channels[targetGroup[i]]->broadcast(formatted_msg, fd);
 			}
@@ -180,6 +185,13 @@ void Irc::handleQuit(int fd) {
 	}
 }
 
+size_t getOption(const char &opt){
+	std::string modeoption = "itlok";
+	size_t j;
+	for(j = 0; j < modeoption.size() && opt != modeoption[j]; j++);
+	return (j);
+}
+
 void Irc::handleMode(int fd, const std::string &channelName, const std::string &mode){
 	if (_channels.find(channelName) == _channels.end()) {
 		sendMessage(fd, ERR_NOSUCHCHANNEL(clientBook[fd]->getNickname(), channelName)); return ;
@@ -187,35 +199,76 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 	if (channelName[0] != '#' && channelName[0] != '&') {
 		sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), channelName)); return ;
 	}
+	if (mode.empty()){
+		sendMessage(fd, RPL_CHANNELMODEIS(clientBook[fd]->getNickname(), channelName, _channels[channelName]->getModeInString()));
+		return ;
+	}
+	
 	std::vector<std::string> modeGroup = ft_split(mode, " ");
+	std::cout << BLUE << "[DEBUG] " << RESET << modeGroup[0] << std::endl;
+	if (clientBook[fd]->_clientChannels[_channels[channelName]] != Client::OPERATOR){
+			sendMessage(fd, ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName));
+	}
+	size_t OptionMode = 1;
 	if (modeGroup[0][0] == '+')
 	{
-		size_t OptionMode = 1;
 		for (size_t i = 1; i < modeGroup[0].size(); i++) {
-			std::string modeoption = "itkol";
-			size_t j;
-			for(j = 0; j < modeGroup[0].size() && modeGroup[0][i] != modeoption[j]; j++);
 			
-			switch (j) {
-				case 0 :
+			switch (getOption(modeGroup[0][i])) {
+				case 0 : // i
 					_channels[channelName]->setInvitaion(true); break;
-				case 1 :
+				case 1 : // t
 					_channels[channelName]->setIsOpTopic(true); break;
-				case 2 :
+				case 2 : // l
+					if (atoi(modeGroup[OptionMode].c_str()) > 0 && atoi(modeGroup[OptionMode].c_str()) < 10000){
+						_channels[channelName]->setLimitClients(atoi(modeGroup[OptionMode].c_str()));
+						OptionMode++;
+					}
+					break;
+				case 3 : // o
+					if (nicknameToFd.find(modeGroup[OptionMode]) != nicknameToFd.end()){
+						clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels[_channels[channelName]] = Client::OPERATOR;
+						OptionMode++;
+					}
+					else {
+						sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), channelName));
+					}
+					break;
+				case 4 : // k
 					_channels[channelName]->setPassword(modeGroup[OptionMode]); OptionMode++; break;
-				case 3 :
-					clientBook[fd]->_clientChannels[_channels[channelName]] = Client::OPERATOR; break;
-				case 4 :
-					if (atoi(modeGroup[OptionMode].c_str()) > 0 && atoi(modeGroup[OptionMode].c_str()) < 10000 && clientBook[fd]->_clientChannels[_channels[channelName]] == Client::OPERATOR)
-						_channels[channelName]->setLimitClients(atoi(modeGroup[OptionMode].c_str())); OptionMode++; break;
-						
 				default :
+					sendMessage(fd, ERR_UMODEUNKNOWNFLAG(clientBook[fd]->getNickname()));
 			}
 		}
-
 	}
 	else if (modeGroup[0][0] == '-')
 	{
-		
+		for (size_t i = 1; i < modeGroup[0].size(); i++) {
+			
+			switch (getOption(modeGroup[0][i])) {
+				case 0 : // i
+					_channels[channelName]->setInvitaion(false); break;
+				case 1 : // t
+					_channels[channelName]->setIsOpTopic(false); break;
+				case 2 : // l
+					_channels[channelName]->setLimitClients(10000); break;
+				case 3 : // o
+					if (nicknameToFd.find(modeGroup[OptionMode]) != nicknameToFd.end()){
+						clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels[_channels[channelName]] = Client::MEMBER;
+						OptionMode++;
+					}
+					else {
+						sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), channelName));
+					}
+					break;
+				case 4 : // k
+					_channels[channelName]->setPassword(""); break;
+
+				default :
+					sendMessage(fd, ERR_UMODEUNKNOWNFLAG(clientBook[fd]->getNickname()));
+			}
+		}
 	}
+	else
+		sendMessage(fd, ERR_UMODEUNKNOWNFLAG(clientBook[fd]->getNickname()));
 }
