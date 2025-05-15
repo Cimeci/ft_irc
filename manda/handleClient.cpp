@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleClient.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 10:48:06 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:10:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void Irc::handleClient(int client_socket, std::string input) {
 	size_t space1 = input.find(' ');
 	size_t space2 = input.find(' ', space1 + 1);
 	size_t space3 = input.find(':', space1);
+	// size_t space3Bis = input.find(' ', space2);
 	std::string command = input.substr(0, space1);
 
 	std::string target;
@@ -60,5 +61,8 @@ void Irc::handleClient(int client_socket, std::string input) {
 	}
 	else if (command == "QUIT") {
 		handleQuit(client_socket);
+	}
+	else if (command == "KICK") {
+		handleKick(client_socket, input.substr(space1, input.length()));
 	}
 }
