@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 12:41:06 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:25:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@
 # define RPL_YOURHOST(client, server) 				(" 002 " + client + " :Your host is " + server + ", running version 1\r\n")
 # define RPL_CREATED(client, date) 					(" 003 " + client + " :This server was created " + date + "\r\n")
 # define RPL_MYINFO(client, server) 				(" 004 " + client + " " + server + "<available user modes> <available channel modes> [<channel modes with a parameter>]\r\n")
-# define ERR_NOSUCHCHANNEL(nick, channel)			(" 403 " + nick + " " + channel + " :No such channel")
+# define ERR_NOSUCHCHANNEL(nick, channel)			(" 403 " + nick + " " + channel + " :No such channel\r\n")
 # define ERR_UNKNOWNCOMMAND(client, cmd) 			(" 421 " + client + " " + cmd + " :Unknown command\r\n")
 # define ERR_NONICKNAMEGIVEN(client) 				(" 431 " + client + " :No nickname given\r\n")
 # define ERR_NICKNAMEINUSE(client, nick) 			(" 433 " + client + " " + nick + " :Nickname is already in use\r\n")
+# define ERR_NOTONCHANNEL(client, channel)			(" 442 " + client + " " + channel + " :You're not on that channel\r\n")
 # define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " PASS :Not enough parameters\r\n")
 # define ERR_PASSWDMISMATCH(client) 				(" 464 " + client + " :Password incorrect\r\n")
 
-
-# define PART(nick, user, channel)							(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
+# define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
 
 // ilan //
 

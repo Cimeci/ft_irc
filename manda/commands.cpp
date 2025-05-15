@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 12:50:40 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:38:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,23 +125,25 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 
 void Irc::handlePart(int fd, const std::string& channelName) {
 	Client* client = clientBook[fd];
+	Channel *channel =_channels.find(channelName)->second;
 
 	if (channelName.empty()) {
-		std::string response = ERR_NEEDMOREPARAMS(client->getNickname());
+		std::string response = serverName + ERR_NEEDMOREPARAMS(client->getNickname());
 		send(fd, response.c_str(), response.length(), 0);
 	}
-	else if (_channels.find(channelName) != _channels.end() && isClientOnChannel(fd, channelName)) {
+	else if (_channels.find(channelName) != _channels.end() && channel->isClientInChannel(fd)) {
 		_channels[channelName]->removeClient(fd);
 		client->_clientChannels.erase(_channels[channelName]);
 		std::string response = PART(client->getNickname(), client->getUsername(), channelName);
 		std::cout << response << std::endl;
 		send(fd, response.c_str(), response.length(), 0);
 	}
-	else if (!isClientInChannel(fd) && _channels.find(channelName) != _channels.end()) {
-
+	else if (_channels.find(channelName) != _channels.end() && !channel->isClientInChannel(fd)) {
+		std::string response = serverName + ERR_NOTONCHANNEL(client->getNickname(), channelName);
+		send(fd, response.c_str(), response.length(), 0);
 	}
 	else {
-		std::string response = ERR_NOSUCHCHANNEL(client->getNickname(), channelName);
+		std::string response = serverName + ERR_NOSUCHCHANNEL(client->getNickname(), channelName);
 		send(fd, response.c_str(), response.length(), 0);
 	}
 }
