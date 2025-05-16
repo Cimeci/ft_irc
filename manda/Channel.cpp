@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 13:58:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:24:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ bool Channel::isClientInChannel(int client_fd) const {
 
 void Channel::broadcast(const std::string& message, int sender_fd) {
 	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->first != sender_fd)
+		if (it->first != sender_fd) {
 			send(it->first, message.c_str(), message.length(), 0);
+		}
 	}
 }
 
@@ -62,7 +63,7 @@ bool Channel::getInvitation() const { return _invitation; }
 void Channel::setIsOpTopic(const bool info) { _isOpTopic = info; }
 
 bool Channel::getIsOpTopic() const { return _isOpTopic; }
- 
+
 
 void Channel::setLimitClients(const size_t limit) { _limitClients = limit; }
 
@@ -71,7 +72,7 @@ size_t Channel::getLimitClients() const { return _limitClients; }
 
 std::string Channel::getModeInString() const{
 	std::string mode;
-	
+
 	if (_invitation)
 		mode += "i";
 	if (_isOpTopic)
