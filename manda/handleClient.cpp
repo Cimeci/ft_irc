@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 15:50:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:24:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void Irc::handleClient(int client_socket, std::string input) {
 	size_t space1 = input.find(' ');
 	size_t space2 = input.find(' ', space1 + 1);
 	size_t space3; for(space3 = space2; space3 < input.size() && input[space3] == ' '; space3++);
-	
+
 	std::cout << BLUE << "[DEBUG] " << RESET << "space1: " << space1 << " | space2: " << space2 << " | space3: " << space3 << std::endl;
 
 	std::string command = input.substr(0, space1);
@@ -71,6 +71,6 @@ void Irc::handleClient(int client_socket, std::string input) {
 		handleQuit(client_socket);
 	}
 	else if (command == "KICK") {
-		handleKick(client_socket, input.substr(space1, input.length()));
+		handleKick(client_socket, input.substr(space1 + 1, input.length()));
 	}
 }
