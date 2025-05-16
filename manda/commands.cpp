@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 16:52:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:20:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 		if (_channels[channelName]->getTopic().empty())
 			response = serverName + RPL_NOTOPIC(client->getNickname(), channelName);
 		else {
-			response = serverName + RPL_TOPIC(client->getNickname(), channelName, topic);
+			response = serverName + RPL_TOPIC(client->getNickname(), channelName, channel->getTopic());
 			send(fd, response.c_str(), response.length(), 0);
 			time_t tm = time(0);
 			std::ostringstream oss;
@@ -183,11 +183,15 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 		std::string response = serverName + ERR_NOTONCHANNEL(clientBook[fd]->getNickname(), channelName);
 		send(fd, response.c_str(), response.length(), 0);
 	}
-	if (_channels.find(channelName) != _channels.end()) {
+	else if (channel->getIsOpTopic() == true && client->getState() == 0) {
+		std::string response = serverName + ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName);
+		send(fd, response.c_str(), response.length(), 0);
+	}
+	else {
 		_channels[channelName]->setTopic(topic);
-
 		response = TOPIC(client->getNickname(), client->getUsername(), channelName, topic);
 		_channels[channelName]->broadcast(response, fd);
+		send(fd, response.c_str(), response.length(), 0);
 	}
 }
 
