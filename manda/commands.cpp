@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 10:20:28 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/16 10:24:08 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 			sendMessage(fd, ERR_BADCHANMASK(channelGroup[i]));
 			continue;
 		}
-		// if (!passChanGroup[j].empty())
-		// 	std::cout << BLUE << "[DEBUG] " << RESET << " if password" << passChanGroup[j] << " | " << _channels[channelGroup[i]]->getPassword() << std::endl;
 		if (_channels.find(channelGroup[i]) == _channels.end()) {
 			std::cout << BLUE << "[DEBUG] " << RESET << "here owner of the channel" << std::endl;
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
@@ -38,6 +36,9 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
 			if (!passChanGroup.empty() && !passChanGroup[j].empty())
 				j++;
+		}
+		else if (_channels[channelGroup[i]]->getInvitation() == true && client->_invitationChannels[_channels[channelGroup[i]]] == false){
+			sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
 		}
 		else if (!passChanGroup.empty() && j < passChanGroup.size() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
 			std::cout << BLUE << "[DEBUG] " << RESET << "go here for password" << std::endl;
@@ -47,9 +48,6 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 		}
 		else if (!_channels[channelGroup[i]]->getPassword().empty()){
 			sendMessage(fd, ERR_BADCHANNELKEY(client->getNickname(), channelGroup[i])); continue ;
-		}
-		else if (_channels[channelGroup[i]]->getInvitation() == true){
-			sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
 		}
 		else {
 			_channels[channelGroup[i]]->addClient(fd, *client);
@@ -302,6 +300,36 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 			}
 		}
 	}
+}
+
+void Irc::handleInvite(int fd, const std::string &client, const std::string &channelName){
+	if (client.empty() || channelName.empty()){
+		sendMessage(fd, ERR_NEEDMOREPARAMS(clientBook[fd]->getNickname())); return ;
+	}
+
+	if (nicknameToFd.find(client) == nicknameToFd.end()) {
+		sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), client)); return ;
+	}
+
+	if (_channels.find(channelName) == _channels.end()) {	
+		sendMessage(fd, ERR_NOSUCHCHANNEL(clientBook[fd]->getNickname(), channelName)); return ;
+	}
+	
+	if (clientBook[fd]->_clientChannels.find(_channels[channelName]) == clientBook[fd]->_clientChannels.end()){
+		sendMessage(fd, ERR_NOTONCHANNEL(clientBook[fd]->getNickname(), channelName)); return ;
+	}
+	
+	if (_channels[channelName]-> getInvitation() == true && clientBook[fd]->_clientChannels[_channels[channelName]] != Client::OPERATOR) {
+		sendMessage(fd, ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName)); return ;
+	}
+
+	if (clientBook[nicknameToFd[client]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[client]]->_clientChannels.end()){
+		sendMessage(fd, ERR_USERONCHANNEL(clientBook[fd]->getNickname(), client, channelName)); return ;
+	}
+	sendMessage(fd, RPL_INVITING(clientBook[fd]->getNickname(), client, channelName));
+	std::cout << clientBook[fd]->getNickname() + " has inivited " + client + " to the channel " + channelName << std::endl;
+	sendMessage(nicknameToFd[client], "You've just been invited by " + clientBook[fd]->getNickname() + " to join the channel " + channelName + "\r\n");
+	clientBook[nicknameToFd[client]]->_invitationChannels[_channels[channelName]] = true;
 }
 
 void	Irc::handleKick(int fd, std::string input) {
