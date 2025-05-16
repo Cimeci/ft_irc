@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 16:24:05 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:19:41 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define RPL_NOTOPIC(client, channel)				(serverName + " 331 " + client + " " + channel + " :No topic is set\r\n")
 # define RPL_TOPIC(client, channel, topic)			(serverName + " 332 " + client + " " + channel + " :" + topic + "\r\n")
-# define RPL_TOPICWHOTIME(client, channel, user, t)(" 333 " + client + " " + channel + " " + client + "!~" + user + "@localhost " + t + "\r\n")
+# define RPL_TOPICWHOTIME(client, channel, user, t)	(" 333 " + client + " " + channel + " " + client + "!~" + user + "@localhost " + t + "\r\n")
 # define RPL_CHANNELMODEIS(nick, channel, modes) 	(serverName + " 324 " + nick + " " + channel + " " + modes + "\r\n")
 # define RPL_INVITING(client, nick, channel) 		(serverName + " 341 " + client + " " + nick + " " + channel + "\r\n")
 # define RPL_NAMEREPLY(nick, symbol, channel)		(serverName + " 353 " + nick + " " + symbol + " " + channel + " :" + names + "\r\n")
@@ -49,9 +49,11 @@
 # define ERR_CHANOPRIVSNEEDED(nick, channel)		(serverName + " 482 " + nick + " " + channel + " :You're not channel operator\r\n")
 # define ERR_UMODEUNKNOWNFLAG(client)				(serverName + " 501 " + client + " :Unknown MODE flag\r\n")
 
+# define ERR_INVALIDMODEPARAM(client, channel, mode, param, reason)(serverName + " 696 " + client + " " + channel + " " + mode + " " + param + " :" + reason + "\r\n")
 
 # define MODE(nick, user, channel, mode, param)		(":" + nick + "!~" + user + "@localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 # define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
 # define KICK(nick, user, channel, target)			(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + nick + "\r\n")
 # define TOPIC(nick, user, channel, topic)			(":" + nick + "!~" + user + "@localhost TOPIC " + channel + " :" + topic + "\r\n")
 # define JOIN(nick, user, channel)					(":" + nick + "!~" + user + "@localhost JOIN " + channel + "\r\n")
+# define INVITE(nick, user, target, channel)		(":" + nick + "!~" + user + "@localhost INVITE " + target + " :" + channel + "\r\n")
