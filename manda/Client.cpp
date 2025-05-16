@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:22:14 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 12:06:48 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:33:27 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,6 @@ std::string Client::getRealname() const{return _realname;}
 Client::State Client::getState() const{return _state;}
 
 void Client::setState(State state){_state = state;}
-
-
-Client::banState Client::getBanState() const{return _banState;}
-
-void Client::setBanState(banState banState){_banState = banState;}
 
 char Client::getPrefix(Grade g){
 	switch (g){

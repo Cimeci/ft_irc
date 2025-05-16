@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 14:05:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:17:59 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ class Channel{
 		size_t getLimitClients() const;
 		
 		std::string getModeInString() const;
+
+		size_t getNbClients() const;
 
 		const std::map<int, Client *> &getClients() const;
 

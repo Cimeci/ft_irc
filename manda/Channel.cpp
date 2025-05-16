@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 13:10:21 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:24:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ size_t Channel::getLimitClients() const { return _limitClients; }
 
 
 std::string Channel::getModeInString() const{
-	std::string mode = "+";
+	std::string mode;
 
 	if (_invitation)
 		mode += "i";
@@ -81,8 +81,12 @@ std::string Channel::getModeInString() const{
 		mode += "l";
 	if (!_password.empty())
 		mode += "k";
+	if (!mode.empty())
+		mode = "+" + mode;
 	return mode;
 }
+
+size_t Channel::getNbClients() const{ return _clients.size(); }
 
 
 const std::map<int, Client *>& Channel::getClients() const {

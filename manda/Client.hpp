@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 16:34:45 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:26:13 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@ class Client {
 	        REGISTERED,
 			USER
 	    };
-		enum banState {
-			NOT,
-			BANEXCEPTION,
-			BAN,
-		};
 		enum Grade {
 			MEMBER = 0,
 			OPERATOR,
@@ -45,7 +40,6 @@ class Client {
 		std::string _buffer;
 		bool _shouldClose;
 	    State _state;
-		banState _banState;
 
 
 	public:
@@ -67,9 +61,6 @@ class Client {
 
 		State getState() const;
 		void setState(State state);
-
-		banState getBanState() const;
-		void setBanState(banState banState);
 
 		char getPrefix(Grade g);
 
