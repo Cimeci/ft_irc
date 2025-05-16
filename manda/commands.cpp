@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 10:24:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:58:03 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 		}
 
 		//* send confirmation //
-		sendMessage(fd, ":" + client->getNickname() + "!" + client->getUsername() + "@host" + " JOIN " + channelGroup[i] + "\r\n");
-
+		sendMessage(fd, JOIN(client->getNickname(), client->getUsername(), channelGroup[i]));
+		_channels[channelGroup[i]]->broadcast(JOIN(client->getNickname(), client->getUsername(), channelGroup[i]), fd);
 		// * send MODE //
 		handleMode(fd, channelGroup[i], "");
 
@@ -181,7 +181,7 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 		std::string response = serverName + ERR_NOTONCHANNEL(clientBook[fd]->getNickname(), channelName);
 		send(fd, response.c_str(), response.length(), 0);
 	}
-	else if (channel->getIsOpTopic() == true && client->getState() == 0) {
+	else if (channel->getIsOpTopic() == true && client->_clientChannels[_channels[channelName]] != Client::OPERATOR) {
 		std::string response = serverName + ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName);
 		send(fd, response.c_str(), response.length(), 0);
 	}
@@ -303,33 +303,34 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 }
 
 void Irc::handleInvite(int fd, const std::string &client, const std::string &channelName){
+	Channel* channel = _channels.find(channelName)->second;
 	if (client.empty() || channelName.empty()){
-		sendMessage(fd, ERR_NEEDMOREPARAMS(clientBook[fd]->getNickname())); return ;
+		sendMessage(fd, ERR_NEEDMOREPARAMS(clientBook[fd]->getNickname()));
 	}
-
-	if (nicknameToFd.find(client) == nicknameToFd.end()) {
-		sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), client)); return ;
+	else if (nicknameToFd.find(client) == nicknameToFd.end()) {
+		sendMessage(fd, ERR_NOSUCHNICK(clientBook[fd]->getNickname(), client));
 	}
-
-	if (_channels.find(channelName) == _channels.end()) {	
-		sendMessage(fd, ERR_NOSUCHCHANNEL(clientBook[fd]->getNickname(), channelName)); return ;
+	else if (_channels.find(channelName) == _channels.end()) {
+		sendMessage(fd, ERR_NOSUCHCHANNEL(clientBook[fd]->getNickname(), channelName));
 	}
-	
-	if (clientBook[fd]->_clientChannels.find(_channels[channelName]) == clientBook[fd]->_clientChannels.end()){
-		sendMessage(fd, ERR_NOTONCHANNEL(clientBook[fd]->getNickname(), channelName)); return ;
+	else if (clientBook[fd]->_clientChannels.find(_channels[channelName]) == clientBook[fd]->_clientChannels.end()){
+		sendMessage(fd, ERR_NOTONCHANNEL(clientBook[fd]->getNickname(), channelName));
 	}
-	
-	if (_channels[channelName]-> getInvitation() == true && clientBook[fd]->_clientChannels[_channels[channelName]] != Client::OPERATOR) {
-		sendMessage(fd, ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName)); return ;
+	else if (_channels[channelName]-> getInvitation() == true && clientBook[fd]->_clientChannels[_channels[channelName]] != Client::OPERATOR) {
+		sendMessage(fd, ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName));
 	}
-
-	if (clientBook[nicknameToFd[client]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[client]]->_clientChannels.end()){
+	else if (clientBook[nicknameToFd[client]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[client]]->_clientChannels.end()){
 		sendMessage(fd, ERR_USERONCHANNEL(clientBook[fd]->getNickname(), client, channelName)); return ;
 	}
-	sendMessage(fd, RPL_INVITING(clientBook[fd]->getNickname(), client, channelName));
-	std::cout << clientBook[fd]->getNickname() + " has inivited " + client + " to the channel " + channelName << std::endl;
-	sendMessage(nicknameToFd[client], "You've just been invited by " + clientBook[fd]->getNickname() + " to join the channel " + channelName + "\r\n");
-	clientBook[nicknameToFd[client]]->_invitationChannels[_channels[channelName]] = true;
+	else if (clientBook[fd]->_clientChannels[channel] != Client::OPERATOR) {
+		std::string response = serverName + ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName);
+		send(fd, response.c_str(), response.length(), 0);
+	}
+	else {
+		sendMessage(fd, RPL_INVITING(clientBook[fd]->getNickname(), client, channelName));
+		std::cout << clientBook[fd]->getNickname() + " has invited " + client + " to the channel " + channelName << std::endl;
+		clientBook[nicknameToFd[client]]->_invitationChannels[_channels[channelName]] = true;
+	}
 }
 
 void	Irc::handleKick(int fd, std::string input) {
@@ -337,12 +338,12 @@ void	Irc::handleKick(int fd, std::string input) {
 	std::string channelName;
 	std::string target;
 
-	if (ft_split(input, " ")[0] == "IRC") {
+	if (ft_split(input, " ").size() >= 3 && ft_split(input, " ")[0] == "IRC") {
 		channelName = ft_split(input, " ")[1];
 		target = ft_split(input, " ")[2];
 		target.erase(target.begin());
 	}
-	else {
+	else if (ft_split(input, " ").size() >= 2) {
 		channelName = ft_split(input, " ")[0];
 		target = ft_split(input, " ")[1];
 	}
@@ -375,7 +376,9 @@ void	Irc::handleKick(int fd, std::string input) {
 		int gradeTarget = clientBook[targetFd]->_clientChannels[_channels[channelName]];
 		if (gradeSource > gradeTarget || (gradeSource == 1 && gradeTarget == 1)) {
 			std::string response = KICK(clientBook[fd]->getNickname(), clientBook[fd]->getUsername(), channelName, target);
+			clientBook[fd]->_clientChannels.erase(channel);
 			_channels[channelName]->broadcast(response, fd);
+			send(fd, response.c_str(), response.length(), 0);
 		}
 		else {
 			std::string response = serverName + ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName);

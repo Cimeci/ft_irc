@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 10:24:20 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:42:59 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,4 @@
 # define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
 # define KICK(nick, user, channel, target)			(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + nick + "\r\n")
 # define TOPIC(nick, user, channel, topic)			(":" + nick + "!~" + user + "@localhost TOPIC " + channel + " :" + topic + "\r\n")
+# define JOIN(nick, user, channel)					(":" + nick + "!~" + user + "@localhost JOIN " + channel + "\r\n")
