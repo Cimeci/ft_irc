@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 17:26:26 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:56:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 					sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "+t", ""));
 					break;
 				case 2 : // l
-					if(!modeGroup[OptionMode].empty()){
+					if(modeGroup.size() == OptionMode || modeGroup[OptionMode].empty()){
 						sendMessage(fd, ERR_NEEDMOREPARAMS(client->getNickname()));
 					}
 					else if (atoi(modeGroup[OptionMode].c_str()) > 0 && atoi(modeGroup[OptionMode].c_str()) < 10000){
@@ -272,7 +272,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 					}
 					break;
 				case 3 : // o
-					if(modeGroup[OptionMode].empty()){
+					if(modeGroup.size() == OptionMode || modeGroup[OptionMode].empty()){
 						sendMessage(fd, (serverName + ERR_NEEDMOREPARAMS(client->getNickname())));
 					}
 					else if (nicknameToFd.find(modeGroup[OptionMode]) != nicknameToFd.end() && clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels.end())
@@ -288,7 +288,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 					}
 					break;
 				case 4 : // k
-					if (!modeGroup[OptionMode].empty()){
+					if (modeGroup.size() != OptionMode && !modeGroup[OptionMode].empty()){
 						_channels[channelName]->setPassword(modeGroup[OptionMode]);
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "+k", modeGroup[OptionMode]), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "+k", modeGroup[OptionMode]));
@@ -323,7 +323,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 					sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "-l", ""));
 					break;
 				case 3 : // o
-					if(!modeGroup[OptionMode].empty()){
+					if(modeGroup[OptionMode].empty()){
 						sendMessage(fd, ERR_NEEDMOREPARAMS(client->getNickname()));
 					}
 					else if (nicknameToFd.find(modeGroup[OptionMode]) != nicknameToFd.end() && clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels.end())
