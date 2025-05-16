@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 10:24:20 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:48:39 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@
 
 // ilan //
 
+# define ERR_CHANNELISFULL(nick, channel)			(serverName + " 471 " + nick + " " + channel + " :Cannot join channel (+l)\r\n")
 # define ERR_INVITEONLYCHAN(nick, channel)			(serverName + " 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n")
-# define ERR_BANNEDFROMCHAN(client, channel)		(serverName + " 474 " + client + " " + channel + " :Cannot join channel (+b)\r\n")
 # define ERR_BADCHANNELKEY(client, channel)			(serverName + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
 # define ERR_BADCHANMASK(channel) 					(serverName + " 476 " + channel + " :Bad Channel Mask\r\n")
 # define ERR_CHANOPRIVSNEEDED(nick, channel)		(serverName + " 482 " + nick + " " + channel + " :You're not channel operator\r\n")
 # define ERR_UMODEUNKNOWNFLAG(client)				(serverName + " 501 " + client + " :Unknown MODE flag\r\n")
 
+
+# define MODE(nick, user, channel, mode, param)		(":" + nick + "!~" + user + "@localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 # define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
 # define KICK(nick, user, channel, target)			(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + nick + "\r\n")
 # define TOPIC(nick, user, channel, topic)			(":" + nick + "!~" + user + "@localhost TOPIC " + channel + " :" + topic + "\r\n")

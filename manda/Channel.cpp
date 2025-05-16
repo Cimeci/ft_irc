@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 14:29:17 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:58:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool Channel::isClientInChannel(int client_fd) const {
 
 void Channel::broadcast(const std::string& message, int sender_fd) {
 	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-		if (it->first != sender_fd && it->second->getBanState() < 2)
+		if (it->first != sender_fd)
 			send(it->first, message.c_str(), message.length(), 0);
 	}
 }
@@ -70,7 +70,7 @@ size_t Channel::getLimitClients() const { return _limitClients; }
 
 
 std::string Channel::getModeInString() const{
-	std::string mode = "+";
+	std::string mode;
 	
 	if (_invitation)
 		mode += "i";
@@ -80,8 +80,12 @@ std::string Channel::getModeInString() const{
 		mode += "l";
 	if (!_password.empty())
 		mode += "k";
+	if (!mode.empty())
+		mode = "+" + mode;
 	return mode;
 }
+
+size_t Channel::getNbClients() const{ return _clients.size(); }
 
 
 const std::map<int, Client *>& Channel::getClients() const {
