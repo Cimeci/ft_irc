@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 17:19:41 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:44:38 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 # define ERR_NOTONCHANNEL(client, channel)			(" 442 " + client + " " + channel + " :You're not on that channel\r\n")
 # define ERR_USERONCHANNEL(client, nick, channel)	(" 443 " + client + " " + nick + " " + channel + " :is already on channel\r\n")
 
-
 # define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " :Not enough parameters\r\n")
 # define ERR_PASSWDMISMATCH(client) 				(" 464 " + client + " :Password incorrect\r\n")
 
@@ -53,7 +52,7 @@
 
 # define MODE(nick, user, channel, mode, param)		(":" + nick + "!~" + user + "@localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 # define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
-# define KICK(nick, user, channel, target)			(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + nick + "\r\n")
+# define KICK(nick, user, channel, target, comment)	(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + comment + "\r\n")
 # define TOPIC(nick, user, channel, topic)			(":" + nick + "!~" + user + "@localhost TOPIC " + channel + " :" + topic + "\r\n")
 # define JOIN(nick, user, channel)					(":" + nick + "!~" + user + "@localhost JOIN " + channel + "\r\n")
 # define INVITE(nick, user, target, channel)		(":" + nick + "!~" + user + "@localhost INVITE " + target + " :" + channel + "\r\n")

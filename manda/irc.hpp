@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 15:50:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:56:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,14 @@ class Irc{
 		void handleJoin(int fd, const std::string& channelName, const std::string& passChannel);
 		void handlePart(int fd, const std::string& channelName);
 		void handleTopic(int fd, const std::string& channelName, const std::string& topic);
-		void handleQuit(int fd);
+		void handleQuit(int fd, std::string reason);
 		void handleWho(int fd, const std::string& channelName);
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);
 		void handleMode(int fd, const std::string &channelName, const std::string &mode);
 		void handleInvite(int fd, const std::string &channelName, const std::string &client);
-		void handleKick(int fd, std::string input);
+		// void handleKick(int fd, std::string input);
+		void handleKick(int fd, std::string channel, std::string after);
+
 
 		void sendMessage(int fd, std::string msg);
 
