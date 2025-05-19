@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 17:56:32 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/19 11:13:47 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 	std::vector<std::string> modeGroup = ft_split(mode, " ");
 	if (client->_clientChannels[_channels[channelName]] != Client::OPERATOR){
 			sendMessage(fd, ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName));
+			return ;
 	}
 	size_t OptionMode = 1;
 	if (modeGroup[0][0] == '+')
@@ -280,7 +281,6 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 						clientBook[nicknameToFd[modeGroup[OptionMode]]]->_clientChannels[_channels[channelName]] = Client::OPERATOR;
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "+o", modeGroup[OptionMode]), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "+o", modeGroup[OptionMode]));
-						sendMessage(nicknameToFd[modeGroup[OptionMode]], MODE(client->getNickname(), client->getUsername() ,channelName, "+o", modeGroup[OptionMode]));
 						OptionMode++;
 					}
 					else {

@@ -1,0 +1,21 @@
+PART: <channel>{,<channel>} [<reason>]
+  - gerer plusieurs parametres et le raison
+  - message pas en broadcast, mais en fd unique
+  - quand on part un channel notre nom reste dans la list du channel
+
+TOPIC: <channel> [<topic>]
+  - /topic dans le menu du client -> segfault
+  - on peut savoir le topic d'un channel sans etre dessus (ERR_NOTONCHANNEL (442))
+  - /topic un channel qui n'existe pas -> segfault
+
+QUIT: [<reason>]
+  - gestion raison de QUIT
+  - faudrais un beau message dans le serveur quand qlq QUIT
+
+KICK: <channel> <user> *( "," <user> ) [<comment>]
+  - sur un user inconnu tu marque qu'il n'existe pas dans le channel (441) alors qu'il faudrais dire qu'il n'existe pas (403), j'imagine
+  - si j'essaye de kick un user inconnu, pas de message dans le channel alors que si j'essaye de kick le channel (/kick '#channel'), un message apparait
+  - on ne peux kick plusieurs personne en meme temp '/kick ilan,noa'
+  - pas de comment possible sur le kick
+  - si je kick une personne depuis un channel inexistant (/kick '#unknowChannel' noa) -> segfault
+  - [AMELIORATION] mettre l'erreur (482) en premiere, evite d'autres erreur alors que le client n'est pas op
