@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 10:24:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:31:14 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void Irc::handleClient(int client_socket, std::string input) {
         handleWho(client_socket, target);
     }
 	else if (command == "PRIVMSG") {
-		std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
         handlePrivMsg(client_socket, target, message);
     }
 	else if (command == "MODE") {
@@ -72,5 +71,8 @@ void Irc::handleClient(int client_socket, std::string input) {
 	}
 	else if (command == "KICK") {
 		handleKick(client_socket, input.substr(space1 + 1, input.length()));
+	}
+	else {
+		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(clientBook[client_socket]->getNickname(), command));
 	}
 }

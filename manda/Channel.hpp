@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 13:17:59 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:35:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class Channel{
 		void setPassword(const std::string& password);
 		std::string getPassword() const;
 
-		void setInvitaion(const bool info);
+		void setInvitation(const bool info);
 		bool getInvitation() const;
 
 		void setIsOpTopic(const bool info);
