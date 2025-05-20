@@ -3,11 +3,9 @@ NAME_BONUS = ircserv_bonus
 
 CXX = c++
 CXXFLAGS = -Wall -Werror -Wextra -std=c++98
-CXXFLAGSHELP = $(CXXFLAGS) -D HELP
 
 OBJDIR = obj
-OBJDIBONUS = obj_bonus
-OBJDIRHELP = obj_help
+OBJDIRBONUS = obj_bonus
 
 # SRCS SECTION #
 
@@ -22,12 +20,14 @@ SRC = manda/main.cpp\
 		manda/utils.cpp\
 
 SRC_BONUS = bonus/gamble.cpp\
+			bonus/Bot.cpp\
+			bonus/main.cpp\
+			bonus/botUtils.cpp\
 
 # OBJ SECTION #
 
-OBJBONUS = $(addprefix $(OBJDIRBONUS)/, $(SRC_BONUS:.cpp=.o))
 OBJ = $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
-OBJHELP = $(addprefix $(OBJDIRHELP)/, $(SRC:.cpp=.o))
+OBJBONUS = $(addprefix $(OBJDIRBONUS)/, $(SRC_BONUS:.cpp=.o))
 
 # CMD SECTION #
 
@@ -41,10 +41,10 @@ $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJDIR) $(OBJDIRHELP)
+	rm -rf $(OBJDIR) $(OBJDIRBONUS)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(NAME_BONUS)
 
 re: fclean all
 
@@ -52,22 +52,14 @@ re: fclean all
 
 bonus: $(NAME_BONUS)
 
-$(NAME_BONUS): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(NAME_BONUS) $(OBJ) $(OBJBONUS)
+$(NAME_BONUS): $(OBJBONUS)
+	$(CXX) $(CXXFLAGS) -o $(NAME_BONUS) $(OBJBONUS)
 
 $(OBJDIRBONUS)/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# HELP SECTION #
+rebonus: fclean bonus
 
-help: $(OBJHELP)
-	$(CXX) $(CXXFLAGSHELP) -o $(NAME) $(OBJHELP)
 
-$(OBJDIRHELP)/%.o: %.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGSHELP) -c $< -o $@
-
-relp: fclean help
-
-.PHONY: all clean fclean re help relp
+.PHONY: all clean fclean re bonus rebonus
