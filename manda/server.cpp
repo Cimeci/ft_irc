@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/14 11:27:30 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:01:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int Irc::server() {
 					_pollfds[i].events &= ~POLLOUT;
 				}
 				if (client->getShouldClose()) {
-					std::cout << "Closing client socket: " << _pollfds[i].fd << std::endl;
+					std::cout << client->getBuffer() << std::endl;
 					delete clientBook[_pollfds[i].fd];
 					clientBook.erase(_pollfds[i].fd);
 					close(_pollfds[i].fd);

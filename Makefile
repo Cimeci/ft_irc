@@ -50,7 +50,9 @@ re: fclean all
 
 # BONUS SECTION #
 
-bonus: $(NAME_BONUS)
+bonus: CXXFLAGS += -DBONUS
+bonus: $(OBJ) $(OBJBONUS)
+	$(CXX) $(CXXFLAGS) $^ -o $(NAME)
 
 $(NAME_BONUS): $(OBJBONUS)
 	$(CXX) $(CXXFLAGS) -o $(NAME_BONUS) $(OBJBONUS)

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 13:57:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:37:06 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,15 @@ class Irc{
 		void handleClient(int client_socket, std::string input);
 
 		void handleJoin(int fd, const std::string& channelName, const std::string& passChannel);
-		void handlePart(int fd, const std::string& channelName);
+		void handlePart(int fd, const std::string& channelName, const std::string& reason);
 		void handleTopic(int fd, const std::string& channelName, const std::string& topic);
-		void handleQuit(int fd);
+		void handleQuit(int fd, std::string reason);
 		void handleWho(int fd, const std::string& channelName);
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);
 		void handleMode(int fd, const std::string &channelName, const std::string &mode);
 		void handleInvite(int fd, const std::string &channelName, const std::string &client);
-		void handleKick(int fd, std::string input);
+		void handleKick(int fd, std::string channel, std::string after);
+
 
 		void sendMessage(int fd, std::string msg);
 

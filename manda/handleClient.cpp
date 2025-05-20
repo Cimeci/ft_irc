@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/19 13:31:14 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:37:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Irc::handleClient(int client_socket, std::string input) {
         handleJoin(client_socket, target, message);
     }
     else if (command == "PART") {
-        handlePart(client_socket, target);
+        handlePart(client_socket, target, message);
     }
     else if (command == "TOPIC") {
         handleTopic(client_socket, target, message);
@@ -67,10 +67,11 @@ void Irc::handleClient(int client_socket, std::string input) {
 		handleInvite(client_socket, target, message);
 	}
 	else if (command == "QUIT") {
-		handleQuit(client_socket);
+		handleQuit(client_socket, input.substr(space1 + 1, input.length()));
 	}
 	else if (command == "KICK") {
-		handleKick(client_socket, input.substr(space1 + 1, input.length()));
+		handleKick(client_socket, target, message);
+
 	}
 	else {
 		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(clientBook[client_socket]->getNickname(), command));
