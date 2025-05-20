@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleClient.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 10:34:54 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:37:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void Irc::handleClient(int client_socket, std::string input) {
         handleWho(client_socket, target);
     }
 	else if (command == "PRIVMSG") {
-		std::cout << YELLOW << "<server>" << RESET << " PRIVMSG " << target << " " << message << std::endl;
         handlePrivMsg(client_socket, target, message);
     }
 	else if (command == "MODE") {
@@ -73,5 +72,8 @@ void Irc::handleClient(int client_socket, std::string input) {
 	else if (command == "KICK") {
 		handleKick(client_socket, target, message);
 
+	}
+	else {
+		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(clientBook[client_socket]->getNickname(), command));
 	}
 }

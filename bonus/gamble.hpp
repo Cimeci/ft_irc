@@ -6,13 +6,14 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:55:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/06 10:51:53 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:17:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
 # include "../includes/colors.hpp"
+# include "botUtils.hpp"
 
 # include <iostream>
 # include <vector>
@@ -54,5 +55,7 @@ class Gamble{
 
 		std::string getName() const;
 		void setName(std::string name);
+
+		int playGamble(int fd);
 
 };

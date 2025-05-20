@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:17 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/15 13:43:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:56:19 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ std::vector<std::string> ft_split(std::string str, const std::string& c) {
 }
 
 bool Irc::valueExist(std::string value){
+	if (value == "GambleDealer")
+		return false;
 	for (std::map<int, Client*>::const_iterator it = clientBook.begin(); it != clientBook.end(); ++it) {
 		if (it->second && it->second->getNickname() == value)
 			return true;

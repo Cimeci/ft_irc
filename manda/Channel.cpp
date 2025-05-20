@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 16:24:25 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:35:54 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void Channel::setPassword(const std::string& password) { _password = password; }
 std::string Channel::getPassword() const { return _password; }
 
 
-void Channel::setInvitaion(const bool info) { _invitation = info; }
+void Channel::setInvitation(const bool info) { _invitation = info; }
 
 bool Channel::getInvitation() const { return _invitation; }
 

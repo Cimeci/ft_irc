@@ -1,18 +1,17 @@
 MODE:
-	- Segfault lorsqu'on fait -o sans spécifier de target
-	- on peut faire des - en boucle (le message devrait se mettre uniquement
-	si l'option est activée)
+	- Segfault lorsqu'on fait -o sans spécifier de target✅
+	- on peut faire des - en boucle (le message devrait se mettre uniquement si l'option est activée)✅
+
 WHO:
-	- Segfault quand le channel n'existe pas
-	- who doit fonctionner hors d'un channel (actuellement n'affiche rien)
+	- Segfault quand le channel n'existe pas✅
+	- who doit fonctionner hors d'un channel (actuellement n'affiche rien)✅
+
 INVITE:
-	- Ne tient pas compte de la limite +l
+
 PRIVMSG:
-	- pas de message d'erreur lorsque le destinataire n'existe pas / pas de texte
-	quand il y a un seul client
+	- pas de message d'erreur lorsque le destinataire n'existe pas / pas de texte quand il y a un seul client✅
 
-manque une message d'erreur pour une commande inconnue
-
+manque une message d'erreur pour une commande inconnue✅
 --------------------------------------------------
 
 PART: <channel>{,<channel>} [<reason>]
