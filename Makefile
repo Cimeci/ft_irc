@@ -25,8 +25,8 @@ SRC_BONUS = bonus/gamble.cpp\
 
 # OBJ SECTION #
 
-OBJBONUS = $(addprefix $(OBJDIRBONUS)/, $(SRC_BONUS:.cpp=.o))
 OBJ = $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
+OBJBONUS = $(addprefix $(OBJDIRBONUS)/, $(SRC_BONUS:.cpp=.o))
 OBJHELP = $(addprefix $(OBJDIRHELP)/, $(SRC:.cpp=.o))
 
 # CMD SECTION #
@@ -50,7 +50,9 @@ re: fclean all
 
 # BONUS SECTION #
 
-bonus: $(NAME_BONUS)
+bonus: CXXFLAGS += -DBONUS
+bonus: $(OBJ) $(OBJBONUS)
+	$(CXX) $(CXXFLAGS) $^ -o $(NAME)
 
 $(NAME_BONUS): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $(NAME_BONUS) $(OBJ) $(OBJBONUS)
