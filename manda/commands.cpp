@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/19 15:52:51 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/20 11:10:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,27 +125,37 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 	}
 }
 
-void Irc::handlePart(int fd, const std::string& channelName) {
+void Irc::handlePart(int fd, const std::string& channelName, const std::string& reason) {
 	Client* client = clientBook[fd];
-	Channel *channel =_channels.find(channelName)->second;
+	std::vector<std::string> channels;
+	std::string response;
 
 	if (channelName.empty()) {
-		std::string response = serverName + ERR_NEEDMOREPARAMS(client->getNickname());
+		response = serverName + ERR_NEEDMOREPARAMS(client->getNickname());
 		send(fd, response.c_str(), response.length(), 0);
+		return ;
 	}
-	else if (_channels.find(channelName) != _channels.end() && channel->isClientInChannel(fd)) {
-		_channels[channelName]->removeClient(fd);
-		client->_clientChannels.erase(_channels[channelName]);
-		std::string response = PART(client->getNickname(), client->getUsername(), channelName);
-		_channels[channelName]->broadcast(response, fd);
-		send(fd, response.c_str(), response.length(), 0);
-	}
-	else if (_channels.find(channelName) != _channels.end() && !channel->isClientInChannel(fd)) {
-		std::string response = serverName + ERR_NOTONCHANNEL(client->getNickname(), channelName);
-		send(fd, response.c_str(), response.length(), 0);
-	}
-	else {
-		std::string response = ERR_NOSUCHCHANNEL(client->getNickname(), channelName);
+	if (channelName.find(",") != std::string::npos)
+		channels = ft_split(channelName, ",");
+	else
+		channels.push_back(channelName);
+	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it) {
+		if (_channels.find(*it) != _channels.end()) {
+			Channel *channel = _channels.find(*it)->second;
+			if (channel->isClientInChannel(fd)) {
+				_channels[*it]->removeClient(fd);
+				client->_clientChannels.erase(_channels[*it]);
+				if (reason.empty())
+					response = PART(client->getNickname(), client->getUsername(), *it, "Leaving");
+				else
+					response = PART(client->getNickname(), client->getUsername(), *it, reason);
+				_channels[*it]->broadcast(response, fd);
+			}
+			else
+				response = serverName + ERR_NOTONCHANNEL(client->getNickname(), *it);
+		}
+		else
+			response = ERR_NOSUCHCHANNEL(client->getNickname(), *it);
 		send(fd, response.c_str(), response.length(), 0);
 	}
 }

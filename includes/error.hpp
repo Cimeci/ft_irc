@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/19 15:44:38 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/20 11:02:10 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 # define ERR_INVALIDMODEPARAM(client, channel, mode, param, reason)(serverName + " 696 " + client + " " + channel + " " + mode + " " + param + " :" + reason + "\r\n")
 
 # define MODE(nick, user, channel, mode, param)		(":" + nick + "!~" + user + "@localhost MODE " + channel + " " + mode + " " + param + "\r\n")
-# define PART(nick, user, channel)					(":" + nick + "!~" + user + "@localhost PART " + channel + " :Leaving\r\n")
+# define PART(nick, user, channel, reason)			(":" + nick + "!~" + user + "@localhost PART " + channel + " :" + reason + "\r\n")
 # define KICK(nick, user, channel, target, comment)	(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + comment + "\r\n")
 # define TOPIC(nick, user, channel, topic)			(":" + nick + "!~" + user + "@localhost TOPIC " + channel + " :" + topic + "\r\n")
 # define JOIN(nick, user, channel)					(":" + nick + "!~" + user + "@localhost JOIN " + channel + "\r\n")

@@ -16,7 +16,6 @@ manque une message d'erreur pour une commande inconnue
 --------------------------------------------------
 
 PART: <channel>{,<channel>} [<reason>]
-  - gerer plusieurs parametres et le raison
 
 TOPIC: <channel> [<topic>]
 
