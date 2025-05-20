@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:37:06 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:10:49 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 # include "../includes/colors.hpp"
 # include "../includes/error.hpp"
+
+# ifndef BONUS
+	# include "../bonus/gamble.hpp"
+# endif
 
 # include <unistd.h>
 # include <arpa/inet.h>
@@ -54,7 +58,6 @@ class Irc{
 		std::map<std::string, Channel *> _channels;
 		std::map<std::string, int> nicknameToFd;
 
-
 	public:
 		Irc(): serverName(":irc.climbers.ni") {}
 		bool setParameters(const int port, const std::string password);
@@ -79,12 +82,16 @@ class Irc{
 		void handleMode(int fd, const std::string &channelName, const std::string &mode);
 		void handleInvite(int fd, const std::string &channelName, const std::string &client);
 		void handleKick(int fd, std::string channel, std::string after);
+		
+		// # ifndef BONUS
+		// 	void handleGamble(int fd);
+		// # endif
 
 
 		void sendMessage(int fd, std::string msg);
 
 		bool valueExist(std::string value);
-		void successfulRegistration(int client_socket);
+		void successfulRegistration(int client_socket);\
 };
 
 std::vector<std::string> ft_split(std::string str, const std::string &c);

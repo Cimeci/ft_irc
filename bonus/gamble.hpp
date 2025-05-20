@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:55:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:17:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:18:11 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ class Gamble{
 	private:
 		size_t bank;
 		std::vector<std::string> cardsPack;
-		std::string _name;
 	
 	public:
 		Gamble(size_t bank);
@@ -52,9 +51,6 @@ class Gamble{
 		bool isDoublonCard(std::string card);
 
 		int gambleAtoi(char nb);
-
-		std::string getName() const;
-		void setName(std::string name);
 
 		int playGamble(int fd);
 

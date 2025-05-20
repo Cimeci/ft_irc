@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:36:56 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:36:58 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 	size_t j = 0;
 	for (size_t i = 0; i < channelGroup.size(); i++)
 	{
-		std::cout << BLUE << "[DEBUG] " << RESET << "channelName='" << channelName << "'" << std::endl;
 		if (channelGroup[i].empty()) {
 			sendMessage(fd, ERR_BADCHANMASK(channelGroup[i]));
 			continue;
@@ -55,7 +54,9 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 			_channels[channelGroup[i]]->addClient(fd, *client);
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::MEMBER;
 		}
-
+		
+		client->_invitationChannels[_channels[channelGroup[i]]] = false;
+		
 		//* send confirmation //
 		sendMessage(fd, JOIN(client->getNickname(), client->getUsername(), channelGroup[i]));
 		_channels[channelGroup[i]]->broadcast(JOIN(client->getNickname(), client->getUsername(), channelGroup[i]), fd);
@@ -425,6 +426,10 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 	std::string response;
 	size_t space;
 
+	#ifdef BONUS
+		if (clientBook[fd]->getNickname() == "GambleDealer")
+			clientBook[fd]->_clientChannels[_channels["#GambleRoom"]] = Client::OPERATOR;
+	#endif
 	channelName = input;
 	space = after.find(" ");
 	target = after.substr(0, space);

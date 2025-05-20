@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:41:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:09:30 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:28:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ const char* GAMBLEEXCEPTION::what() const throw() {
 GAMBLEEXCEPTION::~GAMBLEEXCEPTION() throw() {}
 
 
-Gamble::Gamble(size_t bank): bank(bank), _name("player"){setCardsPack();}
+Gamble::Gamble(size_t bank): bank(bank){setCardsPack();}
 Gamble::~Gamble(){}
 
 size_t Gamble::getBank() const {return bank;}
@@ -138,9 +138,6 @@ int Gamble::gambleAtoi(char nb){
 	return (10 + i);
 }
 
-std::string Gamble::getName() const{return _name;}
-void Gamble::setName(std::string name){_name = name;}
-
 bool isStringDigit(std::string &str){
 	for (size_t i = 0; i < str.size(); i++)
 	{
@@ -148,6 +145,12 @@ bool isStringDigit(std::string &str){
 			return false;
 	}
 	return true;
+}
+
+std::string getCommand(std::string input){
+	input = input.substr(input.find(":", 1) + 1);
+	input = input.substr(0, input.find("\r\n"));
+	return input;
 }
 
 int Gamble::playGamble(int fd)
@@ -164,24 +167,19 @@ int Gamble::playGamble(int fd)
 	std::string handlePlay3[2] = {"INSIDE", "OUTSIDE"};
 	std::string handlePlay4[4] = {"CLUB", "HEART", "SPADE", "DIAMOND"};
 	
-	sendChannelMessage(fd, "--------------------------- command ---------------------------\r\n");
-	sendChannelMessage(fd, "'PLAY' : for play camble\n'EXIT' : for exit\n'NAME' : for set your player's name\r\n");
-	sendChannelMessage(fd, "--------------------------- command ---------------------------\r\n");
+	std::cout << "PRESENTATION" << std::endl;
+	sendChannelMessage(fd, "--------------------------- command ---------------------------");
+	sendChannelMessage(fd, "'PLAY' : for play camble");
+	sendChannelMessage(fd, "'EXIT' : for exit");
+	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 	while (line != "EXIT"){
 		if (gamble.getBank() == 0){
-			sendChannelMessage (fd, "[you're broke, goodbye]\r\n"); return(1);
+			sendChannelMessage (fd, "[you're broke, goodbye]"); return(1);
 		}
 		gamble.clearCardPack();
 		gamble.setCardsPack();
-		line = recvMessage(fd);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		if (line == "NAME")
-		{
-			sendChannelMessage(fd, "Your name :\r\n");
-			name = recvMessage(fd);
-			gamble.setName(name);
-		}
+		line = getCommand(recvMessage(fd));
+		// std::cout << "'" << line << "'" << std::endl;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -191,142 +189,142 @@ int Gamble::playGamble(int fd)
 			multiple = 1;
 			try {
 
-				sendChannelMessage(fd, "Your have " + size_t_to_string(gamble.getBank()) + " in your bank account\r\n");
+				sendChannelMessage(fd, "Your have " + size_t_to_string(gamble.getBank()) + " in your bank account");
 				while (!isStringDigit(input) || atoi(input.c_str()) > (int)gamble.getBank()){
-					sendChannelMessage(fd, "Enter the amount to bet : \r\n");
-					input = recvMessage(fd);
+					sendChannelMessage(fd, "Enter the amount to bet : ");
+					input = getCommand(recvMessage(fd));
 				}
 				bet = atoi(input.c_str());
-				sendChannelMessage(fd, "Let's Play\r\n");
+				sendChannelMessage(fd, "Let's Play");
 					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				sendChannelMessage(fd, "For a x2, Bet the card is 'RED' or 'BLACK' ?\r\n");
+				sendChannelMessage(fd, "For a x2, Bet the card is 'RED' or 'BLACK' ?");
 				while (1)
 				{
-					input = recvMessage(fd);
+					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {throw std::bad_exception();}
 					gamble.setBank(gamble.getBank() - bet);
 					if (input == "RED")
 					{
 						if (gamble.getCard(0)[0] == 'R'){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "");
 							multiple = 2;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't red " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't red " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "");}
 					}
 					else if (input == "BLACK")
 					{
 						if (gamble.getCard(0)[0] == 'B'){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "");
 							multiple = 2;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't black " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't black " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + "");}
 					}
 				}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-				sendChannelMessage(fd, "For a x3, Bet the card is 'LOWER' or 'UPPER' than the actual card : " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + " ?\r\n");
+				sendChannelMessage(fd, "For a x3, Bet the card is 'LOWER' or 'UPPER' than the actual card : " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + " ?");
 				while (1)
 				{
-					input = recvMessage(fd);
+					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
 					if (input == "LOWER")
 					{
 						if (gamble.gambleAtoi(gamble.getCard(1)[2]) <= gamble.gambleAtoi(gamble.getCard(0)[2])){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "");
 							multiple = 3;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't lower " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't lower " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "");}
 					}
 					else if (input == "UPPER")
 					{
 						if (gamble.gambleAtoi(gamble.getCard(1)[2]) >= gamble.gambleAtoi(gamble.getCard(0)[2])){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "");
 							multiple = 3;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't upper " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card isn't upper " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "");}
 					}
 				}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				sendChannelMessage(fd, "For a x5, Bet the card is 'INSIDE' or 'OUTSIDE' than actuals cards are: " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + " ?\r\n");
+				sendChannelMessage(fd, "For a x5, Bet the card is 'INSIDE' or 'OUTSIDE' than actuals cards are: " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + " ?");
 				while (1)
 				{
-					input = recvMessage(fd);
+					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
 					int max = gamble.gambleAtoi(gamble.getCard(0)[2]) > gamble.gambleAtoi(gamble.getCard(1)[2]) ? gamble.gambleAtoi(gamble.getCard(0)[2]) : gamble.gambleAtoi(gamble.getCard(1)[2]);
 					int min = gamble.gambleAtoi(gamble.getCard(0)[2]) < gamble.gambleAtoi(gamble.getCard(1)[2]) ? gamble.gambleAtoi(gamble.getCard(0)[2]) : gamble.gambleAtoi(gamble.getCard(1)[2]);
 					if (input == "INSIDE")
 					{
 						if (gamble.gambleAtoi(gamble.getCard(2)[2]) <= max && gamble.gambleAtoi(gamble.getCard(2)[2]) >= min){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + "");
 							multiple = 5;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + " isn't inside "+ gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + " isn't inside "+ gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "");}
 					}
 					else if (input == "OUTSIDE")
 					{
 						if (!(gamble.gambleAtoi(gamble.getCard(2)[2]) <= max && gamble.gambleAtoi(gamble.getCard(2)[2]) >= min)){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + "");
 							multiple = 5;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + " isn't outside "+ gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(2)) + " isn't outside "+ gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + "");}
 					}
 				}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				sendChannelMessage(fd, "For a x10, Bet the card is a 'CLUB', 'HEART', 'SPADE' or 'DIAMOND' ?\r\n");
+				sendChannelMessage(fd, "For a x10, Bet the card is a 'CLUB', 'HEART', 'SPADE' or 'DIAMOND' ?");
 				while (1)
 				{
-					input = recvMessage(fd);
+					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
 					if (input == "CLUB")
 					{
 						if (gamble.getCard(3)[1] == 'C'){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "");
 							multiple = 10;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a club\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a club");}
 					}
 					else if (input == "HEART")
 					{
 						if (gamble.getCard(3)[1] == 'H'){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "");
 							multiple = 10;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a heart\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a heart");}
 					}
 					else if (input == "SPADE")
 					{
 						if (gamble.getCard(3)[1] == 'S'){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "");
 							multiple = 10;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a spade\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a spade");}
 					}
 					else if (input == "DIAMOND")
 					{
 						if (gamble.getCard(3)[1] == 'D'){
-							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "\r\n");
+							sendChannelMessage(fd, "SUCCESS : card is " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + "");
 							multiple = 10;
 							break;
 						}
-						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a diamond\r\n");}
+						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a diamond");}
 					}
 				}
-				sendChannelMessage(fd, "GG you win the max bet\r\n");
+				sendChannelMessage(fd, "GG you win the max bet");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

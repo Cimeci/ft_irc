@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:04:39 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:29:17 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:34:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,40 @@ void Bot::dealer(){
 	while (1)
 	{
 		std::string input = recvMessage(_socketFd);
-		if (!input.empty())
-			return ;
-		std::string sender = input.substr(1, input.find(" "));
-		std::string message = input.substr(input.find(":", 1));
-		if (message == "GAMBLE")
-		{
-			sendMessage(_socketFd, "JOIN #GambleRoom\r\n");
-			sendMessage(_socketFd, "MODE +il 2\r\n");
-			sendMessage(_socketFd, "INVITE " + sender + " #GambleRoom\r\n");
-			Gamble gamble = Gamble(100);
-			if (gamble.playGamble(_socketFd))
-				sendMessage(_socketFd, "KICK #GambleRoom " + sender + "\r\n");
+		if (!input.empty()){
+			std::cout << input << std::endl;
+			std::string sender = input.substr(1, input.find(" ") - 1);
+			std::string message = input.substr(input.find(":", 1) + 1);
+			if (message == "GAMBLE\r\n")
+			{
+				sendMessage(_socketFd, "JOIN #GambleRoom\r\n");
+			
+				while (1){
+					input = recvMessage(_socketFd);
+					if (input.find("JOIN #GambleRoom") != std::string::npos &&
+						input.find("GambleDealer") != std::string::npos)
+						break;
+				}
+			
+				sendMessage(_socketFd, "MODE #GambleRoom +il 2\r\n");
+				sendMessage(_socketFd, "INVITE " + sender + " #GambleRoom\r\n");
+				sendChannelMessage(_socketFd, "NEW GAMBLE GAME");
+			
+				while (1){
+					input = recvMessage(_socketFd);
+					if (input.find("JOIN #GambleRoom") != std::string::npos &&
+						input.find(sender) != std::string::npos)
+						break;
+				}
+			
+				std::cout << "ready to play" << std::endl;
+				Gamble gamble(100);
+				if (gamble.playGamble(_socketFd))
+				{
+					std::cout << "have to kick the player" << std::endl;
+					sendMessage(_socketFd, "KICK #GambleRoom " + sender + "\r\n");
+				}
+			}
 		}
 	}
 }

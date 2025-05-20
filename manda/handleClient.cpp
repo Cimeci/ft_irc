@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:37:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:00:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,12 @@ void Irc::handleClient(int client_socket, std::string input) {
 	}
 	else if (command == "KICK") {
 		handleKick(client_socket, target, message);
-
 	}
+	// # ifndef BONUS
+	// 	else if (command == "GAMBLE") {
+	// 		handleGamble(client_socket);
+	// 	}
+	// # endif
 	else {
 		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(clientBook[client_socket]->getNickname(), command));
 	}
