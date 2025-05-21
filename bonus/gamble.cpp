@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gamble.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:41:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 11:07:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:31:23 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,13 +166,14 @@ int Gamble::playGamble(int fd)
 	std::string handlePlay2[2] = {"LOWER", "UPPER"};
 	std::string handlePlay3[2] = {"INSIDE", "OUTSIDE"};
 	std::string handlePlay4[4] = {"CLUB", "HEART", "SPADE", "DIAMOND"};
-	
+
 	std::cout << "PRESENTATION" << std::endl;
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 	sendChannelMessage(fd, "'PLAY' : for play camble");
 	sendChannelMessage(fd, "'EXIT' : for exit");
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 	while (line != "EXIT" && g_bot->getStop() == false){
+		input = ",";
 		if (gamble.getBank() == 0){
 			sendChannelMessage (fd, "[you're broke, goodbye]"); return(1);
 		}
@@ -189,15 +190,16 @@ int Gamble::playGamble(int fd)
 			multiple = 1;
 			try {
 
-				sendChannelMessage(fd, "Your have " + size_t_to_string(gamble.getBank()) + " in your bank account");
+				sendChannelMessage(fd, "You have " + size_t_to_string(gamble.getBank()) + " in your bank account");
 				while (!isStringDigit(input) || atoi(input.c_str()) > (int)gamble.getBank()){
+					if (input == "OUT") {throw std::bad_exception();}
 					if (g_bot->getStop() != false){ return (1); }
 					sendChannelMessage(fd, "Enter the amount to bet : ");
 					input = getCommand(recvMessage(fd));
 				}
 				bet = atoi(input.c_str());
 				sendChannelMessage(fd, "Let's Play");
-					
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				sendChannelMessage(fd, "For a x2, Bet the card is 'RED' or 'BLACK' ?");
@@ -329,14 +331,22 @@ int Gamble::playGamble(int fd)
 						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a diamond");}
 					}
 				}
-				sendChannelMessage(fd, "GG you win the max bet");
+				std::stringstream ss;
+				ss << gamble.getBank();
+				std::string message = "You have won the max bet ! You have " + ss.str() + " in your bank account.";
+				sendChannelMessage(fd, message);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				gamble.setBank(gamble.getBank() + bet * multiple);
 			}
 			catch (GAMBLEEXCEPTION &e){sendChannelMessage(fd, e.what());}
-			catch (std::bad_exception &e){}
+			catch (std::bad_exception &e){
+				std::stringstream ss;
+				ss << gamble.getBank();
+				std::string message = "You have exited your current game with " + ss.str() + " in your bank account.";
+				sendChannelMessage(fd, message);
+			}
 		}
 	}
 	return (1);

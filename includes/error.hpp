@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 11:02:10 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:53:58 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define ERR_NOSUCHCHANNEL(client, channel)			(serverName + " 403 " + client + " " + channel + " :No such channel\r\n")
 # define ERR_NORECIPIENT(client)					(serverName + " 411 " + client + " :No recipient given (PRIVMSG)\r\n")
 # define ERR_NOTEXTTOSEND(client)					(serverName + " 412 " + client + " :No text to send\r\n")
-# define ERR_UNKNOWNCOMMAND(client, cmd) 			(" 421 " + client + " " + cmd + " :Unknown command\r\n")
+# define ERR_UNKNOWNCOMMAND(client, cmd) 			(serverName + " 421 " + client + " " + cmd + " :Unknown command\r\n")
 # define ERR_NONICKNAMEGIVEN(client) 				(" 431 " + client + " :No nickname given\r\n")
 # define ERR_NICKNAMEINUSE(client, nick) 			(" 433 " + client + " " + nick + " :Nickname is already in use\r\n")
 # define ERR_USERNOTINCHANNEL(client, nick, channel)(" 441 " + client + " " + nick + " " + channel + " :They aren't on that channel\r\n")
