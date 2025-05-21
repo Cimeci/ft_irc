@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:33:56 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 11:02:10 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/21 16:51:14 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 // ilan //
 
 # define ERR_CHANNELISFULL(nick, channel)			(serverName + " 471 " + nick + " " + channel + " :Cannot join channel (+l)\r\n")
+# define ERR_UNKNOWNMODE(client, mode)				(serverName + " 472 " + client + " " + mode + " :is unknown mode char to me\r\n")
 # define ERR_INVITEONLYCHAN(nick, channel)			(serverName + " 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n")
 # define ERR_BADCHANNELKEY(client, channel)			(serverName + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
 # define ERR_BADCHANMASK(channel) 					(serverName + " 476 " + channel + " :Bad Channel Mask\r\n")

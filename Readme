@@ -1,7 +1,7 @@
 ilan :
 - illegal channel name ? ✅
-- gérer différents modes /mode #a o-k+l aussi les differents users pour +o
-- /mode #a +tk salut test (les modes ne s'activent pas correctement)
+- gérer différents modes /mode '#a o-k+l' aussi les differents users pour +o
+- /mode '#a +tk salut test' (les modes ne s'activent pas correctement) ✅
 
 noa :
 - gérer les kick multiples ?

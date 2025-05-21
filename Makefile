@@ -18,8 +18,9 @@ SRC = manda/main.cpp\
       manda/Client.cpp\
       manda/Channel.cpp\
       manda/handleClient.cpp\
+      manda/utils.cpp\
       manda/commands.cpp\
-      manda/utils.cpp
+	  manda/commands/handleMode.cpp\
 
 SRC_BOT = bonus/gamble.cpp\
           bonus/Bot.cpp\
