@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 14:20:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:45:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ static Irc *g_irc = NULL;
 
 void handleSigintServer(int sig){
 	if (sig == 2){}
+	std::cout << std::endl << std::endl;
+	std::cout << RED << "+-----------------------------+" << RESET << std::endl;
+	std::cout << RED << "| SHUT DOWN OF THE IRC SERVER |" << RESET << std::endl;
+	std::cout << RED << "+-----------------------------+" << RESET << std::endl;
 	std::map<int, Client *>& clientBook = g_irc->getClientBook();
 	for (std::map<int, Client *>::iterator it = clientBook.begin(); it != clientBook.end(); it++){
 		close(it->first);
@@ -33,6 +37,9 @@ void handleSigintServer(int sig){
 }
 
 int Irc::server() {
+	std::cout << GREEN << "+-----------------------------+" << RESET << std::endl;
+	std::cout << GREEN << "|  LAUNCH OF THE IRC SERVER   |" << RESET << std::endl;
+	std::cout << GREEN << "+-----------------------------+" << RESET << std::endl;
 	g_irc = this;
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 13:00:31 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:37:05 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,10 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 				else
 					response = PART(client->getNickname(), client->getUsername(), *it, reason);
 				_channels[*it]->broadcast(response, fd);
-				if (_channels[channelName]->getNbClients() < 1)
+				if (_channels[channelName]->getNbClients() < 1) {
 					delete _channels[channelName];
+					_channels.erase(channelName);
+				}
 			}
 			else
 				response = serverName + ERR_NOTONCHANNEL(client->getNickname(), *it);
@@ -217,6 +219,7 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 
 void Irc::handleQuit(int fd, std::string reason) {
 	Client *client = clientBook[fd];
+	std::map<std::string, Channel *>::iterator tmp;
 
 	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); )
 	{
@@ -228,8 +231,10 @@ void Irc::handleQuit(int fd, std::string reason) {
 				++cit;
 		}
 		if (channel->getNbClients() < 1) {
-			delete channel;
-			_channels.erase(it++);
+			delete it->second;
+			tmp = it;
+    		++it;
+        	_channels.erase(tmp);	
 		}
 		else
 			++it;
@@ -492,8 +497,10 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 			send(fd, response.c_str(), response.length(), 0);
 			_channels[channelName]->removeClient(targetFd);
 			clientBook[targetFd]->_clientChannels.erase(channel);
-			if (_channels[channelName]->getNbClients() < 1)
+			if (_channels[channelName]->getNbClients() < 1) {
 				delete _channels[channelName];
+				_channels.erase(channelName);
+			}
 		}
 		else {
 			response = serverName + ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName);
