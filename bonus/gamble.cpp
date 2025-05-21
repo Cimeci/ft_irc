@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:41:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 18:28:44 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 11:07:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ int Gamble::playGamble(int fd)
 	sendChannelMessage(fd, "'PLAY' : for play camble");
 	sendChannelMessage(fd, "'EXIT' : for exit");
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
-	while (line != "EXIT"){
+	while (line != "EXIT" && g_bot->getStop() == false){
 		if (gamble.getBank() == 0){
 			sendChannelMessage (fd, "[you're broke, goodbye]"); return(1);
 		}
@@ -191,6 +191,7 @@ int Gamble::playGamble(int fd)
 
 				sendChannelMessage(fd, "Your have " + size_t_to_string(gamble.getBank()) + " in your bank account");
 				while (!isStringDigit(input) || atoi(input.c_str()) > (int)gamble.getBank()){
+					if (g_bot->getStop() != false){ return (1); }
 					sendChannelMessage(fd, "Enter the amount to bet : ");
 					input = getCommand(recvMessage(fd));
 				}
@@ -202,6 +203,7 @@ int Gamble::playGamble(int fd)
 				sendChannelMessage(fd, "For a x2, Bet the card is 'RED' or 'BLACK' ?");
 				while (1)
 				{
+					if (g_bot->getStop() != false) return (1);
 					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {throw std::bad_exception();}
 					gamble.setBank(gamble.getBank() - bet);
@@ -231,6 +233,7 @@ int Gamble::playGamble(int fd)
 				sendChannelMessage(fd, "For a x3, Bet the card is 'LOWER' or 'UPPER' than the actual card : " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + " ?");
 				while (1)
 				{
+					if (g_bot->getStop() != false) return (1);
 					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
 					if (input == "LOWER")
@@ -257,6 +260,7 @@ int Gamble::playGamble(int fd)
 				sendChannelMessage(fd, "For a x5, Bet the card is 'INSIDE' or 'OUTSIDE' than actuals cards are: " + gamble.getEmojiFromCardCode(gamble.getCard(0)) + " and " + gamble.getEmojiFromCardCode(gamble.getCard(1)) + " ?");
 				while (1)
 				{
+					if (g_bot->getStop() != false) return (1);
 					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
 					int max = gamble.gambleAtoi(gamble.getCard(0)[2]) > gamble.gambleAtoi(gamble.getCard(1)[2]) ? gamble.gambleAtoi(gamble.getCard(0)[2]) : gamble.gambleAtoi(gamble.getCard(1)[2]);
@@ -285,6 +289,7 @@ int Gamble::playGamble(int fd)
 				sendChannelMessage(fd, "For a x10, Bet the card is a 'CLUB', 'HEART', 'SPADE' or 'DIAMOND' ?");
 				while (1)
 				{
+					if (g_bot->getStop() != false) return (1);
 					input = getCommand(recvMessage(fd));
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
 					if (input == "CLUB")
@@ -334,5 +339,5 @@ int Gamble::playGamble(int fd)
 			catch (std::bad_exception &e){}
 		}
 	}
-	return (0);
+	return (1);
 }

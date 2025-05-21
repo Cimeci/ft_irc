@@ -3,7 +3,7 @@ NAME_BONUS   = ircserv_bonus
 NAME_BOT     = gamble
 
 CXX          = c++
-CXXFLAGS     = -Wall -Werror -Wextra -std=c++98
+CXXFLAGS     = -Wall -Werror -Wextra -std=c++98 -g
 
 OBJDIR       = obj
 OBJDIRBONUS  = obj_bonus

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 17:10:49 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:40:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <algorithm>
 # include <sstream>
 # include <ctime>
+# include <csignal>
 
 class Client;
 class Channel;
@@ -51,6 +52,7 @@ class Irc{
 		int server_socket;
 		int _port;
 		std::string _password;
+		bool _serverRunning;
 
 		std::vector<pollfd> _pollfds;
 
@@ -59,10 +61,16 @@ class Irc{
 		std::map<std::string, int> nicknameToFd;
 
 	public:
-		Irc(): serverName(":irc.climbers.ni") {}
+		Irc(): serverName(":irc.climbers.ni"), _serverRunning(true) {}
 		bool setParameters(const int port, const std::string password);
 
 		int server();
+
+		int getServerSocket() const {return server_socket;}
+		std::map<int, Client *>& getClientBook() {return clientBook;}
+		std::map<std::string, Channel *>& getChannels() {return _channels;}
+		std::vector<pollfd>& getPollFds() {return _pollfds;}
+		
 
 		void handleNewConnection();
 		void handleClientData(int fd);
@@ -91,7 +99,8 @@ class Irc{
 		void sendMessage(int fd, std::string msg);
 
 		bool valueExist(std::string value);
-		void successfulRegistration(int client_socket);\
+		void successfulRegistration(int client_socket);
+		void setServerRunning(bool b) {_serverRunning = b;}
 };
 
 std::vector<std::string> ft_split(std::string str, const std::string &c);

@@ -6,13 +6,13 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:22:14 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/16 13:33:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:48:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
-Client::Client() : _username(""), _nickname(""), _hostname("0"), _servername("*"), _realname("realname"), _state(CONNECTED) {}
+Client::Client() : _username(""), _nickname(""), _hostname("0"), _servername("*"), _realname("realname"), _buffer(""), _shouldClose(false),  _state(CONNECTED) {}
 
 Client::~Client() {}
 

@@ -6,13 +6,34 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 14:56:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 14:20:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "irc.hpp"
 
+static Irc *g_irc = NULL;
+
+void handleSigintServer(int sig){
+	if (sig == 2){}
+	std::map<int, Client *>& clientBook = g_irc->getClientBook();
+	for (std::map<int, Client *>::iterator it = clientBook.begin(); it != clientBook.end(); it++){
+		close(it->first);
+		delete(it->second);
+	}
+	clientBook.clear();
+	std::map<std::string, Channel *>& channels = g_irc->getChannels();
+	for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end(); it++){
+		delete(it->second);
+	}
+	channels.clear();
+	std::vector<pollfd>& pollFds = g_irc->getPollFds();
+	pollFds.clear();
+	g_irc->setServerRunning(false);
+}
+
 int Irc::server() {
+	g_irc = this;
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
 		std::cerr << "Error socket()\n";
@@ -41,20 +62,25 @@ int Irc::server() {
     }
 
 	// Initialize poll structure for server socket
-	pollfd server_pollfd;
+	struct pollfd server_pollfd;
+	std::memset(&server_pollfd, 0, sizeof(server_pollfd));
 	server_pollfd.fd = server_socket;
 	server_pollfd.events = POLLIN;
 	_pollfds.push_back(server_pollfd);
 
 	std::cout << "Server listening on port " << _port << "...\n";
 
-	while (true) {
+	std::signal(SIGINT, handleSigintServer);
+	while (_serverRunning == true) {
+		for (size_t i = 0; i < _pollfds.size(); ++i)
+        	_pollfds[i].revents = 0;
 		int poll_count = poll(_pollfds.data(), _pollfds.size(), -1);
 		if (poll_count < 0) {
-			std::cerr << "Error poll()\n";
 			break;
 		}
 		for (size_t i = 0; i < _pollfds.size(); i++) {
+			if (_pollfds[i].revents == 0)
+            	continue;
 			if (_pollfds[i].revents & POLLOUT) {
 				Client* client = clientBook[_pollfds[i].fd];
 				if (!client) continue;
@@ -69,6 +95,7 @@ int Irc::server() {
 					close(_pollfds[i].fd);
 					_pollfds.erase(_pollfds.begin() + i);
 					--i;
+					continue;
 				}
 			}
 			if (_pollfds[i].revents & POLLIN) {
@@ -114,12 +141,12 @@ void Irc::handleNewConnection() {
     pollfd new_pollfd;
     new_pollfd.fd = new_client;
     new_pollfd.events = POLLIN;
+	new_pollfd.revents = 0;
     _pollfds.push_back(new_pollfd);
 
     // Create and store new client object
     Client *new_client_obj = new Client();
     clientBook[new_client] = new_client_obj;
-
 	std::string openInput = "Please enter PASS / NICK / USER to connect\r\n";
 	send(new_client, openInput.c_str(), openInput.length(), 0);
 }

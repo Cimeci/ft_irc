@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 17:36:58 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:00:31 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 			continue;
 		}
 		if (_channels.find(channelGroup[i]) == _channels.end()) {
+			#ifdef BONUS
+				if (channelName == "#GambleRoom" && client->getNickname() != "GambleDealer") {
+					sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
+				}
+			#endif
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
 			_channels[channelGroup[i]]->addClient(fd, *client);
 			client->_clientChannels[_channels[channelGroup[i]]] = Client::OPERATOR;
@@ -152,6 +157,8 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 				else
 					response = PART(client->getNickname(), client->getUsername(), *it, reason);
 				_channels[*it]->broadcast(response, fd);
+				if (_channels[channelName]->getNbClients() < 1)
+					delete _channels[channelName];
 			}
 			else
 				response = serverName + ERR_NOTONCHANNEL(client->getNickname(), *it);
@@ -211,7 +218,7 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 void Irc::handleQuit(int fd, std::string reason) {
 	Client *client = clientBook[fd];
 
-	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); )
 	{
 		Channel *channel = it->second;
 		for (std::map<int, Client *>::iterator cit = channel->getClients().begin(); cit != channel->getClients().end(); ){
@@ -220,12 +227,18 @@ void Irc::handleQuit(int fd, std::string reason) {
 			else
 				++cit;
 		}
+		if (channel->getNbClients() < 1) {
+			delete channel;
+			_channels.erase(it++);
+		}
+		else
+			++it;
 	}
 	client->markForClose();
-	if (reason.empty())
+	if (reason.find(" ") == std::string::npos)
 		client->setBuffer("Quit :Leaving\r\n");
 	else
-		client->setBuffer("Quit " + reason + "\r\n");
+		client->setBuffer("Quit " + reason.substr(reason.find(" ") + 1, reason.length()) + "\r\n");
 	for (size_t i = 0; i < _pollfds.size(); ++i) {
 		if (_pollfds[i].fd == fd) {
 			_pollfds[i].events |= POLLOUT;
@@ -442,6 +455,8 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 	if (after[space + 1] == ':') space++;
 	comment = after.substr(space + 1);
 
+	std::cout << "[DEBUG] " << channelName + " | " + target + " | " + comment << std::endl;
+
 	if (channelName.empty() || target.empty()) {
 		response = serverName + ERR_NEEDMOREPARAMS(clientBook[fd]->getNickname());
 		send(fd, response.c_str(), response.length(), 0);
@@ -477,6 +492,8 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 			send(fd, response.c_str(), response.length(), 0);
 			_channels[channelName]->removeClient(targetFd);
 			clientBook[targetFd]->_clientChannels.erase(channel);
+			if (_channels[channelName]->getNbClients() < 1)
+				delete _channels[channelName];
 		}
 		else {
 			response = serverName + ERR_CHANOPRIVSNEEDED(clientBook[fd]->getNickname(), channelName);
