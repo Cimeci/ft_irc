@@ -21,8 +21,6 @@
 
 ## Structure de mon IRC
 
-# Structure du projet
-
 ```txt
 ft_irc
 ├── bonus/
@@ -59,6 +57,86 @@ ft_irc
 ├── Makefile
 └── README.md
 ```
+# Manda
+
+# BONUS
+```bash
+make bonus
+./ircserver_bonus <port> <password>
+```
+
+Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
+
+## Le principe du jeux
+-> tu mise une somme
+-> le groupier tire 4 cartes aleatoires allant de As(1) a roi(13)
+-> le jeux se base sur 4 tours
+-> si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
+-> entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
+
+Premier tour:
+- tu parie pour un X2 de ta mise de depart sur es ce que la premiere des 4 cartes est rouge ou noir
+  
+Deuxieme tour:
+- tu parie pour un X3 de ta mise de depart sur es ce que la deuxieme carte est inferieur ou superieur a la premier carte
+- si la deuxieme carte est la meme que la premiere tu gagne dans tous les cas ce tour
+
+Troisieme tour:
+- tu parie pour un X5 de ta mise de depart sur es ce que la troisieme carte est entre la premiere et la deuxieme ou en dehors
+- si la troisieme carte est la meme que la premiere ou la deuxieme la troisieme carte est concidere comme a l'interieur
+
+Quatrieme tour:
+- tu parie pour un X10 de ta mise de depart sur qu'elle est le symbole de la quatrieme carte, entre carreaux(club), coeur(heart), pique(spade), trefle(diamond)
+
+apres le quatrieme tour le jeux s'arrete et tu peux recommencer jusqu'a que tu arretes ou tu n'a plus d'argent  
+
+## Comment jouer sur mon Irc
+```bash
+./gamble <port> <password>
+```
+cette executable va lancer le client **GambleDealer**, qui va creer un salon **GambleRoom**, mettre une limitation de 2 personnes et va activer le mode *invation only* et va attendre qu'un autre client lui envoie en message prive ```GAMBLE```
+
+nc
+```nc
+PRIVMSG GambleDealer GAMBLE
+```
+hexchat
+```hexchat
+/privmsg GambleDealer GAMBLE
+```
+
+par la suite le client va recevoir une invatation a rejoindre le channel GambleRoom, il pourra donc faire
+
+nc
+```nc
+JOIN #GambleRoom
+```
+hexchat
+```hexchat
+/join #GambleRoom
+```
+
+Une fois arrive dans le channel il recevra se message :
+```
+--------------------------- command ---------------------------
+'PLAY' : for play camble
+'EXIT' : for exit
+'BANK' : for bank amount
+--------------------------- command ---------------------------
+```
+Chaque Client commence avec 100$ sur son compte si il tombe a 0 il se fera expluser du channel et devra se faire re-inviter et recevra gracieusement 10$.
+
+Apres avoir fais
+nc
+```
+PRIVMSG #GambleRoom PLAY
+```
+hexchat
+```
+/privmsg #gambleRoom PLAY
+```
+ou
+```PLAY``` directement depuis le channel #gambleRoom
 
 ## Licence
 
