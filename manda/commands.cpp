@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 16:39:18 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 13:57:20 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,6 +287,10 @@ void Irc::handleInvite(int fd, const std::string &client, const std::string &cha
 }
 
 void	Irc::handleKick(int fd, std::string input, std::string after) {
+
+	if (clientBook.find(fd) == clientBook.end())
+		return;
+
 	int targetFd = -1;
 	std::string channelName;
 	std::string target;

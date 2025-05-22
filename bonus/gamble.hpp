@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:55:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 11:00:42 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:49:55 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ class Gamble{
 
 		int gambleAtoi(char nb);
 
-		int playGamble(int fd);
+		int playGamble(int fd, Gamble gamble);
 
 };
