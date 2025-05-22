@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   irc.hpp                                            :+:      :+:    :+:   */
+/*   Irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 13:40:36 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:16:48 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
-# include "../includes/colors.hpp"
-# include "../includes/error.hpp"
+# include "../../includes/colors.hpp"
+# include "IRCMacros.hpp"
 
 # ifndef BONUS
-	# include "../bonus/gamble.hpp"
+	# include "../../bonus/gamble.hpp"
 # endif
 
 # include <unistd.h>
@@ -37,8 +37,8 @@
 class Client;
 class Channel;
 
-# include "Client.hpp"
-# include "Channel.hpp"
+# include "../Client/Client.hpp"
+# include "../Channel/Channel.hpp"
 
 # define PORT 6667
 # define BUFFER_SIZE 1024
@@ -91,11 +91,6 @@ class Irc{
 		void handleInvite(int fd, const std::string &channelName, const std::string &client);
 		void handleKick(int fd, std::string channel, std::string after);
 		
-		// # ifndef BONUS
-		// 	void handleGamble(int fd);
-		// # endif
-
-
 		void sendMessage(int fd, std::string msg);
 
 		bool valueExist(std::string value);

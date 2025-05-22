@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handleClient.cpp                                   :+:      :+:    :+:   */
+/*   handleCommands.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 13:52:16 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 12:15:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:12:59 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "irc.hpp"
-# include "Channel.hpp"
-# include "Client.hpp"
-
-void Irc::sendMessage(int fd, std::string msg)
-{
-	std::cout << ORANGE << "[SEND] " << RESET << msg;
-	send(fd, msg.c_str(), msg.length(), 0);
-}
+# include "includes/Irc.hpp"
+# include "Channel/Channel.hpp"
+# include "Client/Client.hpp"
 
 void Irc::handleClient(int client_socket, std::string input) {
 

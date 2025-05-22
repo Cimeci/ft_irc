@@ -1,0 +1,1908 @@
+irc.choopa.net
+efnet.port80.se
+irc.underworld.no
+efnet.deic.eu
+
+------------------------------------------------------------------------------------------------------
+
+protocole expérimental version 1993 : 1459 (https://www.rfc-editor.org/rfc/rfc1459.html)
+
+protocole informationnnel version 2000 : 2812 (https://www.rfc-editor.org/rfc/rfc2812)
+
+------------------------------------------------------------------------------------------------------
+
+FORMAT DES MESSAGES :
+
+	:<prefix><space><command><space><params>
+
+avec prefix :
+
+	<servername><nick>!<user>@host
+
+<channel> inclut #
+
+------------------------------------------------------------------------------------------------------
+
+ATTENTION :
+
+	- HEXCHAT accepte / x espace COMMANDE
+
+------------------------------------------------------------------------------------------------------
+
+CONNECTION REGISTRATION
+
+------------------------------------------------------------------------------------------------------
+
+PASS tests :
+
+Un mdp aura préalablement été défini au lancement du serveur.
+
+	- syntaxe : PASS <mdp>
+
+✅	- vérifier la bonne prise en compte des "mdp" et 'mdp' et "'mdp'" et '"mdp"'
+
+✅	- un client s'identifie sans mdp : PASS
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 !@localhost PASS :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 461 !@localhost PASS :Not enough parameters"
+
+✅	- un client s'identifie avec un mdp constitué de plusieurs espaces (les espaces sont skip)
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 !@localhost PASS :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 461 !@localhost PASS :Not enough parameters"
+
+✅	- un client s'identifie avec un mdp faux :
+		-> un message s'affiche dans le terminal du client (ERR_PASSWDMISMATCH) :
+		": 464 !@localhost :Password incorrect"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 464 !@localhost :Password incorrect"
+
+✅	- un client s'identifie avec la commande PASS suivie de plusieurs espaces puis du mdp
+	correct :
+		-> les espaces sont skip et le mdp est accepté
+
+✅	- un client s'identifie avec la commande PASS précédée d'un ou plusieurs espaces puis du
+	mdp correct :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son mdp
+		-> HEXCHAT EFnet reconnaît la commande si les espaces sont placés après le "/"
+		-> ft_IRC :
+		pas de message
+
+✅	- un client s'identifie avec la commande PASS suivie du mdp correct et de plusieurs autres
+	mots :
+		-> seul le premier mot (le mdp) est pris en compte
+
+✅	- un client a déjà saisi le bon mdp :
+		-> un message s'affiche dans le terminal du client (ERR_ALREADYREGISTRED) :
+		~ version 2812 :
+		": 462 !@localhost :Unauthorized command (already registered)"
+		~ version 1459 :
+		": 462 !@localhost :You may not reregister"
+		-> ft_IRC :
+⚠️		": 462 !@localhost :Unauthorized command (already registered)"
+
+✅	- un client s'identifie en saisissant son nickname avant son mdp :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son mdp
+
+✅	- un client s'identifie en saisissant son username avant son mdp ou avant son nickname :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son mdp ou son nickname
+
+------------------------------------------------------------------------------------------------------
+
+NICK tests :
+
+	- syntaxe : NICK <nickname>
+	
+	- caractères spéciaux : "[", "]", "\", "`", "_", "^", "{", "|", "}"
+
+✅	- un client s'identifie sans nickname : NICK
+		-> un message s'affiche dans le terminal du client (ERR_NONICKNAMEGIVEN) :
+		": 431 !@localhost * :No nickname given"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 431 !@localhost * :No nickname given"
+
+	- un client s'identifie avec un nickname qui ne répond pas aux règles. Ces règles sont les
+	suivantes :
+		~ version 2812 :
+✅			- 1 caractère alphabétique ou spécial au début,
+			- au maximum 8 caractères alphabétiques, spéciaux ou numériques ensuite,
+		~ version 1459 :
+			- 1 caractère alphabétique ou spécial au début,
+			- des caractères alphabétiques, spéciaux ou numériques ensuite,
+		
+		-> un message s'affiche dans le terminal du client (ERR_ERRONEUSNICKNAME) :
+✅		": 432 !@localhost <nick> :Erroneus nickname"
+		NB : pas de différence entre les versions en ce qui concerne les messages
+
+		~ version 2812 :
+✅			- les caractères au delà du 9ème ne sont pas pris en compte, et aucune
+			erreur ne s'affiche.
+		~ version 1459 :
+			- pas de restriction
+
+✅	- un client s'identifie avec la commande NICK suivie de plusieurs espaces puis du
+	nickname :
+		-> les espaces sont skip
+	
+✅	- un client s'identifie avec la commande NICK précédée d'un ou plusieurs espaces puis du
+	nickname :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son nickname
+		-> HEXCHAT EFnet reconnaît la commande si les espaces sont placés après le "/"
+
+✅	- un client s'identifie en saisissant son nickname avant son mdp :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son mdp
+
+✅	- un client s'identifie avec un nickname déjà utilisé :
+		-> un message s'affiche dans le terminal du client (ERR_NICKNAMEINUSE) :
+		": 433 * !@localhost <nick> :Nickname is already in use"
+		NB : pas de différence entre les versions
+		-> messsage ft_IRC :
+		": 433 * !@localhost <nick> :Nickname is already in use"
+		
+✅	- un client redéfinit son nickname :
+		-> c'est possible et les mêmes règles s'applique que dans le cas de
+		l'identification initiale
+
+✅	- un client quitte le serveur et se reconnecte avec son nickname précédent :
+		-> c'est possible
+
+------------------------------------------------------------------------------------------------------
+
+USER tests :
+
+	- syntaxe : USER <username>
+
+✅	- un client s'identifie sans username : USER
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 !@localhost USER :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+⚠️		": 461 <nick>!@localhost USER :Not enough parameters"
+
+✅	- un client s'identifie avec la commande USER suivie de plusieurs espaces puis du
+	username :
+		-> les espaces sont skip
+
+✅	- un client s'identifie avec la commande USER précédée d'un ou plusieurs espaces puis du
+	username :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son nickname
+		-> HEXCHAT EFnet reconnaît la commande si les espaces sont placés après le "/"
+		
+✅	- un client s'identifie en saisissant son username avant son mdp et / ou avant son
+	nickname :
+		-> aucun message ne s'affiche dans le terminal du client
+		-> le client doit saisir son mdp et / ou son nickname
+
+✅	- un client a déjà saisi son username :
+		-> un message s'affiche dans le terminal du client (ERR_ALREADYREGISTRED) :
+		~ version 2812 :
+		": 462 !@localhost :Unauthorized command (already registered)"
+		~ version 1459 :
+		": 462 !@localhost :You may not reregister"
+		-> message ft_IRC :
+⚠️		": 462 PAP!PAP@localhost ::Unauthorized command (already registered)"
+		
+✅	- un client s'identifie avec un username déjà utilisé :
+		-> c'est possible
+
+------------------------------------------------------------------------------------------------------
+
+Connection Registration tests :
+
+✅	- un client s'est correctement identifié :
+		-> un message s'affiche dans le terminal du client (RPL_WELCOME) :
+		": 001 Welcome to the Internet Relay Network <nick>!<user>@<host>"
+		-> message ft_IRC :
+⚠️		": 001 Welcome to the IRC world, <nick>!<user>@<host>"
+
+
+✅	- un user quitte le serveur puis se reconnecte
+
+✅	- un client est en cours d'identification :
+		- PASS saisi,
+		- NICK saisi avec un nickname déjà utilisé,
+		- USER saisi.
+
+✅	- un client est en cours d'identification :
+		- PASS saisi,
+		- USER saisi.
+		- NICK saisi avec un nickname déjà utilisé.
+
+✅	- un client est en cours d'identification :
+		- PASS non saisi,
+		- NICK non saisi,
+		- USER non saisi,
+	et CTRL C
+
+✅	- un client est en cours d'identification :
+		- PASS non saisi,
+		- NICK non saisi,
+		- USER non saisi,
+	et CTRL C
+	puis se reconnecte.
+
+✅	- un client est en cours d'identification :
+		- PASS non saisi,
+		- NICK non saisi,
+		- USER non saisi,
+	et CTRL Z
+	puis fg.
+
+------------------------------------------------------------------------------------------------------
+
+PRIVMSG tests :
+
+	- syntaxe : PRIVMSG <target> <message>
+	avec <message> pouvant contenir des espaces si le premier caractère est ':'
+	avec <target> est un autre user ou un channel
+	
+✅	- un user envoie un message sans arguments : PRIVMSG
+		-> un message s'affiche dans le terminal du client (ERR_NORECIPIENT) :
+		": 411 <nick>!<user>@localhost :No recipient given (PRIVMSG)"
+		NB : pas de différence entre les versions
+		NB : cette erreur devrait s'appliquer quand le destinataire n'a pas été spéficié mais
+		il semblerait que HEXCHAT EFnet considère que le message est absent avec la commande
+		suivante : PRIVMSG :message
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 411 <nick>!<user>@localhost :No recipient given (PRIVMSG)"
+
+✅	- un user envoie un message sans spécifier de destinataire : PRIVMSG :<message>
+		-> un message devrait s'afficher dans le terminal du client (ERR_NORECIPIENT) :
+		": 411 <nick>!<user>@localhost :No recipient given (PRIVMSG)"
+		NB : cette erreur devrait s'appliquer quand le destinataire n'a pas été spéficié mais
+		il semblerait que HEXCHAT EFnet considère que le message est absent avec la commande
+		suivante : PRIVMSG :message
+⚠️		-> pas de message à envoyer ": 412 <nick>!<user>@localhost :No text to send"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 412 <nick>!<user>@localhost :No text send"
+
+✅	- un user envoie un message sans <message> : PRIVMSG <target>
+		-> un message s'affiche dans le terminal du client (ERR_NOTEXTTOSEND) :
+		": 412 <nick>!<user>@localhost :No text to send"
+		NB : pas de différence entre les versions		
+		-> message ft_IRC :
+		": 412 <nick>!<user>@localhost :No text send"
+
+✅	- un user saisit la commande suivie de plusieurs espaces entre les arguments :
+		-> les espaces sont skip
+
+✅	- un user saisit la commande PRIVMSG précédée d'un ou plusieurs espaces puis des
+	arguments :
+		-> la commande est inconnue
+		-> un message s'affiche dans le terminal du client (ERR_UNKNOWNCOMMAND) :
+		": 421 <nick>!<user>@localhost <command> :Unknown command"
+		-> HEXCHAT EFnet reconnaît la commande si les espaces sont placés après le "/"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 421 <nick>!<user>@localhost <command> :Unknown command"
+
+✅	- un user envoie un message à un destinataire qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHNICK) :
+		": 401 <nick>!<user>@localhost <nickname> :No such nick/channel"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 401 <nick>!<user>@localhost <nickname> :No such nick/channel"
+
+✅	- un user envoie un message à un channel auquel il n'appartient pas :
+		-> un message s'affiche dans le terminal du client (ERR_CANNOTSENDTOCHAN) :
+		": 404 <nick>!<user>@localhost <channel> :Cannot send to channel"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 404 <nick>!<user>@localhost <channel> :Cannot send to channel"
+
+✅	- un user (sender) envoie un message à un autre user (receiver):
+		-> un message s'affiche dans le terminal du receiver :
+		"<nickSender> :<message>"
+		-> un message s'affiche dans le terminal du receiver :
+		":<nickSender>!<user>@localhost PRIVMSG <nickReceiver> :<message>"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		":<nickSender>!<user>@localhost PRIVMSG <nickReceiver> :<message>"
+
+✅	- un user (sender) envoie un message à un channel auquel il appartient :
+		-> un message s'affiche dans le terminal de l'ensemble des membres du channel
+		(y compris le sender) :
+		"<nickSender> :<message>"
+		-> un message s'affiche dans le terminal de l'ensemble des membres du channel
+		(sauf le sender) :
+		":<nickSender>!<user>@localhost <nicknameSender> PRIVMSG <channel> :<message>"
+		NB : pas de différence entre les versions
+
+✅	- un user peut s'envoyer un message à lui-même :
+		-> c'est possible
+
+
+
+Tests random :
+
+✅	- essayer d'envoyer un PRIVMSG à un channel après l'avoir quitté
+
+✅	- essayer d'envoyer un PRIVMSG à un destinataire qui a QUIT le serveur
+	
+⚠️	- essayer d'envoyer un PRIVMSG qui contient un ou plusieurs '\n'
+	
+Non traité :
+
+	414 ERR_WILDTOPLEVEL
+
+	301 RPL_AWAY	
+
+	413 ERR_NOTOPLEVEL
+
+	407 ERR_TOOMANYTARGETS
+
+------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------------------------------------------------------------------
+
+QUIT
+
+------------------------------------------------------------------------------------------------------
+QUIT tests :
+
+	- un client quit le serveur :
+		-> un message peut s'afficher (pas de numeric reply dans la doc) :
+❌		": <nick>!<user>@localhost QUIT :Gone to have lunch"
+
+------------------------------------------------------------------------------------------------------
+
+❌CHANNELS (page 4)
+
+	- longueur max de la string utilisée pour le nom :
+		~ version 2812 : 50 caractères
+		~ version 1459 : 200 caractères
+
+	- restrictions concernant le nom :
+		- space (ASCII 32),
+		- CTRL G (ASCII 7),
+		- virgule (ASCII 44).
+	NB : pas de différence entre les versions
+
+
+	- la casse :
+		~ version 2812 : insensible à la casse (validé sur HEXCHAT EFnet)
+		~ version 1459 : pas de spécification
+
+------------------------------------------------------------------------------------------------------
+
+JOIN tests :
+
+	- syntaxe : JOIN <channel>
+	
+	- un client crée un channel public : JOIN #channel
+
+✅		-> le nom du channel doit être précédé d'un # pour JOIN
+
+✅		-> un message de confirmation s'affiche dans le terminal du client (pas de numeric
+		reply dans la doc) :
+		":<nick>!<user>@localhost JOIN <channel>"
+		~ version HEXCHAT EFnet :
+		":<nick>!<user>@localhost JOIN :<channel>"
+		-> message ft_IRC :
+		":<nick>!<user>@localhost JOIN <channel>"
+		
+		-> un message s'affiche dans le terminal du client (RPL_TOPIC ou RPL_NOTOPIC). Dans
+		la mesure où il s'agit d'un nouveau channel, à priori aucun topic n'a encore été
+		défini :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set" 
+		": 332 <nick>!<user>@localhost TOPIC <channel> :topic
+❌		-> message ft_IRC :
+		aucun message
+		NB : la doc ne prévoit pas d'inclure TOPIC
+
+✅		-> un message s'affiche dans le terminal du client (RPL_NAMREPLY) :
+		~ version 2812 :
+		": 353 <nick>!<user>@localhost = <channel> :@<nick>"
+		NB : le "=" est utilisé lorsque le channel est public
+		~ version 1459 :
+		": 353 <nick>!<user>@localhost <channel> :@<nick>"
+		NB : le "@" est utilisé pour l'opérateur
+⚠️		-> message ft_IRC :
+		": 353 <nick> = <channel> :@<nick>"
+
+		
+		-> un message s'affiche dans le terminal du client (RPL_ENDOFNAMES) :
+		": 366 <nick>!<user>@localhost <channel> :End of /NAMES list"
+❌		-> message ft_IRC :
+		aucun message
+
+	- un client rejoint un channel existant :
+
+✅		-> le nom du channel doit être précédé d'un # pour JOIN
+
+//		-> un message indiquant toutes les commandes à sa disposition s'affiche dans le
+//		terminal du nouveau membre :
+//		JOIN, MODE, KICK, PART, QUIT, PRIVMSG / NOTICE
+
+		-> un message de confirmation s'affiche dans le terminal du nouveau membre (pas de
+		numeric reply dans la doc).
+✅		Ce message peut également être envoyé aux autres membres (ce qui dispenserait du
+		message "has joined the channel" ?) :
+✅		":<nick>!<user>@localhost JOIN <channel>"
+		~ version HEXCHAT EFnet :
+		":<nick>!<user>@localhost JOIN :<channel>"
+
+//		-> le client renvoie un MODE <channel> et un WHO <channel>
+		
+		-> le serveur répond dans le journal (RPL_NAMREPLY):
+		": 353 <nick>!<user>@localhost = <channel> :<nick> @<nick>"		
+⚠️		-> message ft_IRC :
+		": 353 <nick> = <channel> :@<operateurNick> <member1Nick> <member2Nick> <nick>"
+
+
+		
+✅		-> le serveur répond dans le journal (RPL_ENDOFNAMES):
+		": 366 <nick>!<user>@localhost <channel> :End of /NAMES list"		
+
+//		-> le serveur répond dans le journal (RPL_CHANNELMODEIS):
+//		": 324 <nick>!<user>@localhost <channel> +tn"
+//		-> le serveur répond dans le journal (???):
+//		": 329 <nick>!<user>@localhost <channel> suite numérique"
+//		-> le serveur répond dans le journal avec chaque nickname (RPL_WHOREPLY):
+//		": 352 <nick>!<user>@localhost <channel> : ~<user> localhost <serveur> <nick>
+//			H :0 <realname>"
+//		": 352 <nick>!<user>@localhost <channel> : ~<user> localhost <serveur> <nick>
+//			H :0 <realname>"
+//		-> le serveur répond dans le journal (RPL_ENDOFWHO):
+//		": 315 <nick>!<user>@localhost <channel> :End of /WHO list"
+		
+		-> un message de confirmation peut s'afficher dans le terminal du nouveau membre :
+		": <nick>!<user>@localhost" has joined the channel"
+❌		-> message ft_IRC :
+		pas de message
+
+		-> les autres membres peuvent être informés de la présence d'un nouveau membre :
+		": <nick>!<user>@localhost" has joined the channel"
+❌		-> message ft_IRC :
+		pas de message
+
+		-> un message s'affiche dans le terminal du nouveau membre (RPL_TOPIC ou
+		RPL_NOTOPIC).
+		": 331 <nick>!<user>@localhost <channel> :No topic is set" 
+		": 332 <nick>!<user>@localhost TOPIC <channel> :topic
+		NB : la doc ne prévoit pas d'inclure TOPIC
+❌		-> message ft_IRC :
+		pas de message
+
+		-> un message s'affiche dans le terminal des membres du channel ou seulement du
+		client -> à priori uniquement dans le terminal du client qui vient de JOIN
+		(RPL_NAMREPLY) :
+		~ version 2812 :
+		": 353 <nick>!<user>@localhost = <channel> :@<nick>"
+		NB : le "=" est utilisé lorsque le channel est public
+		~ version 1459 :
+		": 353 <nick>!<user>@localhost <channel> :@<nick>"
+		NB : le "@" est utilisé pour l'opérateur
+⚠️		-> message ft_IRC :
+		": 353 <nick> = <channel> :@<operateurNick> <member1Nick> <member2Nick> <nick>"
+		
+
+✅	- un client essaie de rejoindre un channel qui n'existe pas et ne peut pas être créé
+	(type channel et non #channel) :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet :
+		": 403 <nick> <channel> :No such channel"		
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un client utilise la commande JOIN sans paramètre : JOIN
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost JOIN :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		pas de message dans la fenêtre de log
+		-> message ft_IRC :
+		": 461 <nick>!<user>@localhost JOIN :Not enough parameters"
+
+	
+✅	- un client utilise la commande JOIN suivie de plusieurs espaces puis du channel :
+		-> les espaces sont skip
+
+
+✅	- un client utilise la commande JOIN précédée d'un ou plusieurs espaces puis du
+	channel :
+		-> la commande est inconnue
+		-> un message s'affiche dans le terminal du client (ERR_UNKNOWNCOMMAND) :
+		": 421 <nick>!<user>@localhost <command> :Unknown command"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet reconnaît la commande si les espaces sont placés après le "/"
+		-> message ft_IRC
+		": 421 <nick>!<user>@localhost <command> :Unknown command"
+
+
+✅	- un client tente de rejoindre un channel en invite only (mode +i) avant d'avoir été
+	invité :
+		-> un message s'affiche dans le terminal du client (ERR_INVITEONLYCHAN) :
+		": 473 <nick>!<user>@localhost <channel> :Cannot join channel (+i)"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": 473 <nick> <channel> :Cannot join channel (+i)"
+		-> message ft_IRC :
+		": 473 <nick>!<user>@localhost <channel> :Cannot join channel (+i)"
+
+✅	- un client tente de rejoindre un channel pour lequel un mot de passe a été défini et sans
+	donner le mdp : JOIN <channel>
+		-> un message s'affiche dans le terminal du client (ERR_BADCHANNELKEY) :
+		": 475 <nick>!<user>@localhost <channel> :Cannot join channel (+k)"
+		-> 464 ERR_PASSWDMISMATCH ???
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": 475 <nick> <channel> :Cannot join channel (+k)"
+		-> message ft_IRC :
+		": 475 <nick>!<user>@localhost <channel> :Cannot join channel (+k)"
+
+
+	- un client tente de rejoindre un channel pour lequel un mot de passe a été défini et en
+	donnant un mauvais mdp :
+		-> un message s'affiche dans le terminal du client (ERR_BADCHANNELKEY) :
+		": 475 <nick>!<user>@localhost <channel> :Cannot join channel (+k)"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": 475 <nick> <channel> :Cannot join channel (+k)"
+		-> message ft_IRC :
+❌		le client peut se connecter
+
+✅	- un client tente de rejoindre un channel dont le nombre maximum de membres a été atteint :
+		-> un message s'affiche dans le terminal du client (ERR_CHANNELISFULL) :
+		": 471 <nick>!<user>@localhost <channel> :Cannot join channel (+l)"	
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": 471 <nick> <channel> :Cannot join channel (+l)"		
+		-> message ft_IRC :
+		": 471 <nick>!<user>@localhost <channel> :Cannot join channel (+l)"	
+
+	- dans l'ordre, pour rejoindre un channel :
+		- un client doit être invité,
+		- il doit saisir le mdp,
+		- il peut accéder au channel si le nombre maximum de membres n'a pas été atteint.
+	
+//	- un client tente de rejoindre un channel dont il a été exclu :
+//		-> un message s'affiche dans le terminal du client (ERR_BANNEDFROMCHAN) :
+//		": 474 <nick>!<user>@localhost <channel> :Cannot join channel (+b)"
+
+------------------------------------------------------------------------------------------------------
+
+Tests random :
+
+✅	- tous les membres quittent le channel et se reconnectent sur ce channel
+		-> le channel est détruit puis reconstruit
+
+✅	- un membre est déjà sur un channel et tente de le rejoindre à nouveau
+		-> HEXCHAT EFnet :
+		bascule sur la fenêtre du channel et pas de message
+⚠️		-> message ft_IRC :
+		":<nick>!<nick>@localhost JOIN <channel>
+		: 353 <nick> = <channel> :@<nick>
+		:<nick>!<nick>@localhost 366 <channel> :End of /NAMES list"
+	
+✅	- un membre quitte un channel auquel il appartient et tente de le rejoindre à nouveau
+
+✅	- un membre d'un channel quitte le serveur sans quitter le channel, se reconnecte et tente
+	de rejoindre à nouveau le channel
+
+✅	- essayer de JOIN un channel après l'avoir quitté
+	
+✅	- JOIN un channel existant puis changer de nickname
+	
+✅	- JOIN un channel existant puis changer de mode +i
+
+✅	- JOIN un channel existant puis changer de mode +k
+
+✅	- JOIN un channel existant puis changer de mode +l
+
+✅	- essayer de JOIN un channel après l'avoir quitté et changé de nickname
+
+✅	- essayer de JOIN un channel après l'avoir quitté et changement de mode +i
+
+✅	- essayer de JOIN un channel après l'avoir quitté et changement de mode +k
+
+✅	- essayer de JOIN un channel après l'avoir quitté et changement de mode +l
+
+Non traité :
+
+	407 ERR_TOOMANYTARGETS ?
+	
+	476 ERR_BADCHANMASK ?
+	
+	405 ERR_TOOMANYCHANNELS :
+		- recommandation de 10 channels max dans la version 1459 pour les users locaux
+		- quid version 1428 ?
+	
+	delay mechanism
+	
+------------------------------------------------------------------------------------------------------
+
+PART
+
+	- quand le dernier membre quitte le channel, le channel cesse d'exister
+
+------------------------------------------------------------------------------------------------------
+
+COMMANDES SPECIFIQUES AUX OPERATEURS
+
+------------------------------------------------------------------------------------------------------
+
+KICK tests
+
+	- seul un opérateur de channel peut KICK un membre
+
+	- syntaxe : KICK <channel> <userVictim>
+		-> attention : HEXCHAT EFnet prend KICK dans le <channel> sans spécifier le channel
+		sinon il le considère comme la victime à KICK
+
+✅	- un opérateur utilise KICK sans arguments : KICK
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost KICK :Not enough parameters"
+		-> 461 ERR_NEEDMOREPARAMS avec JOIN et non KICK
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		pas de message dans le journal de log
+		-> message ft_IRC :
+⚠️		": 461 <nick> KICK :Not enough parameters"
+
+✅	- un opérateur utilise KICK sans spécifier de channel :
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost KICK :Not enough parameters"
+		-> 461 ERR_NEEDMOREPARAMS avec JOIN et non KICK
+		-> message ft_IRC :
+⚠️		": 461 <nick> KICK :Not enough parameters"
+
+✅	- un opérateur utilise KICK sans spécifier de user :
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost KICK :Not enough parameters"
+		-> 461 ERR_NEEDMOREPARAMS avec JOIN et non KICK
+		-> message ft_IRC :
+⚠️		": 461 <nick> KICK :Not enough parameters"
+
+✅	- un opérateur saisit la commande suivie de plusieurs espaces entre les arguments :
+		-> les espaces sont skip
+
+✅	- un opérateur saisit la commande KICK précédée d'un ou plusieurs espaces puis des
+	arguments :
+		-> la commande est inconnue
+		-> un message s'affiche dans le terminal du client (ERR_UNKNOWNCOMMAND) :
+		": 421 <nick>!<user>@localhost <command> :Unknown command"
+		-> HEXCHAT EFnet reconnaît la commande si les espaces sont placés après le "/"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+		": 421 <nick>!<user>@localhost <command> :Unknown command"
+
+✅	- un opérateur KICK un membre :
+		-> un message s'affiche dans le terminal du client et de l'ensemble des membres
+		(pas de numeric	reply dans la doc) :		
+		": <nick>!<user>@localhost KICK <channel> <nickvictim> :<channel>
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": <nick>!<user>@localhost KICK <channel> <nickvictim> :<nickvictim>
+		-> message ft_IRC dans terminal de l'opérateur :
+⚠️		": <nick> KICK <channel> <nickvictim>
+		-> message ft_IRC dans terminal de la victime :
+⚠️		": <nick> KICK <channel> <nickvictim> : You have been kicked from the channel"
+
+✅	- un membre non opérateur tente de KICK un membre :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		NB : pas de différence entre les versions
+		-> message ft_IRC :
+⚠️		": 482 <nick> <channel> :You're not channel operator"
+
+✅	- un opérateur tente de se KICK lui-même
+		-> c'est possible
+
+✅	- un opérateur tente de KICK un user qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHNICK) :
+		": 401 <nick>!<user>@localhost <userDoNotExist> :No such nick/channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": 401 <nick> <userDoNotExist> :No such nick/channel"
+		-> message ft_IRC :
+		": 401 <nick>!<user>@localhost <userDoNotExist> :No such nick/channel"
+
+✅	- un opérateur tente de KICK un user d'un channel qui n'existe pas
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet :
+		": 403 <nick> EFNet :No such channel"		
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+	
+✅	- un opérateur tente de KICK un user qui n'appartient pas au channel :
+		-> un message s'affiche dans le terminal du client (ERR_USERNOTINCHANNEL) :
+		": 441 <nick>!<user>@localhost <nickVictim> <channel> :They aren't on that channel"
+		-> HEXCHAT EFNet :
+		": 441 <nick> <nickVictim> <channel> :They aren't on that channel"
+		-> message ft_IRC :
+		": 441 <nick>!<user>@localhost <nickVictim> <channel> :They aren't on that channel"
+
+✅	- un user tente de KICK sans appartenir au channel :
+❓		-> un message s'affiche dans le terminal du client (ERR_NOTONCHANNEL) :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"		
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 403 <nick> EFNet :No such channel"
+		-> message ft_IRC :
+⚠️		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+Non traité :
+
+	476 ERR_BADCHANMASK
+
+------------------------------------------------------------------------------------------------------
+
+INVITE tests :
+
+❓	- tous les membres d'un channel peuvent INVITE : NON
+	
+❓	- le channel peut ne pas exister : NON
+
+	- seuls le membre qui INVITE et l'invité reçoive la notification d'invitation
+
+	- syntaxe : INVITE <nicknameToInvite> <channel>
+
+
+✅	- un user n'appartenant à aucun channel utilise INVITE sans arguments :
+	INVITE
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> non vérifiable sur HEXCHAT EFnet car affiche le message "Utilisation : 
+		INVITE <pseudo> [<canal>], inviter quelqu'un sur un canal, par défaut le
+		canal actuel (nécessite d'être opérateur [chanop])"
+		-> message ft_IRC dans terminal :
+		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message ft_IRC dans HEXCHAT :
+		"Usage: INVITE <nick> [<channel>], invites someone to a channel, by default the
+		current channel (needs chanop)"
+
+✅	- un membre non opérateur appartenant à un channel en mode -i utilise INVITE sans arguments :
+	INVITE
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> non vérifiable sur HEXCHAT EFnet car affiche le message "Utilisation : 
+		INVITE <pseudo> [<canal>], inviter quelqu'un sur un canal, par défaut le
+		canal actuel (nécessite d'être opérateur [chanop])"
+		-> message ft_IRC :
+		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message dans HEXCHAT :
+		"Usage: INVITE <nick> [<channel>], invites someone to a channel, by default the
+		current channel (needs chanop)"
+
+✅	- un opérateur appartenant à un channel en mode -i utilise INVITE sans arguments :
+	INVITE
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :
+		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+		NB : pas de différence entre les versions
+		-> non vérifiable sur HEXCHAT EFnet car affiche le message "Utilisation : 
+		INVITE <pseudo> [<canal>], inviter quelqu'un sur un canal, par défaut le
+		canal actuel (nécessite d'être opérateur [chanop])"
+		-> message ft_IRC :
+		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message dans HEXCHAT :
+		"Usage: INVITE <nick> [<channel>], invites someone to a channel, by default the
+		current channel (needs chanop)"
+
+
+	- un user n'appartenant pas à un channel en mode -i utilise INVITE <channel> sans
+	définir de userToInvite : 
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHNICK) :
+		": 401 <nick>!<user>@localhost <channel> :No such nick/channel"
+		-> HEXCHAT EFNet :
+		": 401 <nick> <channel> :No such nick/channel"		
+		-> message ft_IRC :
+⚠️		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message dans HEXCHAT (401)
+
+	- un user appartenant à un channel en mode -i utilise INVITE <channel> sans définir
+	de userToInvite : 
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHNICK) :
+		": 401 <nick>!<user>@localhost <channel> :No such nick/channel"
+		-> HEXCHAT EFNet :
+		-> non vérifiable sur HEXCHAT EFnet car affiche le message "Utilisation : 
+		INVITE <pseudo> [<canal>], inviter quelqu'un sur un canal, par défaut le
+		canal actuel (nécessite d'être opérateur [chanop])"
+		-> message ft_IRC :
+⚠️		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message dans HEXCHAT (401)
+
+	- un user n'appartenant pas à un channel utilise INVITE <userToInvite> sans définir de
+	channel : 
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :
+		": 403 <nick>!<user>@localhost <userToInvite> :No such channel"
+		-> HEXCHAT EFNet :
+		": 403 <nick> EFNet :No such channel"		
+		-> message ft_IRC :
+⚠️		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message dans HEXCHAT (403)
+
+	- un user appartenant à un channel utilise INVITE <userToInvite> sans définir de channel : 
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :
+		": 403 <nick>!<user>@localhost <userToInvite> :No such channel"
+		-> HEXCHAT EFNet :
+		": 403 <nick> EFNet :No such channel"		
+		-> ft_IRC :
+⚠️		": 461 <nick>!<user>@localhost INVITE :Not enough parameters"
+⚠️		un message dans HEXCHAT (403)
+
+
+✅	- un user n'appartenant pas à un channel en mode -i INVITE un userToInvite sur ce channel :
+		-> un message s'affiche dans le terminal du client (ERR_NOTONCHANNEL) :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 442 <nick> <channel> :You're not on that channel"
+		-> message ft_IRC
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+
+
+✅	- un user (appartenant ou non à un channel) INVITE un userToInvite sur un channel qui
+	n'existe pas ou est invalide :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user appartenant à un channel en mode -i INVITE un userToInvite qui appartient
+	déjà au channel : 
+		-> un message s'affiche dans le terminal du client (ERR_USERONCHANNEL) :
+		": 443 <nick>!<user>@localhost <userToInvite> <channel> :is already on channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 443 <nick> <userToInvite> <channel> :is already on channel"
+		-> message ft_IRC
+		": 443 <nick> <userToInvite> <channel> :is already on channel"
+
+✅	- un membre non opérateur INVITE un userToInvite sur un channel en mode -i :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+
+✅	- un membre opérateur appartenant à un channel INVITE un userToInvite : 
+		-> un message s'affiche dans le journal du userToInvite (pas de numeric reply
+		dans la doc) :
+		":<nick>!<user>@localhost INVITE <nickUserToInvite> :<channel>"
+		-> un message s'affiche dans le terminal du userToInvite (RPL_INVITING) :
+		": 341 <channel> <nickUserToInvite>"
+		NB : pas de différence entre les versions
+		-> sur HEXCHAT EFnet :
+		": 341 <nick> <nickUserToInvite> <channel>"
+		-> message ft_IRC :
+		<nick>!<user>@localhost <nickUserToInvite> <channel>
+
+✅	- un membre opérateur appartenant à un channel INVITE un userToInvite qui a précédemment
+	quitté le channel
+
+✅	- un membre ex-opérateur ayant quitté le channel INVITE un userToInvite
+		-> un message s'affiche dans le terminal du client (ERR_NOTONCHANNEL) :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+		-> message ft_IRC
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"		
+
+✅	- un membre ex-opérateur ayant quitté le channel et le rejoignant à nouveau INVITE un
+	userToInvite (il a perdu son statut d'opérateur)
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre ex-opérateur ayant perdu son status d'opérateur sur le channel INVITE
+	un userToInvite
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFNet :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+Non traité :
+
+	301 RPL_AWAY
+
+
+------------------------------------------------------------------------------------------------------
+
+TOPIC tests :
+
+	- syntaxe : TOPIC <channel> <topic>
+
+	- n'importe quel user, appartenant ou non au channel, peut utiliser TOPIC <channel>
+
+	- le user doit être opérateur pour changer le topic, en MODE +t
+
+	- retourne le topic du channel si aucun argument n'est donné à la commande
+	
+	- change le topic du channel si un argument est donné à la commande
+	
+	- efface le topic si l'argument est une chaîne vide
+
+✅	- un opérateur appartenant à un channel utilise TOPIC sans arguments (le topic n'a pas été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> EFNet :No such channel"
+		-> message ft_IRC :
+⚠️		: 461 PAP!PAP@localhost TOPIC :Not enough parameters
+⚠️		un message dans HEXCHAT (403)
+
+	- un opérateur appartenant à un channel utilise TOPIC sans arguments (le topic a été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+⚠️		: 461 PAP!PAP@localhost TOPIC :Not enough parameters
+⚠️		un message dans HEXCHAT (403)
+
+✅	- un opérateur appartenant à un channel utilise TOPIC <channel> sur un channel qui n'existe
+	pas :
+		> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+✅	- un opérateur appartenant à un channel utilise TOPIC <channel> (le topic n'a pas été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set"
+		-> HEXCHAT EFnet donne :
+		": 331 <nick> <channel> :No topic is set"
+		-> ft_IRC :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set"
+
+✅	- un opérateur appartenant à un channel utilise TOPIC <channel> (le topic a été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_TOPIC) :
+		": 332 <nick>!<user>@localhost <channel> :<topic>"
+		-> HEXCHAT EFnet donne :
+		": <nick>!<user>@localhost TOPIC <channel> :<topic>"
+		-> ft_IRC :
+		": 332 <nick>!<user>@localhost <channel> :<topic>"
+
+✅	- un opérateur appartenant à un channel utilise TOPIC <channel> <topic> (le topic n'a pas
+	été préalablement défini) :
+		-> un message s'affiche dans le terminal du client et de tous les membres (pas de
+		numeric reply dans la doc) :
+		"<nick> a modifié le sujet pour : <topic>"
+		-> et dans le journal de log
+		"<nick>!<user>@localhost TOPIC <channel> :<topic"
+		-> message ft_IRC :
+⚠️		"<nick> TOPIC <channel> :<topic"
+⚠️		-> le même message s'affiche dans le terminal de tous les membres
+		
+✅	- un opérateur appartenant à un channel utilise TOPIC <channel> <topic> (le topic a été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client et de tous les membres (pas de
+		numeric reply dans la doc) :
+		"<nick> a modifié le sujet pour : <topic>"
+		-> et dans le journal de log
+		"<nick>!<user>@localhost TOPIC <channel> :<topic"
+		-> message ft_IRC :
+⚠️		"<nick> TOPIC <channel> :<topic"
+⚠️		-> le même message s'affiche dans le terminal de tous les membres
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC sans argument (le topic n'a
+	pas été	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+⚠️		: 461 PAP!PAP@localhost TOPIC :Not enough parameters
+⚠️		un message dans HEXCHAT (403)
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC <channel> sur un channel
+	qui n'existe pas :
+		> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC sans argument (le topic a
+	été préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+⚠️		: 461 PAP!PAP@localhost TOPIC :Not enough parameters
+⚠️		un message dans HEXCHAT (403)
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC <channel> (le topic n'a
+	pas été	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set"
+		-> HEXCHAT EFnet donne :
+		": 331 <nick> <channel> :No topic is set"
+		-> ft_IRC :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set"
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC <channel> (le topic a
+	été préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 332 <nick>!<user>@localhost <channel> :<topic>"
+		-> HEXCHAT EFnet donne :
+		": 332 <nick> <channel> :<topic>"
+		-> ft_IRC :
+		": 332 <nick>!<user>@localhost <channel> :<topic>"
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC <channel> <topic> (le topic
+	n'a pas	été préalablement défini) :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur appartenant à un channel utilise TOPIC <channel> <topic> (le topic
+	a été préalablement défini) :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+
+✅	- un user n'appartenant pas à un channel utilise TOPIC sans arguments :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :		
+⚠️		: 461 PAP!PAP@localhost TOPIC :Not enough parameters
+⚠️		un message dans HEXCHAT (403)
+
+✅	- un user appartenant à un channel utilise TOPIC <channel> sur un channel qui n'existe pas :
+		> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+✅	- un user n'appartenant pas à un channel utilise TOPIC <channel> (le topic n'a pas été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_NOTOPIC) :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set"
+		-> HEXCHAT EFnet donne :
+		": 331 <nick> <channel> :No topic is set"
+		-> ft_IRC :
+		": 331 <nick>!<user>@localhost <channel> :No topic is set"
+
+✅	- un user n'appartenant pas à un channel utilise TOPIC <channel> (le topic a été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (RPL_TOPIC) :
+		": 332 <nick>!<user>@localhost <channel> :<topic>"
+		-> HEXCHAT EFnet donne :
+		": 332 <nick> <channel> :<topic>"
+		-> message ft_IRC :
+		": 332 <nick>!<user>@localhost <channel> :<topic>"		
+
+✅	- un user n'appartenant pas à un channel utilise TOPIC <channel> <topic > (le topic n'a pas
+	été préalablement défini) :
+		-> un message s'affiche dans le terminal du client (ERR_NOTONCHANNEL) :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+		-> HEXCHAT EFnet donne :
+		": 442 <nick> <channel> :You're not on that channel"
+		-> ft_IRC :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+
+✅	- un user n'appartenant pas à un channel utilise TOPIC <channel> <topic > (le topic a été
+	préalablement défini) :
+		-> un message s'affiche dans le terminal du client (ERR_NOTONCHANNEL) :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+		-> HEXCHAT EFnet donne :
+		": 442 <nick> <channel> :You're not on that channel"
+		-> ft_IRC :
+		": 442 <nick>!<user>@localhost <channel> :You're not on that channel"
+
+------------------------------------------------------------------------------------------------------
+
+MODE tests :
+
+	- seul un opérateur de channel peut MODE + / -
+	
+	- syntaxe : MODE <channel> <mode> <parameters> <mode> <parameters>
+
+✅	- un user utilise MODE sans arguments :
+		-> un message s'affiche dans le terminal du client (ERR_NEEDMOREPARAMS) :		
+		": 461 <nick>!<user>@localhost MODE :Not enough parameters"
+		-> HEXCHAT EFnet donne :
+		": 461 <nick> MODE :Not enough parameters"		
+		-> message ft_IRC :
+		": 461 <nick>!<user>@localhost MODE :Not enough parameters"
+
+✅	- un user non membre utilise MODE <channel> :
+		-> un message s'affiche dans le terminal du client (RPL_CHANNELMODEIS) :		
+		": 324 <nick>!<user>@localhost <channel> <mode> <mode params>"
+		-> HEXCHAT EFnet donne :
+		": 324 <nick> <channel> :+tin"
+		-> message ft_IRC :
+		": 324 <nick>!<user>@localhost <channel> <mode> <mode params>"
+
+✅	- un membre non opérateur du channel utilise MODE <channel> :
+		-> un message s'affiche dans le terminal du client (RPL_CHANNELMODEIS) :		
+		": 324 <nick>!<user>@localhost <channel> <mode> <mode params>"
+		-> HEXCHAT EFnet donne :
+		": 324 <nick> <channel> :+tin"
+		-> message ft_IRC :
+		": 324 <nick>!<user>@localhost <channel> <mode> <mode params>"
+
+✅	- un opérateur du channel utilise MODE <channel> :
+		-> un message s'affiche dans le terminal du client (RPL_CHANNELMODEIS) :		
+		": 324 <nick>!<user>@localhost <channel> <mode> <mode params>"
+		-> HEXCHAT EFnet donne :
+		": 324 <nick> <channel> :+tin"
+		-> message ft_IRC :
+		": 324 <nick>!<user>@localhost <channel> <mode> <mode params>"
+
+✅	- vérifier avec différents modes activés
+
+------------------------------------------------------------------------------------------------------
+
+MODE +i tests :
+
+✅	- un opérateur utilise MODE +i :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +i :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost +i :No such channel"
+
+
+✅	- un user utilise MODE <channel> +i sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> +i :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> +i :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+
+✅	- un membre opérateur utilise MODE <channel> +i sur un channel en mode -i:
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +i"
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +i"
+
+✅	- un membre opérateur utilise MODE <channel> +i sur un channel déjà en mode +i :
+		-> aucun message ne s'affiche dans le terminal 
+		-> ft_IRC :
+		pas de message
+
+
+✅	- vérifier les changements des droits sur JOIN pour les users
+		-> ft_IRC :
+		": 473 BD!BD@localhost #lili :Cannot join channel (+i)"
+
+------------------------------------------------------------------------------------------------------
+
+MODE -i tests :
+
+✅	- un opérateur utilise MODE -i :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost -i :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost -i :No such channel"
+
+
+✅	- un user utilise MODE <channel> -i sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> -i :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> -i :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre opérateur utilise MODE <channel> -i :
+❓		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -i"
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> message ft_IRC :
+		pas de message
+
+✅	- un membre opérateur utilise MODE <channel> -i sur un channel déjà en mode -i :
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> message ft_IRC :
+		pas de message
+
+✅	- un membre opérateur utilise MODE <channel> -i sur un channel précédemment en mode +i:
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -i"
+		-> HEXCHAT EFnet donne :
+		"<nick>!<user>@localhost MODE <channel> -i"
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> -i"
+
+
+	- vérifier les changements des droits sur JOIN pour les users
+
+------------------------------------------------------------------------------------------------------
+
+MODE +t tests :
+
+✅	- un opérateur utilise MODE +t :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +i :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost +t :No such channel"
+
+
+✅	- un user utilise MODE <channel> +t sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> +t :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> +t :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre opérateur utilise MODE <channel> +t sur un channel en mode -t:
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +t"
+		-> HEXCHAT EFnet donne :
+		"<nick>!<user>@localhost MODE <channel> +i"
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +t"
+
+✅	- un membre opérateur utilise MODE <channel> +i sur un channel déjà en mode +i :
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> ft_IRC :
+		pas de message
+
+	- vérifier les changements des droits sur TOPIC pour les membres 
+
+------------------------------------------------------------------------------------------------------
+
+MODE -t tests :
+
+✅	- un opérateur utilise MODE -t :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +i :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost -t :No such channel"
+
+
+✅	- un user utilise MODE <channel> -t sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> -t :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> -t :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre opérateur utilise MODE <channel> -t sur un channel en mode +t:
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -t"
+		-> HEXCHAT EFnet donne :
+		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> -t"
+
+✅	- un membre opérateur utilise MODE <channel> -t sur un channel déjà en mode -t :
+		-> HEXCHAT EFnet donne :
+		pas de message 
+		-> ft_IRC :
+		pas de message
+
+✅	- vérifier les changements des droits sur TOPIC pour les membres
+
+------------------------------------------------------------------------------------------------------
+
+MODE +k tests :
+
+✅	- un opérateur utilise MODE +k :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +i :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost +k :No such channel"
+
+✅	- un membre opérateur utilise MODE <channel> +k :
+		-> HEXCHAT EFnet donne :
+		pas de message 
+		-> ft_IRC :
+		pas de message
+
+✅	- un user utilise MODE <channel> +k <channelKey> sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> +k <channelKey> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> +k <channelKey> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre opérateur utilise MODE <channel> +k <channelKey> sur un channel en mode -k:
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +k <channelKey>"
+		-> HEXCHAT EFnet donne :
+
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +k <channelKey>"
+
+✅	- un membre opérateur utilise MODE <channel> +k <newChannelKey> sur un channel déjà
+	en mode +k :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +k <newChannelKey>"
+		-> HEXCHAT EFnet donne :
+		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +k <channelKey>"
+
+
+✅	- vérifier les changements des droits sur JOIN pour les users
+
+------------------------------------------------------------------------------------------------------
+
+MODE -k tests :
+
+✅	- un opérateur utilise MODE -k :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +i :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost +k :No such channel"
+
+
+✅	- un user utilise MODE <channel> -k sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> -k :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> -k :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre opérateur utilise MODE <channel> -k sur un channel en mode +k:
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -k"
+		-> HEXCHAT EFnet donne :		
+		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> -k"
+
+✅	- un membre opérateur utilise MODE <channel> -k sur un channel déjà
+	en mode -k :
+		-> HEXCHAT EFnet donne :
+		pas de message 
+		-> ft_IRC :
+		pas de message
+
+
+✅	- vérifier les changements des droits sur JOIN pour les users
+
+------------------------------------------------------------------------------------------------------
+
+MODE +o tests :
+
+✅	- un opérateur utilise MODE +o :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +o :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost +o :No such channel"
+
+
+✅	- un user utilise MODE <channel> +o <user> sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> +o <user> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> +o <user> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> +o <member> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+
+✅	- un membre opérateur utilise MODE <channel> +o <userNonMember> :
+		-> un message s'affiche dans le terminal de l'opérateur (ERR_USERNOTINCHANNEL) :		
+		": 441 <nick>!<user>@localhost <userNonMember> <channel> :They aren't channel on
+		that channel"
+		-> HEXCHAT EFnet donne :
+		": 441 <nick> <userNonMember> <channel> :They aren't channel on that
+		channel"
+		-> message ft_IRC :
+		": 441 <nick>!<user>@localhost <userNonMember> <channel> :They aren't channel on
+		that channel"
+
+✅	- un membre opérateur utilise MODE <channel> +o <userDoNotExist> :
+		-> un message s'affiche dans le terminal de l'opérateur (ERR_USERNOTINCHANNEL) :		
+		": 441 <nick>!<user>@localhost <userDoNotExist> <channel> :They aren't channel on
+		that channel"
+⚠️		-> HEXCHAT EFnet donne 2 messages différents selon si la commande est saisie dans ou
+		en dehors du channel :
+		": 441 <nick> <userDoNotExist> <channel> :They aren't channel on that channel"
+		": 401 <nick>!<user>@localhost <userDoNotExist> :No such nick/channel"
+		-> message ft_IRC :
+		: 401 <nick>!<user>@localhost <userDoNotExist> :No such nick/channel
+
+✅	- un membre opérateur utilise MODE <channel> +o <member> :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +o <member>"
+		-> HEXCHAT EFnet donne
+		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +o <member>"
+
+✅	- un membre opérateur utilise MODE <channel> +o <memberAlreadyOperator> :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +o <memberAlreadyOperator>"
+		-> HEXCHAT EFnet donne		
+		"<nick>!<user>@localhost MODE <channel> +o <memberAlreadyOperator>"		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +o <memberAlreadyOperator>"
+
+✅	- un membre opérateur utilise MODE <channel> +o <himself> :
+		-> aucun message ne s'affiche dans le terminal de l'opérateur et des autres membres
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> message ft_IRC à l'opérateur et autres membres :
+⚠️		": <nick>!<user>@localhost MODE <channel> +o <himself>"
+
+
+✅	- un membre opérateur utilise MODE <channel> +o :
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> ft_IRC :
+		pas de message
+
+
+✅	- vérifier les changements des droits pour les membres
+
+------------------------------------------------------------------------------------------------------
+
+MODE -o tests :
+
+✅	- un opérateur utilise MODE -o :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost -o :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +i :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost -o :No such channel"
+
+✅	- un opérateur utilise MODE <channel> -o sans target :
+		-> HEXCHAT EFnet donne :
+		pas de message		
+		-> message ft_IRC :
+		pas de message
+
+✅	- un user utilise MODE <channel> -o <user> sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> -o <user> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> -o <user> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> -o <member> :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre opérateur utilise MODE <channel> -o <userNonMember> :
+		-> un message s'affiche dans le terminal de l'opérateur (ERR_USERNOTINCHANNEL) :		
+		"441 <nick>!<user>@localhost <userNonMember> <channel> :They aren't channel on that
+		channel"
+		-> HEXCHAT EFnet donne :
+		"441 <nick> <userNonMember> <channel> :They aren't channel on that channel"
+		-> message ft_IRC :
+		"441 <nick>!<user>@localhost <userNonMember> <channel> :They aren't channel on that
+		channel"
+
+✅	- un membre opérateur utilise MODE <channel> -o <userDoNotExist> :
+		-> un message s'affiche dans le terminal de l'opérateur (ERR_USERNOTINCHANNEL) :		
+		"441 <nick>!<user>@localhost <userDoNotExist> <channel> :They aren't channel on that
+		channel"
+⚠️		-> HEXCHAT EFnet donne 2 messages différents selon si la commande est saisie dans ou
+		en dehors du channel :
+		": 441 <nick> <userDoNotExist> <channel> :They aren't channel on that channel"
+		": 401 <nick>!<user>@localhost <userDoNotExist> :No such nick/channel"
+		-> message ft_IRC :
+		: 401 <nick>!<user>@localhost <userDoNotExist> :No such nick/channel
+
+✅	- un membre opérateur utilise MODE <channel> -o <memberOperator> :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -o <memberOperator>"
+		-> HEXCHAT EFnet donne :
+		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> -o <memberOperator>"
+
+✅	- un membre opérateur utilise MODE <channel> -o <memberNonOperator> sur un channel :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -o <memberNonOperator>"
+		-> HEXCHAT EFnet donne :
+		
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> -o <memberOperator>"
+
+✅	- un membre opérateur utilise MODE <channel> -o <himself> :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -o <himself>"
+		-> HEXCHAT EFnet donne :
+		"<nick>!<user>@localhost MODE <channel> -o <himself>"
+		-> message ft_IRC à l'opérateur et autres membres :
+		"<nick>!<user>@localhost MODE <channel> -o <himself>"
+
+✅	- un membre opérateur utilise MODE <channel> -o :
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> ft_IRC :
+		pas de message
+
+
+✅	- vérifier les changements des droits pour les membres notamment pour les membres devenus
+	opérateurs
+
+------------------------------------------------------------------------------------------------------
+
+MODE +l tests :
+
+✅	- un opérateur utilise MODE +l :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost +l :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> +l :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost +l :No such channel"
+
+✅	- un opérateur utilise MODE <channel> +l :
+		-> HEXCHAT EFnet donne :
+		pas de message
+		-> ft_IRC :
+		pas de message
+
+✅	- un opérateur utilise MODE <channel> +l 0 :
+		-> aucun message ne s'affiche dans le terminal 
+		-> ft_IRC :
+		pas de message
+
+✅	- un opérateur utilise MODE <channel> +l a :
+		-> aucun message ne s'affiche dans le terminal 
+		-> ft_IRC :
+		pas de message
+
+✅	- un user utilise MODE <channel> +l 2 sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> +l 2 :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> +l 2 :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+
+✅	- un membre opérateur utilise MODE <channel> +l 2 :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +l 2"
+		-> HEXCHAT EFnet donne :
+		"<nick>!<user>@localhost MODE <channel> +l 2"				
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +l 2"
+
+✅	- un membre opérateur utilise MODE <channel> +l 3 sur un channel dont la limite a déjà été
+	définie :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> +l 3"
+		-> HEXCHAT EFnet donne :
+		"<nick>!<user>@localhost MODE <channel> +l 3"				
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> +l 3"
+
+
+❌	- vérifier les changements des droits pour les membres :
+		- un member qui veut JOIN un channel à nouveau sera bloqué si la limite est atteinte
+		or il ne rejoint pas puisqu'il en fait déjà partie !
+
+------------------------------------------------------------------------------------------------------
+
+MODE -l tests :
+
+✅	- un opérateur utilise MODE -l :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost -l :No such channel"
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> -l :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost -l :No such channel"
+
+✅	- un user utilise MODE <channel> -l sur un channel qui n'existe pas :
+		-> un message s'affiche dans le terminal du client (ERR_NOSUCHCHANNEL) :		
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+		NB : pas de différence entre les versions
+		-> HEXCHAT EFnet donne :
+		": 403 <nick> <channel> :No such channel"
+		-> message ft_IRC :
+		": 403 <nick>!<user>@localhost <channel> :No such channel"
+
+
+✅	- un user non membre utilise MODE <channel> -l :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+✅	- un membre non opérateur utilise MODE <channel> -l :
+		-> un message s'affiche dans le terminal du client (ERR_CHANOPRIVSNEEDED) :		
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+		-> HEXCHAT EFnet donne :
+		": 482 <nick> <channel> :You're not channel operator"
+		-> message ft_IRC :
+		": 482 <nick>!<user>@localhost <channel> :You're not channel operator"
+
+
+✅	- un membre opérateur utilise MODE <channel> -l :
+		-> un message s'affiche dans le terminal de tous les membres (y compris
+		l'opérateur) :		
+		"<nick>!<user>@localhost MODE <channel> -l"
+		-> HEXCHAT EFnet donne :
+		"<nick>!<user>@localhost MODE <channel> -l"
+		-> message ft_IRC :
+		"<nick>!<user>@localhost MODE <channel> -l"
+
+
+✅	- un membre opérateur utilise MODE <channel> -l sur un channel dont la limite a déjà été
+	enlevé :
+		-> HEXCHAT EFnet donne :
+		pas de message		
+		-> ft_IRC :
+		pas de message
+
+
+✅	- vérifier les changements des droits pour les membres :
+
+		- MODE +l 2 sur un channel comportant 2 personnes : un 3ème membre ne peut pas
+		rejoindre (erreur 471 sur JOIN)
+
+		- MODE -l : un 3ème membre peut rejoindre
+
+		- MODE +l 2 sur un channel comportant 3 personnes : un 4ème membre ne peut pas
+		rejoindre (erreur 471 sur JOIN)
+
+------------------------------------------------------------------------------------------------------
+
+bot titi et grosminet
+
+vérifier le transfert de fichier
+
+vérifier les CTRL D dans les commandes et messages (EOF permettant de "geler la saisie")
+
+vérifier le comportement du serveur après avoir suspendu un client (CTRL + Z) et relancé avec fg

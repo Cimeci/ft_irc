@@ -6,11 +6,11 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 14:05:50 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:13:35 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "irc.hpp"
+# include "includes/Irc.hpp"
 
 static Irc *g_irc = NULL;
 
@@ -40,6 +40,8 @@ int Irc::server() {
 	std::cout << GREEN << "+----------------------------+" << RESET << std::endl;
 	std::cout << GREEN << "|  LAUNCH OF THE IRC SERVER  |" << RESET << std::endl;
 	std::cout << GREEN << "+----------------------------+" << RESET << std::endl;
+	
+	//* Initialize Server *//
 	g_irc = this;
 	server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_socket < 0) {
@@ -68,29 +70,34 @@ int Irc::server() {
         return 1;
     }
 
-	// Initialize poll structure for server socket
+	//* Initialize poll *//
 	struct pollfd server_pollfd;
 	std::memset(&server_pollfd, 0, sizeof(server_pollfd));
 	server_pollfd.fd = server_socket;
 	server_pollfd.events = POLLIN;
 	_pollfds.push_back(server_pollfd);
 
+	//* Server Listen His Port *//
+	
 	std::cout << "Server listening on port " << _port << "...\n";
 
 	std::signal(SIGINT, handleSigintServer);
 	while (_serverRunning == true) {
 		for (size_t i = 0; i < _pollfds.size(); ++i)
         	_pollfds[i].revents = 0;
+
 		int poll_count = poll(_pollfds.data(), _pollfds.size(), -1);
 		if (poll_count < 0) {
 			break;
 		}
+		
 		for (size_t i = 0; i < _pollfds.size(); i++) {
 			if (_pollfds[i].revents == 0)
             	continue;
 			if (_pollfds[i].revents & POLLOUT) {
 				Client* client = clientBook[_pollfds[i].fd];
-				if (!client) continue;
+				if (!client)
+					continue;
 				if (client->hasDataToSend()){
 					send(_pollfds[i].fd, client->getBuffer().c_str(), client->getBuffer().length(), 0);
 					_pollfds[i].events &= ~POLLOUT;
@@ -144,14 +151,14 @@ void Irc::handleNewConnection() {
 
 	std::cout << "Currently : " << _pollfds.size() - 1 << " clients has connected" << std::endl;
 
-	// Add new client to poll structure
+	//* Add new client to poll structure *//
     pollfd new_pollfd;
     new_pollfd.fd = new_client;
     new_pollfd.events = POLLIN;
 	new_pollfd.revents = 0;
     _pollfds.push_back(new_pollfd);
 
-    // Create and store new client object
+    //* Create and store new client object *//
     Client *new_client_obj = new Client();
     clientBook[new_client] = new_client_obj;
 	std::string openInput = "Please enter PASS / NICK / USER to connect\r\n";
@@ -189,6 +196,9 @@ void Irc::handleClientData(int fd) {
 	for (size_t i = 0; i < split.size(); i++)
 		std::cout << "split : " << split[i] << std::endl;
 	std::cout << "------------------------" << std::endl;
+
+	//* Connexion Path*//
+
 	for (size_t i = 0; i < split.size(); i++)
 	{
 		if (split[i] == HEXCHAT_OPT);

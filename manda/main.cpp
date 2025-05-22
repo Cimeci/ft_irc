@@ -6,11 +6,11 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:40:45 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/09 09:57:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:13:28 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "irc.hpp"
+# include "includes/Irc.hpp"
 
 int main(int argc, char **argv)
 {

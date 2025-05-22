@@ -6,11 +6,11 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:38:57 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 17:20:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:15:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../irc.hpp"
+# include "../includes/Irc.hpp"
 
 size_t getOption(const char &opt){
 	std::string modeoption = "itlok";
@@ -22,12 +22,17 @@ size_t getOption(const char &opt){
 void Irc::handleMode(int fd, const std::string &channelName, const std::string &mode){
 	Client *client = clientBook[fd];
 
+	//* ERROR *//
+
 	if (_channels.find(channelName) == _channels.end()) {
 		sendMessage(fd, ERR_NOSUCHCHANNEL(client->getNickname(), channelName)); return ;
 	}
 	if (channelName[0] != '#' && channelName[0] != '&') {
 		sendMessage(fd, ERR_NOSUCHNICK(client->getNickname(), channelName)); return ;
 	}
+	
+	//* DISPLAY ACTUAL MODE *//
+
 	if (mode.empty()){
 		sendMessage(fd, RPL_CHANNELMODEIS(client->getNickname(), channelName, _channels[channelName]->getModeInString()));
 		return ;
@@ -40,30 +45,33 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 	}
 	size_t OptionMode = 1;
 	int Sign = 0;
-	std::cout << BLUE << "DEBUG " << RESET << "modeGroup[0]: " << modeGroup[0] << std::endl;
 	for (size_t i = 0; i < modeGroup[0].size(); i++){
 
+		//* FIND THE SIGN *//
 		if (modeGroup[0][i] == '+') { Sign = 1; }
 		else if (modeGroup[0][i] == '-') { Sign = -1; }
 		
-		std::cout << BLUE << "DEBUG " << RESET << "option: " << modeGroup[0][i] << std::endl;
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+								//* HANDLE ADD OPTION MODE *//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		if (Sign == 1 && modeGroup[0][i] != '+'){
 			switch (getOption(modeGroup[0][i])) {
-				case 0 : // i
+				case 0 : // !i
 					if (_channels[channelName]->getInvitation() == false){
 						_channels[channelName]->setInvitation(true);
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "+i", ""), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "+i", ""));
 					}
 					break;
-				case 1 : // t
+				case 1 : // !t
 					if (_channels[channelName]->getIsOpTopic() == false){
 						_channels[channelName]->setIsOpTopic(true);
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "+t", ""), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "+t", ""));
 					}
 					break;
-				case 2 : // l
+				case 2 : // !l
 					if(modeGroup.size() == OptionMode || modeGroup[OptionMode].empty()){
 						sendMessage(fd, ERR_NEEDMOREPARAMS(client->getNickname()));
 					}
@@ -77,7 +85,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 						sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+l", modeGroup[OptionMode], "Not a valid digit (0 - 9999)"));
 					}
 					break;
-				case 3 : // o
+				case 3 : // !o
 					if (modeGroup.size() == OptionMode || modeGroup[OptionMode].empty()){
 						sendMessage(fd, (serverName + ERR_NEEDMOREPARAMS(client->getNickname())));
 					}
@@ -103,7 +111,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 						OptionMode++;
 					}
 					break;
-				case 4 : // k
+				case 4 : // !k
 					if (modeGroup.size() != OptionMode && !modeGroup[OptionMode].empty()){
 						if (_channels[channelName]->getPassword() != modeGroup[OptionMode]) {
 							_channels[channelName]->setPassword(modeGroup[OptionMode]);
@@ -120,31 +128,35 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 					sendMessage(fd, ERR_UMODEUNKNOWNFLAG(client->getNickname()));
 			}
 		}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+								//* HANDLE REMOVE OPTION MODE *//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		if (Sign == -1 && modeGroup[0][i] != '-'){
 			switch (getOption(modeGroup[0][i])) {
-				case 0 : // i
+				case 0 : // !i
 					if (_channels[channelName]->getInvitation() == true){
 						_channels[channelName]->setInvitation(false);
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "-i", ""), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "-i", ""));
 					}
 					break;
-				case 1 : // t
+				case 1 : // !t
 					if (_channels[channelName]->getIsOpTopic() == true){
 						_channels[channelName]->setIsOpTopic(false);
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "-t", ""), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "-t", ""));
 					}
 					break;
-				case 2 : // l
+				case 2 : // !l
 					if (_channels[channelName]->getLimitClients() < 10000){
 						_channels[channelName]->setLimitClients(10000);
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "-l", ""), fd);
 						sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "-l", ""));
 					}
 					break;
-				case 3 : // o
+				case 3 : // !o
 					if (modeGroup.size() == OptionMode || modeGroup[OptionMode].empty()){
 						sendMessage(fd, ERR_NEEDMOREPARAMS(client->getNickname()));
 					}
@@ -170,7 +182,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 						OptionMode++;
 					}
 					break;
-				case 4 : // k
+				case 4 : // !k
 					if (!_channels[channelName]->getPassword().empty()){
 						_channels[channelName]->setPassword("");
 						_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "-k", ""), fd);
