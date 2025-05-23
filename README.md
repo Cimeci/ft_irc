@@ -57,7 +57,153 @@ ft_irc
 ├── Makefile
 └── README.md
 ```
+
+## Les clients:
+
+### [NetCat (nc)](https://www.varonis.com/fr/blog/netcat-commands)
+
+nc est un client obligatoire demander par le sujet. Il s'utilise depuis un terminal est se lance de cette facon :
+```
+nc <addresse du serveur> <port du serveur>
+```
+pour ma part
+```
+nc localhost 8080
+```
+depuis nc on doit tout ecrire en brute, c'est a dire que nc ne fait rien a notre place, et ne nous affiche rien par lui meme, c'est donc au serveur d'envoyer les infos sur nc.
+
+#### La structure des commandes nc
+
+Sur nc, la struture est la plus part du temp comme ceci :
+``` 
+<COMMAND> <Target> <L'information a transmettre> <autres options>
+```
+par exemple pour la commande privmsg, si on veut parler a ilan et noa:
+```
+PRIVMSG ilan,noa hello world
+```
+ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
+
+
+### [Hexchat](https://hexchat.github.io)
+
+Hexchat est un des client possible que l'on peux ajouter au projet comme demande par le sujet, j'ai decide de l'utiliser car la premiere fois que j'ai vue IRC c'etait sur le client hexchat, il m'a ete recommande, il permet le transfere des fichiers automatiques (bonus), on peut afficher les logs de communication entre client et serveur et puis je le trouve relativement accessible et facile a comprendre.
+
+Il s'utilise depuis son application, pour la telecharger :
+```
+flatpak install flathub io.github.Hexchat
+```
+
+Une fois lancer tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur
+
+Si c'est le cas alors, tu peux faire :
+-> Tu peux definir:
+--> ton nickname
+--> ton deuxieme nickname
+--> ton troisieme nickanme
+--> ton nom de user
+
+-> ```Add``` et tu peux choisir le nom d'appellation de ton serveur.
+
+-> ```Edit``` tu va trouver ceci :
+
+<image menu entree hexchat>
+
+sur la ligne en haut il faut que tu la modifie pour qu'elle soit en lien avec les parametres que tu as mis sur le set de ton serveur:
+exemple:
+tu lance ton serveur avec ces parametres:
+```
+./ircserver 8080 123
+```
+alors la ligne en haut doit etre
+```
+localhost/8080
+```
+le localhost est dans tout les cas ici car on heberge le serveur sur notre machine et on ne le partage pas a tous
+et ensuite il y a le port sur lequel ton serveur est ouvert.
+
+apres ceci sur la base de l'exemple il faut aussi que tu renseigne le mot de passe au client hexchat pour que de lui meme il donne les commandes a ton serveur:
+tu dois avoir ceci visuellement:
+
+<image page edit>
+
+tu peux faire autrement et tester les autres facons si tu en a envie mais personnelement j'ai choisie ceci.
+apres cela tu peux faire ```close```
+et ensuite ```connect``` depuis ton Client hexchat cree.
+
+Apres cela tu te retrouve avec un client qui essaye perpetuellement de se connecter a ton serveur.
+
+Des choses interressantes a savoir:
+- **!!a verifier!!** Window/raw_logs -> ceci t'affiche les logs de communication entre le serveur et le client, ca te permet de comprendre ce que tu va recevoir et se que tu lui envoie, je te conseille de regarder le raw log d'autre client que le tiens pour que tu comprennes ce que tu as a faire
+- **!!a verifier!!** Hexchat/server_select -> tu peux creer plusieurs clients en changeant le nom du client et en te connectant toujours a ton serveur.
+
+
+#### La structure des commandes hexchat
+
+Sur hexchat, la struture est la plus part du temp comme ceci :
+``` 
+/<COMMAND> <Target> <L'information a transmettre> <autres options>
+```
+par exemple pour la commande privmsg, si on veut parler a ilan et noa:
+```
+/privmsg ilan,noa hello world
+```
+ici hexchat va transformer ma ligne en
+```
+PRIVMSG ilan,noa :hello world
+```
+on peux voir ceci depuis la fenetre raw_logs.
+
+Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
+
+La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t'envoie en respectant la norme IRC et aussi son interpretation des lignes que tu va lui envoyer, par exemple quand des clients sont dans un channel, si hexchat recoit selon la commande ```WHO``` qu'une personne a un ```@``` avant son nickname hexchat interprete est le presente comme operateur du channel (la pastille verte a coter du nickanme dans la liste)
+
 # Manda
+
+Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
+
+## [La connection au serveur](https://modern.ircdocs.horse/#connection-messages) 
+
+La connection au serveur doit suivre une logique bien precise.
+
+Les commandes a faire:
+1) ```PASS``` : va permettre de donner le mot de passe attendu par le serveur.
+2) ```NICK``` : va permettre de definir un nickname.
+3) ```USER``` : va permettre de definir un username.
+
+Hexchat peux t'envoyer aussi ```CAP LS 302```, je te laisse te renseigner.
+
+Personnellement j'ai fais un switch case d'un enum qui definie les grades de connection:
+
+```cpp
+	    enum State {
+	        CONNECTED,
+	        AUTHENTICATED,
+	        REGISTERED,
+			    USER
+	    };
+```
+
+```cpp
+switch(state){
+  case CONNECTED:
+    handlePass();
+  case AUTHENTICATED:
+    handleNick();
+  case REGISTERED:
+    handleUser();
+  case USER:
+    handleCommands();
+}
+```
+
+Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur](https://modern.ircdocs.horse/#rplwelcome-001).
+
+## Les commandes a gerer :
+
+### [JOIN](https://modern.ircdocs.horse/#join-message)
+
+### 
 
 # BONUS
 ```bash
@@ -65,11 +211,11 @@ make bonus
 ./ircserver_bonus <port> <password>
 ```
 
-Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
+Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
 
 ## Le principe du jeux
 -> tu mise une somme
--> le groupier tire 4 cartes aleatoires allant de As(1) a roi(13)
+-> le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
 -> le jeux se base sur 4 tours
 -> si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
 -> entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
@@ -88,7 +234,7 @@ Troisieme tour:
 Quatrieme tour:
 - tu parie pour un X10 de ta mise de depart sur qu'elle est le symbole de la quatrieme carte, entre carreaux(club), coeur(heart), pique(spade), trefle(diamond)
 
-apres le quatrieme tour le jeux s'arrete et tu peux recommencer jusqu'a que tu arretes ou tu n'a plus d'argent  
+apres le quatrieme tour le jeux s'arrete et tu peux recommencer jusqu'a que tu arretes ou que tu n'ai plus d'argent  
 
 ## Comment jouer sur mon Irc
 ```bash
