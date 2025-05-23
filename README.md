@@ -156,7 +156,7 @@ on peux voir ceci depuis la fenetre raw_logs.
 
 Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
 
-La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t'envoie en respectant la norme IRC et aussi son interpretation des lignes que tu va lui envoyer, par exemple quand des clients sont dans un channel, si hexchat recoit selon la commande ```WHO``` qu'une personne a un ```@``` avant son nickname hexchat interprete est le presente comme operateur du channel (la pastille verte a coter du nickanme dans la liste)
+La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t'envoie en respectant la norme IRC et aussi son interpretation des lignes que tu va lui envoyer, par exemple quand des clients sont dans un channel, si hexchat recoit selon la commande ```WHO``` qu'une personne a un ```@``` avant son nickname hexchat l'interprete est le presente comme operateur du channel (la pastille verte a coter du nickanme dans la liste)
 
 # Manda
 
@@ -176,12 +176,12 @@ Hexchat peux t'envoyer aussi ```CAP LS 302```, je te laisse te renseigner.
 Personnellement j'ai fais un switch case d'un enum qui definie les grades de connection:
 
 ```cpp
-	    enum State {
-	        CONNECTED,
-	        AUTHENTICATED,
-	        REGISTERED,
-			    USER
-	    };
+enum State {
+	 CONNECTED,
+	 AUTHENTICATED,
+	 REGISTERED,
+		USER
+};
 ```
 
 ```cpp
@@ -201,9 +201,32 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 
 ## Les commandes a gerer :
 
+### [QUIT](https://modern.ircdocs.horse/#quit-message)
+
 ### [JOIN](https://modern.ircdocs.horse/#join-message)
 
-### 
+### [PART](https://modern.ircdocs.horse/#part-message)
+
+### [TOPIC](https://modern.ircdocs.horse/#topic-message)
+
+### [INVITE](https://modern.ircdocs.horse/#invite-message)
+
+### [KICK](https://modern.ircdocs.horse/#kick-message)
+
+### [MODE](https://modern.ircdocs.horse/#mode-message)
+
+### [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message)
+
+### [WHO](https://modern.ircdocs.horse/#who-message)
+pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
+
+## [Les Reponses IRC](https://modern.ircdocs.horse/#numerics)
+
+### Les RPL
+Les reponses RPL sont des formats de reponses aux commandes envoyées
+
+### Les ERR
+Les reponses RPL sont des formats d'erreurs à renvoyer au client
 
 # BONUS
 ```bash
