@@ -1,5 +1,5 @@
-# PROJET 42
-# ft_irc
+# PROJET 42 : 🌐 Ft_irc 
+
 
 ## Description
 
