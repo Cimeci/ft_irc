@@ -1,3 +1,4 @@
+# PROJET 42
 # ft_irc
 
 ## Description
@@ -97,7 +98,8 @@ flatpak install flathub io.github.Hexchat
 Une fois lancer tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur
 
 Si c'est le cas alors, tu peux faire :
--> Tu peux definir:
+
+-> En haut dans les 4 cases tu peux definir:
 --> ton nickname
 --> ton deuxieme nickname
 --> ton troisieme nickanme
@@ -134,8 +136,8 @@ et ensuite ```connect``` depuis ton Client hexchat cree.
 Apres cela tu te retrouve avec un client qui essaye perpetuellement de se connecter a ton serveur.
 
 Des choses interressantes a savoir:
-- **!!a verifier!!** Window/raw_logs -> ceci t'affiche les logs de communication entre le serveur et le client, ca te permet de comprendre ce que tu va recevoir et se que tu lui envoie, je te conseille de regarder le raw log d'autre client que le tiens pour que tu comprennes ce que tu as a faire
-- **!!a verifier!!** Hexchat/server_select -> tu peux creer plusieurs clients en changeant le nom du client et en te connectant toujours a ton serveur.
+- **🚧!!a verifier🚧!!** Window/raw_logs -> ceci t'affiche les logs de communication entre le serveur et le client, ca te permet de comprendre ce que tu va recevoir et se que tu lui envoie, je te conseille de regarder le raw log d'autre client que le tiens pour que tu comprennes ce que tu as a faire
+- **🚧!!a verifier!!🚧** Hexchat/server_select -> tu peux creer plusieurs clients en changeant le nom du client et en te connectant toujours a ton serveur.
 
 
 #### La structure des commandes hexchat
@@ -215,6 +217,12 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 
 ### [MODE](https://modern.ircdocs.horse/#mode-message)
 #### le - pour enlever le mode et le + pour ajouter
+#### i -> activer/desactiver le mode invitation uniquement
+#### t -> activer/desactiver l'obligation d'etre operator pour modifier le topic
+#### l -> activer/desactiver une limite de client sur le serveur
+#### k -> activer/desactiver la connection avcec un mot de passe au channel
+#### o -> donner/retirer les permissions d'operateur a un client
+
 ### [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message)
 
 ### [WHO](https://modern.ircdocs.horse/#who-message)
@@ -228,7 +236,19 @@ Les reponses RPL sont des formats de reponses aux commandes envoyées
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client
 
+## La logique de la structure de notre code
+
+On a utilise plusieurs [std::map](https://cplusplus.com/reference/map/map/) qui nous on etait utile pour stocker les clients, les channels, les clients dans les channels, les grades des clients dans les channels...
+
 # BONUS
+
+## Le transfert de fichier
+
+Sur hexchat, le transfert de fichier se fait de base si votre serveur est bien defini.
+Pour le realiser 🚧!!!A Faire!!!🚧
+
+## LE BOT
+
 ```bash
 make bonus
 ./ircserver_bonus <port> <password>
@@ -236,7 +256,7 @@ make bonus
 
 Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
 
-## Le principe du jeux
+### Le principe du jeux
 -> tu mise une somme
 -> le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
 -> le jeux se base sur 4 tours
@@ -259,7 +279,7 @@ Quatrieme tour:
 
 apres le quatrieme tour le jeux s'arrete et tu peux recommencer jusqu'a que tu arretes ou que tu n'ai plus d'argent  
 
-## Comment jouer sur mon Irc
+### Comment jouer sur mon Irc
 ```bash
 ./gamble <port> <password>
 ```
@@ -295,21 +315,27 @@ Une fois arrive dans le channel il recevra se message :
 ```
 Chaque Client commence avec 100$ sur son compte si il tombe a 0 il se fera expluser du channel et devra se faire re-inviter et recevra gracieusement 10$.
 
-Apres avoir fais
-nc
-```
-PRIVMSG #GambleRoom PLAY
-```
-hexchat
-```
-/privmsg #gambleRoom PLAY
-```
-ou
-```PLAY``` directement depuis le channel #gambleRoom
+Apres avoir envoyer ```PLAY``` directement depuis le channel #gambleRoom, sa vous lancera en partie est vous demandera de choisir le montant a miser.
+A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
-## Licence
+### Classement Jeux du Gamble
 
-Ce projet est sous licence MIT.
+LOGIN 42		| Argent total
+------------------------+---------------
+alualik			| 1060
+matde-ol		| 1050
+mblanch			| ?
+
+
+## Credit
+
+Readme realise par Ilan Nowak--Glandier (login: inowak--)
+
+Le projet IRC a ete realise par:
+nom 			| login 42
+------------------------+------------
+Ilan Nowak--Glandier	| inowak--
+Noa Charbog		| ncharbog
 
 ---
 
