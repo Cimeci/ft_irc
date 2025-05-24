@@ -319,25 +319,23 @@ Apres avoir envoyer ```PLAY``` directement depuis le channel #gambleRoom, sa vou
 A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 ### Classement Jeux du Gamble
-```
-login 42		| Argent total
-------------------------+---------------
-alualik			| 1060
-matde-ol		| 1050
-mblanch			| ?
-```
+
+| login 42 | Argent total |
+|----------|--------------|
+| alualik  | 1060 	  |
+| matde-ol | 1050	  |
+| mblanch  | ?		  |
 
 ## Credit
 
 Readme realise par Ilan Nowak--Glandier (login: inowak--)
 
 Le projet IRC a ete realise par:
-```
-nom 			| login 42
-------------------------+------------
-Ilan Nowak--Glandier	| inowak--
-Noa Charbog		| ncharbog
-```
+| nom 			| login 42 |
+|-----------------------|----------|
+| Ilan Nowak--Glandier	| inowak-- |
+| Noa Charbog		| ncharbog |
+
 ---
 
 > Ce README est une base et doit être adapté selon vos implémentations spécifiques et vos choix techniques.
