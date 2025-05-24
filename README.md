@@ -109,7 +109,7 @@ Si c'est le cas alors, tu peux faire :
 
 -> ```Edit``` tu va trouver ceci :
 
-<image menu entree hexchat>
+**🚧image menu entree hexchat🚧**
 
 sur la ligne en haut il faut que tu la modifie pour qu'elle soit en lien avec les parametres que tu as mis sur le set de ton serveur:
 exemple:
@@ -127,7 +127,7 @@ et ensuite il y a le port sur lequel ton serveur est ouvert.
 apres ceci sur la base de l'exemple il faut aussi que tu renseigne le mot de passe au client hexchat pour que de lui meme il donne les commandes a ton serveur:
 tu dois avoir ceci visuellement:
 
-<image page edit>
+**🚧image page edit🚧**
 
 tu peux faire autrement et tester les autres facons si tu en a envie mais personnelement j'ai choisie ceci.
 apres cela tu peux faire ```close```
