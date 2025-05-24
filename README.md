@@ -320,7 +320,7 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 ### Classement Jeux du Gamble
 ```
-LOGIN 42		| Argent total
+login 42		| Argent total
 ------------------------+---------------
 alualik			| 1060
 matde-ol		| 1050
@@ -330,6 +330,7 @@ mblanch			| ?
 ## Credit
 
 Readme realise par Ilan Nowak--Glandier (login: inowak--)
+
 Le projet IRC a ete realise par:
 ```
 nom 			| login 42
