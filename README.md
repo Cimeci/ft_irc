@@ -216,12 +216,12 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 ### [KICK](https://modern.ircdocs.horse/#kick-message)
 
 ### [MODE](https://modern.ircdocs.horse/#mode-message)
-#### le - pour enlever le mode et le + pour ajouter
-#### i -> activer/desactiver le mode invitation uniquement
-#### t -> activer/desactiver l'obligation d'etre operator pour modifier le topic
-#### l -> activer/desactiver une limite de client sur le serveur
-#### k -> activer/desactiver la connection avcec un mot de passe au channel
-#### o -> donner/retirer les permissions d'operateur a un client
+#### 	le - pour enlever le mode et le + pour ajouter
+#### 	i -> activer/desactiver le mode invitation uniquement
+#### 	t -> activer/desactiver l'obligation d'etre operator pour modifier le topic
+#### 	l -> activer/desactiver une limite de client sur le serveur
+#### 	k -> activer/desactiver la connection avcec un mot de passe au channel
+#### 	o -> donner/retirer les permissions d'operateur a un client
 
 ### [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message)
 
