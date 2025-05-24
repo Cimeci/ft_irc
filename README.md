@@ -330,6 +330,7 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 Readme realise par Ilan Nowak--Glandier (login: inowak--)
 
+
 Le projet IRC a ete realise par:
 - inowak-- , Ilan Nowak--Glandier
 - ncharbog , Noa Charbog
