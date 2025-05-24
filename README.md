@@ -214,7 +214,7 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 ### [KICK](https://modern.ircdocs.horse/#kick-message)
 
 ### [MODE](https://modern.ircdocs.horse/#mode-message)
-
+#### le - pour enlever le mode et le + pour ajouter
 ### [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message)
 
 ### [WHO](https://modern.ircdocs.horse/#who-message)
@@ -226,7 +226,7 @@ pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
 Les reponses RPL sont des formats de reponses aux commandes envoyées
 
 ### Les ERR
-Les reponses RPL sont des formats d'erreurs à renvoyer au client
+Les reponses ERR sont des formats d'erreurs à renvoyer au client
 
 # BONUS
 ```bash
