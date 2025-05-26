@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:08:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 10:24:31 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:12:43 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ class Bot{
 		~Bot();
 
 		void dealer();
+
 		void setStop(bool b) {_stop = b;}
+
 		int getFd() const {return _socketFd;}
 		bool getStop() const {return _stop;}
-
+		std::map<std::string, size_t> getPlayers() {return _players;}
 		std::string getSender() const {return _sender;}
+
 };
 
 extern Bot* g_bot;

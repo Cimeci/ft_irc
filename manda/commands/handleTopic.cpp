@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleTopic.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:35:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:15:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:17:29 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,9 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 		std::string response = serverName + ERR_NOTONCHANNEL(clientBook[fd]->getNickname(), channelName);
 		send(fd, response.c_str(), response.length(), 0);
 	}
-	else if (channel->getIsOpTopic() == true && client->_clientChannels[_channels[channelName]] != Client::OPERATOR) {
-		std::string response = serverName + ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName);
-		send(fd, response.c_str(), response.length(), 0);
-	}
 	else if (topic.empty()) {
 		if (_channels[channelName]->getTopic().empty())
-			response = serverName + RPL_NOTOPIC(client->getNickname(), channelName);
+		response = serverName + RPL_NOTOPIC(client->getNickname(), channelName);
 		else {
 			response = serverName + RPL_TOPIC(client->getNickname(), channelName, channel->getTopic());
 			send(fd, response.c_str(), response.length(), 0);
@@ -48,6 +44,10 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 			std::string t = oss.str();
 			response = serverName + RPL_TOPICWHOTIME(client->getNickname(), channelName, client->getUsername(), t);
 		}
+		send(fd, response.c_str(), response.length(), 0);
+	}
+	else if (channel->getIsOpTopic() == true && client->_clientChannels[_channels[channelName]] != Client::OPERATOR) {
+		std::string response = serverName + ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName);
 		send(fd, response.c_str(), response.length(), 0);
 	}
 	else {
