@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:41:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 10:18:55 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:01:43 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 	sendChannelMessage(fd, "'BANK' : for bank amount");
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 
-	while (line != "EXIT" && g_bot->getStop() == false){
+	while (line != "EXIT" && g_bot->getStop() == false && g_bot->getPlayers().size() > 1){
 		input = ",";
 		if (gamble.getBank() == 0){
 			sendChannelMessage (fd, "[you're broke, goodbye]"); return(gamble.getBank());

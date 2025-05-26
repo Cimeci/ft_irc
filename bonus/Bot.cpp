@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:04:39 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 14:09:42 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:13:01 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void handle_sigint(int sig){
 }
 
 void Bot::dealer(){
-	
+
 	g_bot = this;
 	std::string input;
 	std::signal(SIGINT, handle_sigint);
@@ -94,10 +94,14 @@ void Bot::dealer(){
 					_players[_sender] = 100;
 				else if (_players[_sender] == 0)
 					_players[_sender] = 10;
-				std::cout << _sender << " | " << _players[_sender] << std::endl;		
+				std::cout << _sender << " | " << _players[_sender] << std::endl;
 				Gamble gamble(_players[_sender]);
 				_players[_sender] = gamble.playGamble(_socketFd, gamble);
-				sendMessage(_socketFd, "KICK #GambleRoom " + _sender + "\r\n");
+				if (_players.size() < 2) {
+					continue ;
+				}
+				if (_stop == false)
+					sendMessage(_socketFd, "KICK #GambleRoom " + _sender + "\r\n");
 			}
 		}
 	}
