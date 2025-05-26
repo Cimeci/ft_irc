@@ -173,7 +173,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 	sendChannelMessage(fd, "'BANK' : for bank amount");
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 
-	while (line != "EXIT" && g_bot->getStop() == false && g_bot->getPlayers().size() > 1){
+	while (line != "EXIT" && g_bot->getStop() == false && g_bot->getPlayers().size() >= 1){
 		input = ",";
 		if (gamble.getBank() == 0){
 			sendChannelMessage (fd, "[you're broke, goodbye]"); return(gamble.getBank());
