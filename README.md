@@ -179,7 +179,7 @@ Pour le serveur vous allez avoir besoin d'utiliser:
 
 Les structures :
 - [sockaddr_in](https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html)
-- liee a accpet [socklen_t](http://manpagesfr.free.fr/man/man2/accept.2.html)
+- liee a accept [socklen_t](http://manpagesfr.free.fr/man/man2/accept.2.html)
 - liee a poll [pollfd](http://manpagesfr.free.fr/man/man2/poll.2.html)
 
 Les fonctions :
