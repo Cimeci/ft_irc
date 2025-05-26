@@ -16,6 +16,7 @@ SRC = manda/main.cpp\
       manda/handleConnection.cpp\
       manda/handleCommands.cpp\
       manda/utils.cpp\
+	  manda/ircUtils.cpp\
       manda/Client/Client.cpp\
       manda/Channel/Channel.cpp\
 	  manda/commands/handleInvite.cpp\

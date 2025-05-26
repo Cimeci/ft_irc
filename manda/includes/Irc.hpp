@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:16:48 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:35:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,28 +48,28 @@ class Channel;
 
 class Irc{
 	private:
-		const std::string serverName;
-		int server_socket;
+		const std::string _serverName;
+		int _server_socket;
 		int _port;
 		std::string _password;
 		bool _serverRunning;
 
 		std::vector<pollfd> _pollfds;
 
-		std::map<int, Client *> clientBook;
+		std::map<int, Client *> _clientBook;
 		std::map<std::string, Channel *> _channels;
-		std::map<std::string, int> nicknameToFd;
+		std::map<std::string, int> _nicknameToFd;
 
 	public:
-		Irc(): serverName(":irc.climbers.ni"), _serverRunning(true) {}
+		Irc(): _serverName(":irc.climbers.ni"), _serverRunning(true) {}
 		bool setParameters(const int port, const std::string password);
 
 		int server();
 
-		int getServerSocket() const {return server_socket;}
-		std::map<int, Client *>& getClientBook() {return clientBook;}
-		std::map<std::string, Channel *>& getChannels() {return _channels;}
-		std::vector<pollfd>& getPollFds() {return _pollfds;}
+		int getServerSocket() const;
+		std::map<int, Client *>& getClientBook();
+		std::map<std::string, Channel *>& getChannels();
+		std::vector<pollfd>& getPollFds();
 		
 
 		void handleNewConnection();
@@ -95,7 +95,7 @@ class Irc{
 
 		bool valueExist(std::string value);
 		void successfulRegistration(int client_socket);
-		void setServerRunning(bool b) {_serverRunning = b;}
+		void setServerRunning(bool b);
 };
 
 std::vector<std::string> ft_split(std::string str, const std::string &c);

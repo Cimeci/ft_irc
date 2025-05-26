@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:56:27 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:15:59 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:40:25 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void Irc::handleWho(int fd, const std::string& channelName){
 	//* send actual member list //
 	std::string names;
-	Client *client = clientBook[fd];
+	Client *client = _clientBook[fd];
 	
 	if (_channels.find(channelName) == _channels.end()){
 		sendMessage(fd, ERR_NOSUCHCHANNEL(client->getNickname(), channelName));

@@ -6,14 +6,14 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:31:40 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:15:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:36:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/Irc.hpp"
 
 void Irc::handleJoin(int fd, const std::string& channelName, const std::string& passChannel) {
-	Client *client = clientBook[fd];
+	Client *client = _clientBook[fd];
 
 	std::vector<std::string> channelGroup = ft_split(channelName, ",");
 	std::vector<std::string> passChanGroup = ft_split(passChannel, ",");

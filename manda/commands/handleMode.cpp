@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:38:57 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:15:44 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:37:52 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ size_t getOption(const char &opt){
 }
 
 void Irc::handleMode(int fd, const std::string &channelName, const std::string &mode){
-	Client *client = clientBook[fd];
+	Client *client = _clientBook[fd];
 
 	//* ERROR *//
 
@@ -87,7 +87,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 					break;
 				case 3 : // !o
 					if (modeGroup.size() == OptionMode || modeGroup[OptionMode].empty()){
-						sendMessage(fd, (serverName + ERR_NEEDMOREPARAMS(client->getNickname())));
+						sendMessage(fd, (_serverName + ERR_NEEDMOREPARAMS(client->getNickname())));
 					}
 					else {
 						std::vector<std::string> GroupClient = ft_split(modeGroup[OptionMode], ",");
@@ -95,10 +95,10 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 							sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+o", modeGroup[OptionMode], "Not a valid nickname"));
 						else {
 							for (size_t k = 0; k < GroupClient.size(); k++){
-								if (nicknameToFd.find(GroupClient[k]) != nicknameToFd.end() && clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels.end())
+								if (_nicknameToFd.find(GroupClient[k]) != _nicknameToFd.end() && _clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels.find(_channels[channelName]) != _clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels.end())
 								{
-									if (clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] == Client::MEMBER) {
-										clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] = Client::OPERATOR;
+									if (_clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] == Client::MEMBER) {
+										_clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] = Client::OPERATOR;
 										_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "+o", GroupClient[k]), fd);
 										sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "+o", GroupClient[k]));
 									}
@@ -166,10 +166,10 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 							sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+o", modeGroup[OptionMode], "Not a valid nickname"));
 						else {
 							for (size_t k = 0; k < GroupClient.size(); k++){
-								if (nicknameToFd.find(GroupClient[k]) != nicknameToFd.end() && clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels.find(_channels[channelName]) != clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels.end())
+								if (_nicknameToFd.find(GroupClient[k]) != _nicknameToFd.end() && _clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels.find(_channels[channelName]) != _clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels.end())
 								{
-									if (clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] == Client::OPERATOR) {
-										clientBook[nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] = Client::MEMBER;
+									if (_clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] == Client::OPERATOR) {
+										_clientBook[_nicknameToFd[GroupClient[k]]]->_clientChannels[_channels[channelName]] = Client::MEMBER;
 										_channels[channelName]->broadcast(MODE(client->getNickname(), client->getUsername() ,channelName, "-o", GroupClient[k]), fd);
 										sendMessage(fd, MODE(client->getNickname(), client->getUsername() ,channelName, "-o", GroupClient[k]));
 									}

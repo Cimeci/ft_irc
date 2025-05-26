@@ -6,19 +6,19 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:34:47 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:15:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:38:54 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/Irc.hpp"
 
 void Irc::handlePart(int fd, const std::string& channelName, const std::string& reason) {
-	Client* client = clientBook[fd];
+	Client* client = _clientBook[fd];
 	std::vector<std::string> channels;
 	std::string response;
 
 	if (channelName.empty()) {
-		response = serverName + ERR_NEEDMOREPARAMS(client->getNickname());
+		response = _serverName + ERR_NEEDMOREPARAMS(client->getNickname());
 		send(fd, response.c_str(), response.length(), 0);
 		return ;
 	}
@@ -43,7 +43,7 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 				}
 			}
 			else
-				response = serverName + ERR_NOTONCHANNEL(client->getNickname(), *it);
+				response = _serverName + ERR_NOTONCHANNEL(client->getNickname(), *it);
 		}
 		else
 			response = ERR_NOSUCHCHANNEL(client->getNickname(), *it);

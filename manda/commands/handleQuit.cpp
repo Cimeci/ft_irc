@@ -6,14 +6,14 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:35:54 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 16:15:50 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:39:20 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/Irc.hpp"
 
 void Irc::handleQuit(int fd, std::string reason) {
-	Client *client = clientBook[fd];
+	Client *client = _clientBook[fd];
 	std::map<std::string, Channel *>::iterator tmp;
 
 	for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end(); )
