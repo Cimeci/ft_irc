@@ -104,10 +104,10 @@ Tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes
 Si c'est le cas alors, tu peux faire :
 
 -> En haut dans les 4 cases tu peux definir:
-- ton nickname
+- ton nickname (que le serveur utilise)
 - ton deuxieme nickname
 - ton troisieme nickanme
-- ton nom de user
+- ton nom de user (que le serveur utilise)
 
 -> ```Add``` et tu peux choisir le nom d'appellation de ton serveur.
 
