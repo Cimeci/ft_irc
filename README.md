@@ -173,6 +173,10 @@ La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t
 
 # Manda
 
+Pour le serveur, vous allez avoir besoin d'utiliser:
+- [socket](https://linux.die.net/man/2/socket)
+- [setsockopt]()
+
 Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
 
 ## [La connection au serveur](https://modern.ircdocs.horse/#connection-messages) 
