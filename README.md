@@ -95,21 +95,25 @@ Il s'utilise depuis son application, pour la telecharger :
 flatpak install flathub io.github.Hexchat
 ```
 
-Une fois lancer tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur
+Une fois lancée tu verras :
+
+![image](https://github.com/user-attachments/assets/f0a3e571-b2e1-46ff-b4d8-90f3efee15ad)
+
+Tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur
 
 Si c'est le cas alors, tu peux faire :
 
 -> En haut dans les 4 cases tu peux definir:
---> ton nickname
---> ton deuxieme nickname
---> ton troisieme nickanme
---> ton nom de user
+- ton nickname
+- ton deuxieme nickname
+- ton troisieme nickanme
+- ton nom de user
 
 -> ```Add``` et tu peux choisir le nom d'appellation de ton serveur.
 
 -> ```Edit``` tu va trouver ceci :
 
-**🚧image menu entree hexchat🚧**
+![image](https://github.com/user-attachments/assets/5a4c5ca3-e872-421a-b835-5035ea4ae2b2)
 
 sur la ligne en haut il faut que tu la modifie pour qu'elle soit en lien avec les parametres que tu as mis sur le set de ton serveur:
 exemple:
@@ -127,7 +131,7 @@ et ensuite il y a le port sur lequel ton serveur est ouvert.
 apres ceci sur la base de l'exemple il faut aussi que tu renseigne le mot de passe au client hexchat pour que de lui meme il donne les commandes a ton serveur:
 tu dois avoir ceci visuellement:
 
-**🚧image page edit🚧**
+![image](https://github.com/user-attachments/assets/5badaa14-87ab-46be-a11b-2dec6a940c9d)
 
 tu peux faire autrement et tester les autres facons si tu en a envie mais personnelement j'ai choisie ceci.
 apres cela tu peux faire ```close```
@@ -135,16 +139,23 @@ et ensuite ```connect``` depuis ton Client hexchat cree.
 
 Apres cela tu te retrouve avec un client qui essaye perpetuellement de se connecter a ton serveur.
 
+![image](https://github.com/user-attachments/assets/a2a69d51-3348-41f7-a28b-6e6125b4790b)
+
 Des choses interressantes a savoir:
-- **🚧!!a verifier🚧!!** Window/raw_logs -> ceci t'affiche les logs de communication entre le serveur et le client, ca te permet de comprendre ce que tu va recevoir et se que tu lui envoie, je te conseille de regarder le raw log d'autre client que le tiens pour que tu comprennes ce que tu as a faire
-- **🚧!!a verifier!!🚧** Hexchat/server_select -> tu peux creer plusieurs clients en changeant le nom du client et en te connectant toujours a ton serveur.
+- **Window/Raw Logs** -> ceci t'affiche les logs de communication entre le serveur et le client, ca te permet de comprendre ce que tu va recevoir et se que tu lui envoie, je te conseille de regarder le raw log d'autre client que le tiens pour que tu comprennes ce que tu as a faire.
+
+Voici ce que tu pourrais voir :
+
+![image](https://github.com/user-attachments/assets/c334bb41-10c6-45af-86e6-e1056ab6be42)
+
+- **Hexchat/Network List** -> tu peux creer plusieurs clients en changeant le nom du client et en te connectant toujours a ton serveur.
 
 
 #### La structure des commandes hexchat
 
 Sur hexchat, la struture est la plus part du temp comme ceci :
 ``` 
-/<COMMAND> <Target> <L'information a transmettre> <autres options>
+/<command> <Target> <L'information a transmettre> <autres options>
 ```
 par exemple pour la commande privmsg, si on veut parler a ilan et noa:
 ```
@@ -179,10 +190,10 @@ Personnellement j'ai fais un switch case d'un enum qui definie les grades de con
 
 ```cpp
 enum State {
-	 CONNECTED,
-	 AUTHENTICATED,
-	 REGISTERED,
-		USER
+  CONNECTED,
+  AUTHENTICATED,
+  REGISTERED,
+  USER
 };
 ```
 
@@ -231,10 +242,10 @@ pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
 ## [Les Reponses IRC](https://modern.ircdocs.horse/#numerics)
 
 ### Les RPL
-Les reponses RPL sont des formats de reponses aux commandes envoyées
+Les reponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
-Les reponses ERR sont des formats d'erreurs à renvoyer au client
+Les reponses ERR sont des formats d'erreurs à renvoyer au client.
 
 ## La logique de la structure de notre code
 
@@ -245,7 +256,7 @@ On a utilise plusieurs [std::map](https://cplusplus.com/reference/map/map/) qui 
 ## Le transfert de fichier
 
 Sur hexchat, le transfert de fichier se fait de base si votre serveur est bien defini.
-Pour le realiser 🚧!!!A Faire!!!🚧
+Pour le realiser, dans l'onglet **Window** tu pourras retrouver **File Transfers**.
 
 ## LE BOT
 
