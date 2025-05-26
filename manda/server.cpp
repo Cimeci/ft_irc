@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:33:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 15:27:09 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ void Irc::handleNewConnection() {
 }
 
 void Irc::handleClientData(int fd) {
+	static std::string saveInput = "";
     Client *client = _clientBook[fd];
     char buffer[BUFFER_SIZE];
     std::string input;
@@ -183,12 +184,19 @@ void Irc::handleClientData(int fd) {
 		return;
 	}
 
+	
+
 	input = std::string(buffer);
 	std::vector<std::string> split;
-	if (input.find("\r\n") != std::string::npos)
-		split = ft_split(input, "\r\n");
+	saveInput += input;
+	if (saveInput.find("\r\n") != std::string::npos)
+		split = ft_split(saveInput, "\r\n");
+	else if (saveInput.find("\n") != std::string::npos)
+		split = ft_split(saveInput, "\n");
 	else
-		split = ft_split(input, "\n");
+		return;
+	if (!saveInput.empty())
+		saveInput = "";
 	std::cout << "------ split input -----" << std::endl;
 	for (size_t i = 0; i < split.size(); i++)
 		std::cout << "split : " << split[i] << std::endl;
