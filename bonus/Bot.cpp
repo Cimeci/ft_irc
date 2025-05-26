@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:04:39 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 13:00:56 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:09:42 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,23 @@ Bot::~Bot(){}
 
 void handle_sigint(int sig){
 	(void)sig;
+	std::cout << std::endl;
+	std::cout << RED << "+----------------------+" << RESET << std::endl;
+	std::cout << RED << "|  Gamble Bot shutdow  |" << RESET << std::endl;
+	std::cout << RED << "+----------------------+" << RESET << std::endl;
 	g_bot->setStop(true);
+	usleep(100000);
 	sendMessage(g_bot->getFd(), "KICK #GambleRoom " + g_bot->getSender() + "\r\n");
+	usleep(100000);
 	sendMessage(g_bot->getFd(), "QUIT\r\n");
-	close(g_bot->getFd());
 }
 
 void Bot::dealer(){
+	
 	g_bot = this;
 	std::string input;
 	std::signal(SIGINT, handle_sigint);
-
+	signal(SIGPIPE, SIG_IGN);
 	sendMessage(_socketFd, "JOIN #GambleRoom\r\n");
 	while (1){
 		input = recvMessage(_socketFd);
@@ -69,7 +75,6 @@ void Bot::dealer(){
 	{
 		input = recvMessage(_socketFd);
 		if (!input.empty()){
-			std::cout << input << std::endl;
 			_sender = input.substr(1, input.find(" ") - 1);
 			if (_sender.find("!") != std::string::npos)
 				_sender = _sender.substr(0, _sender.find("!"));
@@ -82,9 +87,17 @@ void Bot::dealer(){
 			if (input.find("JOIN #GambleRoom") != std::string::npos &&
 				input.find(_sender) != std::string::npos) {
 				std::cout << "ready to play" << std::endl;
-				Gamble gamble(100);
-				if (gamble.playGamble(_socketFd))
-					sendMessage(_socketFd, "KICK #GambleRoom " + _sender + "\r\n");
+				std::map<std::string, size_t>::iterator it = _players.begin();
+				for (; it != _players.end(); ++it)
+					std::cout << it->first << " | " << it->second << std::endl;
+				if (_players.find(_sender) == _players.end())
+					_players[_sender] = 100;
+				else if (_players[_sender] == 0)
+					_players[_sender] = 10;
+				std::cout << _sender << " | " << _players[_sender] << std::endl;		
+				Gamble gamble(_players[_sender]);
+				_players[_sender] = gamble.playGamble(_socketFd, gamble);
+				sendMessage(_socketFd, "KICK #GambleRoom " + _sender + "\r\n");
 			}
 		}
 	}

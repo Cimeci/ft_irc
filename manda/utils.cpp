@@ -6,11 +6,25 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:17 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 17:10:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:15:20 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "irc.hpp"
+# include "includes/Irc.hpp"
+
+bool Irc::setParameters(const int port, const std::string password){
+	if (!(port >= 0 && port <= MAX_PORT))
+    	return false;
+	_port = port;
+	_password = password;
+	return true;
+}
+
+void Irc::sendMessage(int fd, std::string msg)
+{
+	std::cout << ORANGE << "[SEND] " << RESET << msg;
+	send(fd, msg.c_str(), msg.length(), 0);
+}
 
 std::vector<std::string> ft_split(std::string str, const std::string& c) {
 	std::vector<std::string> split;
@@ -32,10 +46,6 @@ std::vector<std::string> ft_split(std::string str, const std::string& c) {
 }
 
 bool Irc::valueExist(std::string value){
-	// # ifdef BONUS
-	// 	if (value == "GambleDealer")
-	// 		return true;
-	// # endif
 	for (std::map<int, Client*>::const_iterator it = clientBook.begin(); it != clientBook.end(); ++it) {
 		if (it->second && it->second->getNickname() == value)
 			return true;

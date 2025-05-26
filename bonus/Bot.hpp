@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 10:08:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 11:11:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 10:24:31 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <string>
 # include <cstring>
 # include <cstdlib>
+# include <map>
 # include <unistd.h>
 # include <arpa/inet.h>
 # include <sys/socket.h>
@@ -29,6 +30,7 @@ class Bot{
 		std::string _password;
 		bool _stop;
 		std::string _sender;
+		std::map<std::string, size_t> _players;
 
 	public:
 		Bot(std::string IPaddress, std::string password);

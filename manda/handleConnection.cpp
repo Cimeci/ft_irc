@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   connection.cpp                                     :+:      :+:    :+:   */
+/*   handleConnection.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/20 10:56:28 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:13:23 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "irc.hpp"
+# include "includes/Irc.hpp"
 
 void Irc::handlePassword(int client_socket, std::string input) {
 	std::string response;

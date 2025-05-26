@@ -6,12 +6,12 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:15:06 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/19 13:35:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:39:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Channel.hpp"
-# include "irc.hpp"
+# include "../includes/Irc.hpp"
 
 Channel::Channel(const std::string& name) : _name(name), _topic(""), _symbol("="), _invitation(false), _isOpTopic(true), _limitClients(10000), _password("") {}
 

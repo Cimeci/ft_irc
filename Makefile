@@ -13,13 +13,20 @@ OBJDIRBOT    = obj_bot
 
 SRC = manda/main.cpp\
       manda/server.cpp\
-      manda/parsing.cpp\
-      manda/connection.cpp\
-      manda/Client.cpp\
-      manda/Channel.cpp\
-      manda/handleClient.cpp\
-      manda/commands.cpp\
-      manda/utils.cpp
+      manda/handleConnection.cpp\
+      manda/handleCommands.cpp\
+      manda/utils.cpp\
+      manda/Client/Client.cpp\
+      manda/Channel/Channel.cpp\
+	  manda/commands/handleInvite.cpp\
+	  manda/commands/handleJoin.cpp\
+	  manda/commands/handleKick.cpp\
+	  manda/commands/handleMode.cpp\
+	  manda/commands/handlePart.cpp\
+	  manda/commands/handlePrivmsg.cpp\
+	  manda/commands/handleQuit.cpp\
+	  manda/commands/handleTopic.cpp\
+	  manda/commands/handleWho.cpp\
 
 SRC_BOT = bonus/gamble.cpp\
           bonus/Bot.cpp\

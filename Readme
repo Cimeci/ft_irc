@@ -1,7 +1,0 @@
-- illegal channel name ?
-- gérer différents modes /mode #a o-k+l aussi les differents users pour +o
-- gérer les kick multiples ?
-- /mode #a +tk salut test (les modes ne s'activent pas correctement)
-- /topic ne fonctionne pas quand on n'est pas opérateur
-- vérifier quelles commandes prennent plusieurs paramètres 
-- out ne fonctionne pas sur le bot
