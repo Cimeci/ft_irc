@@ -173,9 +173,33 @@ La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t
 
 # Manda
 
-Pour le serveur, vous allez avoir besoin d'utiliser:
+## Le serveur
+
+Pour le serveur vous allez avoir besoin d'utiliser:
+
+Les structures :
+- [sockaddr_in](https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html)
+- liee a accpet [socklen_t](http://manpagesfr.free.fr/man/man2/accept.2.html)
+- liee a poll [pollfd](http://manpagesfr.free.fr/man/man2/poll.2.html)
+
+Les fonctions :
 - [socket](https://linux.die.net/man/2/socket)
-- [setsockopt]()
+- [setsockopt](https://linux.die.net/man/2/setsockopt)
+- [bind](https://man7.org/linux/man-pages/man2/bind.2.html)
+- [listen](https://man7.org/linux/man-pages/man2/listen.2.html)
+- [send](https://man7.org/linux/man-pages/man2/send.2.html)
+- [poll](http://manpagesfr.free.fr/man/man2/poll.2.html)
+- [accept](http://manpagesfr.free.fr/man/man2/accept.2.html)
+- [inet_ntop](https://man7.org/linux/man-pages/man3/inet_ntop.3.html)
+- [ntohs](https://linux.die.net/man/3/ntohs)
+
+## La logique de la structure de notre code
+
+On a utilise plusieurs :
+- [std::map](https://cplusplus.com/reference/map/map/) pour stocker les clients, les channels, les clients dans les channels, les grades des clients dans les channels...
+- [enum](https://en.cppreference.com/w/cpp/language/enum) pour une meilleur lisibilite et une amelioration de la logique
+- [macros](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-define-directive-c-cpp?view=msvc-170) pour les RPL et ERR
+- []
 
 Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
 
@@ -250,10 +274,6 @@ Les reponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
-
-## La logique de la structure de notre code
-
-On a utilise plusieurs [std::map](https://cplusplus.com/reference/map/map/) qui nous on etait utile pour stocker les clients, les channels, les clients dans les channels, les grades des clients dans les channels...
 
 # BONUS
 
