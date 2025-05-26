@@ -197,9 +197,10 @@ Les fonctions :
 
 On a utilise plusieurs :
 - [std::map](https://cplusplus.com/reference/map/map/) pour stocker les clients, les channels, les clients dans les channels, les grades des clients dans les channels...
+    exemple: 		std::map<int, Client *> clientBook; -> ici j'index mon objet de ma class Client par rapport au socket du client.
 - [enum](https://en.cppreference.com/w/cpp/language/enum) pour une meilleur lisibilite et une amelioration de la logique
 - [macros](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-define-directive-c-cpp?view=msvc-170) pour les RPL et ERR
-- []
+- [find()](https://cplusplus.com/reference/algorithm/find/) bien utile pour trouver des valeurs dans nos maps
 
 Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
 
