@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gamble.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 15:41:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/22 14:06:56 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/26 10:18:55 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 	std::string handlePlay2[2] = {"LOWER", "UPPER"};
 	std::string handlePlay3[2] = {"INSIDE", "OUTSIDE"};
 	std::string handlePlay4[4] = {"CLUB", "HEART", "SPADE", "DIAMOND"};
-	
+
 	usleep(100000);
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 	sendChannelMessage(fd, "'PLAY' : for play camble");
@@ -174,6 +174,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 
 	while (line != "EXIT" && g_bot->getStop() == false){
+		input = ",";
 		if (gamble.getBank() == 0){
 			sendChannelMessage (fd, "[you're broke, goodbye]"); return(gamble.getBank());
 		}
@@ -185,7 +186,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 		if (line == "BANK"){
 			sendChannelMessage(fd, "You have " + size_t_to_string(gamble.getBank()) + " in your bank account");
 		}
-		
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		if (line == "PLAY")
@@ -205,7 +206,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				}
 				bet = atoi(input.c_str());
 				sendChannelMessage(fd, "Let's Play");
-					
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				sendChannelMessage(fd, "For a x2, Bet the card is 'RED' or 'BLACK' ?");
