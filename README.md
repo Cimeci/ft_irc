@@ -202,6 +202,12 @@ On a utilise plusieurs :
 - [macros](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-define-directive-c-cpp?view=msvc-170) pour les RPL et ERR
 - [find()](https://cplusplus.com/reference/algorithm/find/) bien utile pour trouver des valeurs dans nos maps
 
+##  La gesstion des signaux :
+
+Il faudra gerer les signaux ctrl D et ctrl C.
+- le ctrl D sera a gerer sur nc, afin de traiter une commande, vous devez en premier lieu la reconstituer en concaténant les paquets reçus.
+- le ctrl C vous permetera d'arreter proprement votre serveur.
+
 Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
 
 ## [La connection au serveur](https://modern.ircdocs.horse/#connection-messages) 
@@ -270,11 +276,15 @@ pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
 
 ## [Les Reponses IRC](https://modern.ircdocs.horse/#numerics)
 
+-> Mon fichier macros pour les reponses d'irc : [IRCMacros](manda/includes/IRCMacros.hpp)
+
 ### Les RPL
 Les reponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
+
+
 
 # BONUS
 
@@ -293,11 +303,11 @@ make bonus
 Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
 
 ### Le principe du jeux
--> tu mise une somme
--> le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
--> le jeux se base sur 4 tours
--> si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
--> entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
+- tu mise une somme
+- le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
+- le jeux se base sur 4 tours
+- si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
+- entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
 
 Premier tour:
 - tu parie pour un X2 de ta mise de depart sur es ce que la premiere des 4 cartes est rouge ou noir
@@ -351,7 +361,7 @@ Une fois arrive dans le channel il recevra se message :
 ```
 Chaque Client commence avec 100$ sur son compte si il tombe a 0 il se fera expluser du channel et devra se faire re-inviter et recevra gracieusement 10$.
 
-Apres avoir envoyer ```PLAY``` directement depuis le channel #gambleRoom, sa vous lancera en partie est vous demandera de choisir le montant a miser.
+Apres avoir envoyer ```PLAY``` directement depuis le channel #GambleRoom, sa vous lancera en partie et vous demandera de choisir le montant a miser.
 A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 ### Classement Jeux du Gamble
