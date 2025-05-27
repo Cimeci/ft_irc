@@ -303,11 +303,11 @@ make bonus
 Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
 
 ### Le principe du jeux
--> tu mise une somme
--> le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
--> le jeux se base sur 4 tours
--> si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
--> entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
+- tu mise une somme
+- le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
+- le jeux se base sur 4 tours
+- si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
+- entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
 
 Premier tour:
 - tu parie pour un X2 de ta mise de depart sur es ce que la premiere des 4 cartes est rouge ou noir
