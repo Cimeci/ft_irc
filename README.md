@@ -275,13 +275,16 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
 
 ## [Les Reponses IRC](https://modern.ircdocs.horse/#numerics)
-[IRCMacros](manda/includes/IRCMacros)
+
+-> Mon fichier macros pour les reponses d'irc : [IRCMacros](manda/includes/IRCMacros.hpp)
 
 ### Les RPL
 Les reponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
+
+
 
 # BONUS
 
