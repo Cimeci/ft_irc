@@ -361,7 +361,7 @@ Une fois arrive dans le channel il recevra se message :
 ```
 Chaque Client commence avec 100$ sur son compte si il tombe a 0 il se fera expluser du channel et devra se faire re-inviter et recevra gracieusement 10$.
 
-Apres avoir envoyer ```PLAY``` directement depuis le channel #gambleRoom, sa vous lancera en partie est vous demandera de choisir le montant a miser.
+Apres avoir envoyer ```PLAY``` directement depuis le channel #GambleRoom, sa vous lancera en partie et vous demandera de choisir le montant a miser.
 A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 ### Classement Jeux du Gamble
