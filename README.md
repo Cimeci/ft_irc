@@ -202,6 +202,12 @@ On a utilise plusieurs :
 - [macros](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-define-directive-c-cpp?view=msvc-170) pour les RPL et ERR
 - [find()](https://cplusplus.com/reference/algorithm/find/) bien utile pour trouver des valeurs dans nos maps
 
+##  La gesstion des signaux :
+
+Il faudra gerer les signaux ctrl D et ctrl C.
+- le ctrl D sera a gerer sur nc, afin de traiter une commande, vous devez en premier lieu la reconstituer en concaténant les paquets reçus.
+- le ctrl C vous permetera d'arreter proprement votre serveur.
+
 Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
 
 ## [La connection au serveur](https://modern.ircdocs.horse/#connection-messages) 
@@ -269,6 +275,7 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
 
 ## [Les Reponses IRC](https://modern.ircdocs.horse/#numerics)
+[IRCMacros](manda/includes/IRCMacros)
 
 ### Les RPL
 Les reponses RPL sont des formats de reponses aux commandes envoyées.
