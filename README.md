@@ -402,7 +402,7 @@ Apres avoir envoyer ```PLAY``` directement depuis le channel #GambleRoom, ça vo
 
 ## Credit
 
-Readme realise par:
+Readme réalisé par:
 - Ilan Nowak--Glandier ([inowak--](https://profile.intra.42.fr/users/inowak--))
 
 Projet IRC realisé par:
