@@ -61,6 +61,9 @@ ft_irc
 
 ## Les clients:
 
+<details>
+<summary>NetCat</summary>
+
 ### [NetCat (nc)](https://www.varonis.com/fr/blog/netcat-commands)
 
 nc est un client obligatoire demander par le sujet. Il s'utilise depuis un terminal est se lance de cette facon :
@@ -85,6 +88,10 @@ PRIVMSG ilan,noa hello world
 ```
 ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
 
+</details>
+
+<details>
+<summary>Hexchat</summary>
 
 ### [Hexchat](https://hexchat.github.io)
 
@@ -170,6 +177,8 @@ on peux voir ceci depuis la fenetre raw_logs.
 Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
 
 La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t'envoie en respectant la norme IRC et aussi son interpretation des lignes que tu va lui envoyer, par exemple quand des clients sont dans un channel, si hexchat recoit selon la commande ```WHO``` qu'une personne a un ```@``` avant son nickname hexchat l'interprete est le presente comme operateur du channel (la pastille verte a coter du nickanme dans la liste)
+
+</details>
 
 # Manda
 
