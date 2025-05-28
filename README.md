@@ -52,6 +52,7 @@ ft_irc
 │   │   └── IRCMacro.hpp
 │   ├── handleCommands.cpp
 │   ├── handleConnection.cpp
+│   ├── ircUtils.cpp
 │   ├── main.cpp
 │   ├── server.cpp
 │   └── utils.cpp
