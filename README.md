@@ -20,9 +20,6 @@
 - Gestion de commandes IRC de base : NICK, USER, JOIN, PART, PRIVMSG, QUIT, etc.
 - Gestion des modes utilisateurs et channels.
 
-<details>
-<summary>La Structure de mon IRC</summary>
-
 ```txt
 ft_irc
 ├── bonus/
@@ -59,7 +56,6 @@ ft_irc
 ├── Makefile
 └── README.md
 ```
-</details>
 
 ## Les clients:
 
