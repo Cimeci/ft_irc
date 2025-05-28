@@ -1,4 +1,4 @@
-# PROJET 42 : Ft_irc 🌐 
+# PROJET [42](https://42.fr/en/homepage/) : Ft_irc 🌐 
 
 
 ## Description
@@ -293,8 +293,7 @@ Les reponses RPL sont des formats de reponses aux commandes envoyées.
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
 
-<details>
-<summary>BONUS</summary>
+# BONUS
 
 ## Le transfert de fichier
 
@@ -376,20 +375,17 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 | login 42 | Argent total |
 |----------|--------------|
-| alaualik | 1080 	  |
-| matde-ol | 1050	  |
-| mblanch  | ?		  |
-
-</details>
+| [alaualik](https://profile.intra.42.fr/users/alaualik) | 1080 	  |
+| [matde-ol](https://profile.intra.42.fr/users/matde-ol) | 1050	      |
+| [mblanch](https://profile.intra.42.fr/users/mblanch)  | 1000		  |
 
 ## Credit
 
-Readme realise par Ilan Nowak--Glandier (login: inowak--)
-
+Readme realise par Ilan Nowak--Glandier ([inowak--](https://profile.intra.42.fr/users/inowak--))
 
 Le projet IRC a ete realise par:
-- inowak-- , Ilan Nowak--Glandier
-- ncharbog , Noa Charbog
+- [inowak--](https://profile.intra.42.fr/users/inowak--), Ilan Nowak--Glandier
+- [ncharbog](https://profile.intra.42.fr/users/ncharbog), Noa Charbog
 
 ---
 
