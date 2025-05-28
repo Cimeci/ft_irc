@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:53:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 13:48:59 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:28:02 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,22 @@ class Client {
 		void setHostname(const std::string hostname);
 		void setServername(const std::string servername);
 		void setRealname(const std::string realname);
+		void setState(State state);
+		void setBuffer(std::string buffer);
+		void markForClose();
 
 		std::string getNickname() const;
 		std::string getUsername() const;
 		std::string getHostname() const;
 		std::string getServername() const;
 		std::string getRealname() const;
-
-
 		State getState() const;
-		void setState(State state);
-
 		char getPrefix(Grade g);
+		bool getShouldClose() const;
+		std::string getBuffer();
 
-		void markForClose() {_shouldClose = true;}
-
-		bool getShouldClose() const {return _shouldClose;}
-
-		void setBuffer(std::string buffer) {_buffer = buffer;}
-		std::string getBuffer() {return _buffer;}
-		bool hasDataToSend() {return !_buffer.empty();}
+		bool hasDataToSend();
 
 		std::map<Channel *, Grade> _clientChannels;
 		std::map<Channel *, bool> _invitationChannels;
-
 };

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleWho.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:56:27 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:40:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:32:59 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void Irc::handleWho(int fd, const std::string& channelName){
 		else
 			names += it->second->getNickname() + " ";
 	}
-
 	sendMessage(fd, RPL_NAMEREPLY(client->getNickname(), _channels[channelName]->getSymbol(), channelName));
 	sendMessage(fd, RPL_ENDOFNAMES(client->getNickname(), channelName));
 }

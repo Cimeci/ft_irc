@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlePart.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:34:47 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:38:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:08:37 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 	std::string response;
 
 	if (channelName.empty()) {
-		response = _serverName + ERR_NEEDMOREPARAMS(client->getNickname());
-		send(fd, response.c_str(), response.length(), 0);
+		sendMessage(fd, _serverName + ERR_NEEDMOREPARAMS(client->getNickname()));
 		return ;
 	}
 	if (channelName.find(",") != std::string::npos)
@@ -47,6 +46,6 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 		}
 		else
 			response = ERR_NOSUCHCHANNEL(client->getNickname(), *it);
-		send(fd, response.c_str(), response.length(), 0);
+		sendMessage(fd, response);
 	}
 }

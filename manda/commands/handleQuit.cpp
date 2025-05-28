@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleQuit.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:35:54 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:39:20 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:09:00 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void Irc::handleQuit(int fd, std::string reason) {
 		if (channel->getNbClients() < 1) {
 			delete it->second;
 			tmp = it;
-    		++it;
-        	_channels.erase(tmp);	
+			++it;
+			_channels.erase(tmp);	
 		}
 		else
 			++it;

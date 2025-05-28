@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:22:14 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/21 13:48:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:27:00 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void Client::setServername(const std::string servername){_servername = servernam
 
 void Client::setRealname(const std::string realname){_realname = realname;}
 
+void Client::setState(State state){_state = state;}
+
+void Client::setBuffer(std::string buffer) {_buffer = buffer;}
+
 
 std::string Client::getNickname() const{return _nickname;}
 
@@ -37,10 +41,11 @@ std::string Client::getServername() const{return _servername;}
 
 std::string Client::getRealname() const{return _realname;}
 
-
 Client::State Client::getState() const{return _state;}
 
-void Client::setState(State state){_state = state;}
+void Client::markForClose() {_shouldClose = true;}
+
+bool Client::getShouldClose() const {return _shouldClose;}
 
 char Client::getPrefix(Grade g){
 	switch (g){
@@ -48,3 +53,7 @@ char Client::getPrefix(Grade g){
         default:			return '\0'; 
 	}
 }
+
+std::string Client::getBuffer() {return _buffer;}
+
+bool Client::hasDataToSend() {return !_buffer.empty();}

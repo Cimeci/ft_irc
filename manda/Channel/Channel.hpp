@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 14:44:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/19 13:35:43 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:29:19 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,34 +38,22 @@ class Channel{
     	void removeClient(int client_fd);
 
 		void broadcast(const std::string& message, int sender_fd);
-
-		std::string getName() const;
-
-		std::map<int, Client*>& getClients() { return _clients; }
-
-		void setTopic(const std::string& topic);
-		std::string getTopic() const;
-
-		void setSymbol(const std::string& symbol);
-		std::string getSymbol() const;
-
-		void setPassword(const std::string& password);
-		std::string getPassword() const;
-
-		void setInvitation(const bool info);
-		bool getInvitation() const;
-
-		void setIsOpTopic(const bool info);
-		bool getIsOpTopic() const;
-
-		void setLimitClients(const size_t info);
-		size_t getLimitClients() const;
 		
+		void setTopic(const std::string& topic);
+		void setSymbol(const std::string& symbol);
+		void setPassword(const std::string& password);
+		void setInvitation(const bool info);
+		void setIsOpTopic(const bool info);
+		void setLimitClients(const size_t info);
+		
+		std::string getTopic() const;
+		std::string getSymbol() const;
+		std::string getPassword() const;
+		bool getInvitation() const;
+		bool getIsOpTopic() const;
+		size_t getLimitClients() const;
 		std::string getModeInString() const;
-
 		size_t getNbClients() const;
-
 		const std::map<int, Client *> &getClients() const;
-
-
+		std::string getName() const;
 };

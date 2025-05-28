@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:04:17 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:33:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:32:32 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,6 @@ std::vector<std::string> ft_split(std::string str, const std::string& c) {
 			split.push_back(part);
 	}
 	return split;
-}
-
-bool Irc::valueExist(std::string value){
-	for (std::map<int, Client*>::const_iterator it = _clientBook.begin(); it != _clientBook.end(); ++it) {
-		if (it->second && it->second->getNickname() == value)
-			return true;
-	}
-	return false;
 }
 
 std::string getTime(void) {
