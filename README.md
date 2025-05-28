@@ -293,9 +293,8 @@ Les reponses RPL sont des formats de reponses aux commandes envoyées.
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
 
-
-
-# BONUS
+<details>
+<summary>BONUS</summary>
 
 ## Le transfert de fichier
 
@@ -380,6 +379,8 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 | alaualik | 1080 	  |
 | matde-ol | 1050	  |
 | mblanch  | ?		  |
+
+</details>
 
 ## Credit
 
