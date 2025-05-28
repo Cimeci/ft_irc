@@ -62,19 +62,19 @@ ft_irc
 ## Les clients:
 
 <details>
-<summary>NetCat</summary>
+<summary><h2>NetCat</h2></summary>
 
 ### [NetCat (nc)](https://www.varonis.com/fr/blog/netcat-commands)
 
-nc est un client obligatoire demander par le sujet. Il s'utilise depuis un terminal est se lance de cette facon :
+Nc est un client obligatoire demander par le sujet. Il s'utilise depuis un terminal est se lance de cette facon :
 ```
 nc <addresse du serveur> <port du serveur>
 ```
-pour ma part
+Pour ma part
 ```
 nc localhost 8080
 ```
-depuis nc on doit tout ecrire en brute, c'est a dire que nc ne fait rien a notre place, et ne nous affiche rien par lui meme, c'est donc au serveur d'envoyer les infos sur nc.
+Depuis nc on doit tout ecrire en brute, c'est a dire que nc ne fait rien a notre place, et ne nous affiche rien par lui meme, c'est donc au serveur d'envoyer les infos sur nc.
 
 #### La structure des commandes nc
 
@@ -82,16 +82,16 @@ Sur nc, la struture est la plus part du temp comme ceci :
 ``` 
 <COMMAND> <Target> <L'information a transmettre> <autres options>
 ```
-par exemple pour la commande privmsg, si on veut parler a ilan et noa:
+Par exemple pour la commande privmsg, si on veut parler a ilan et noa:
 ```
 PRIVMSG ilan,noa hello world
 ```
-ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
+Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
 
 </details>
 
 <details>
-<summary>Hexchat</summary>
+<summary><h2>Hexchat</h2></summary>
 
 ### [Hexchat](https://hexchat.github.io)
 
@@ -106,7 +106,7 @@ Une fois lancée tu verras :
 
 ![image](https://github.com/user-attachments/assets/f0a3e571-b2e1-46ff-b4d8-90f3efee15ad)
 
-Tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur
+Tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur.
 
 Si c'est le cas alors, tu peux faire :
 
@@ -116,35 +116,34 @@ Si c'est le cas alors, tu peux faire :
 - ton troisieme nickanme
 - ton nom de user (que le serveur utilise)
 
--> ```Add``` et tu peux choisir le nom d'appellation de ton serveur.
+-> ```Add``` et tu peux choisir le nom d'appellation de ton serveur
 
 -> ```Edit``` tu va trouver ceci :
 
 ![image](https://github.com/user-attachments/assets/5a4c5ca3-e872-421a-b835-5035ea4ae2b2)
 
-sur la ligne en haut il faut que tu la modifie pour qu'elle soit en lien avec les parametres que tu as mis sur le set de ton serveur:
-exemple:
-tu lance ton serveur avec ces parametres:
+La ligne du haut doit etre modifiée pour qu'elle soit en lien avec les parametres que tu as mis lors du lancement de ton serveur.
+
+Tu lance ton serveur avec ces parametres:
 ```
 ./ircserver 8080 123
 ```
-alors la ligne en haut doit etre
+Alors la ligne en haut doit etre
 ```
 localhost/8080
 ```
-le localhost est dans tout les cas ici car on heberge le serveur sur notre machine et on ne le partage pas a tous
-et ensuite il y a le port sur lequel ton serveur est ouvert.
+Le localhost est dans tout les cas ici car on heberge le serveur sur notre machine et on ne le partage pas a tous et il y a le port sur lequel ton serveur est ouvert.
 
-apres ceci sur la base de l'exemple il faut aussi que tu renseigne le mot de passe au client hexchat pour que de lui meme il donne les commandes a ton serveur:
+Ensuite sur la base de l'exemple il faut aussi que tu renseigne le mot de passe au client hexchat pour que de lui meme il donne les commandes a ton serveur:
 tu dois avoir ceci visuellement:
 
 ![image](https://github.com/user-attachments/assets/5badaa14-87ab-46be-a11b-2dec6a940c9d)
 
-tu peux faire autrement et tester les autres facons si tu en a envie mais personnelement j'ai choisie ceci.
-apres cela tu peux faire ```close```
-et ensuite ```connect``` depuis ton Client hexchat cree.
+Tu peux faire autrement et tester les autres facons si tu en a envie mais personnelement j'ai choisie ceci.
 
-Apres cela tu te retrouve avec un client qui essaye perpetuellement de se connecter a ton serveur.
+Apres cela tu peux faire ```close``` et ensuite ```connect``` depuis ton Client hexchat cree.
+
+Par la suite tu te retrouve avec un client qui essaye perpetuellement de se connecter a ton serveur.
 
 ![image](https://github.com/user-attachments/assets/a2a69d51-3348-41f7-a28b-6e6125b4790b)
 
@@ -164,15 +163,15 @@ Sur hexchat, la struture est la plus part du temp comme ceci :
 ``` 
 /<command> <Target> <L'information a transmettre> <autres options>
 ```
-par exemple pour la commande privmsg, si on veut parler a ilan et noa:
+Par exemple pour la commande privmsg, si on veut parler a ilan et noa:
 ```
 /privmsg ilan,noa hello world
 ```
-ici hexchat va transformer ma ligne en
+Ici hexchat va transformer ma ligne en
 ```
 PRIVMSG ilan,noa :hello world
 ```
-on peux voir ceci depuis la fenetre raw_logs.
+On peux voir ceci depuis la fenetre raw_logs.
 
 Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
 
@@ -180,7 +179,8 @@ La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t
 
 </details>
 
-# Manda
+<details>
+<summary><h2>Manda</h2></summary>
 
 ## Le serveur
 
@@ -292,8 +292,18 @@ Les reponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
+</details>
 
-# BONUS
+
+<details>
+<summary><h2>BONUS</h2></summary>
+
+Pour lancer le bonus
+
+```bash
+make bonus
+./ircserver_bonus <port> <password>
+```
 
 ## Le transfert de fichier
 
@@ -302,12 +312,11 @@ Pour le realiser, dans l'onglet **Window** tu pourras retrouver **File Transfers
 
 ## LE BOT
 
-```bash
-make bonus
-./ircserver_bonus <port> <password>
-```
+Dans le sujet il vous est demande de faire un [bot](https://fr.wikipedia.org/wiki/Bot_informatique)
+Personnellement j'ai voulue faire plus qu'un simple agent qui se connecte et ne fait rien.
+Alors j'ai realise un petit jeux avec lequel les clients peuvent jouer.
 
-Selon mon appellation durant le projet, mon bonus s'appelle le jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
+Selon mon appellation durant le projet, mon bot vous permez de jouer au jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
 
 ### Le principe du jeux
 - tu mise une somme
@@ -378,6 +387,8 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 | [alaualik](https://profile.intra.42.fr/users/alaualik) | 1080 	  |
 | [matde-ol](https://profile.intra.42.fr/users/matde-ol) | 1050	      |
 | [mblanch](https://profile.intra.42.fr/users/mblanch)  | 1000		  |
+
+</details>
 
 ## Credit
 
