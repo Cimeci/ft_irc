@@ -59,6 +59,8 @@ ft_irc
 └── README.md
 ```
 
+---
+
 ## Les clients:
 
 <details>
@@ -179,8 +181,9 @@ La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t
 
 </details>
 
-<details>
-<summary><h2>Manda</h2></summary>
+---
+
+# MANDA
 
 ## Le serveur
 
@@ -271,12 +274,16 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 ### [KICK](https://modern.ircdocs.horse/#kick-message)
 
 ### [MODE](https://modern.ircdocs.horse/#mode-message)
+<details>
+<summary>Mode Options</summary>
+
 - le - pour enlever le mode et le + pour ajouter
 - i -> activer/desactiver le mode invitation uniquement
 - t -> activer/desactiver l'obligation d'etre operator pour modifier le topic
 - l -> activer/desactiver une limite de client sur le serveur
 - k -> activer/desactiver la connection avcec un mot de passe au channel
 - o -> donner/retirer les permissions d'operateur a un client
+</details>
 
 ### [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message)
 
@@ -292,25 +299,27 @@ Les reponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
 Les reponses ERR sont des formats d'erreurs à renvoyer au client.
-</details>
 
+---
 
-<details>
-<summary><h2>BONUS</h2></summary>
+# BONUS
 
-Pour lancer le bonus
+Pour lancer le serveur bonus
 
 ```bash
 make bonus
 ./ircserver_bonus <port> <password>
 ```
 
-## Le transfert de fichier
+<details>
+<summary><h2>Le transfert de fichier</h2></summary>
 
 Sur hexchat, le transfert de fichier se fait de base si votre serveur est bien defini.
 Pour le realiser, dans l'onglet **Window** tu pourras retrouver **File Transfers**.
+</details>
 
-## LE BOT
+<details>
+<summary><h2>Le bot</h2></summary>
 
 Dans le sujet il vous est demande de faire un [bot](https://fr.wikipedia.org/wiki/Bot_informatique)
 Personnellement j'ai voulue faire plus qu'un simple agent qui se connecte et ne fait rien.
@@ -386,15 +395,17 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 |----------|--------------|
 | [alaualik](https://profile.intra.42.fr/users/alaualik) | 1080 	  |
 | [matde-ol](https://profile.intra.42.fr/users/matde-ol) | 1050	      |
-| [mblanch](https://profile.intra.42.fr/users/mblanch)  | 1000		  |
-
+| [mblanch](https://profile.intra.42.fr/users/mblanch)(🥇​)  | 1000		  |
 </details>
+
+---
 
 ## Credit
 
-Readme realise par Ilan Nowak--Glandier ([inowak--](https://profile.intra.42.fr/users/inowak--))
+Readme realise par:
+- Ilan Nowak--Glandier ([inowak--](https://profile.intra.42.fr/users/inowak--))
 
-Le projet IRC a ete realise par:
+Projet IRC realise par:
 - [inowak--](https://profile.intra.42.fr/users/inowak--), Ilan Nowak--Glandier
 - [ncharbog](https://profile.intra.42.fr/users/ncharbog), Noa Charbog
 
