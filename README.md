@@ -368,7 +368,7 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 
 | login 42 | Argent total |
 |----------|--------------|
-| alualik  | 1060 	  |
+| alaualik | 1080 	  |
 | matde-ol | 1050	  |
 | mblanch  | ?		  |
 
