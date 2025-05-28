@@ -3,7 +3,7 @@
 
 ## Description
 
-[**Ft_irc**](https://cdn.intra.42.fr/pdf/pdf/154982/fr.subject.pdf) est un projet développé en C++ qui consiste à implémenter un serveur IRC (Internet Relay Chat) basique conforme à la norme IRC, personnelement j'ai utilisé [RFC2119](https://modern.ircdocs.horse). Ce projet a pour objectif de vous familiariser avec la gestion des sockets réseau, de vous ameliorer en C++, la gestion d’événements et les protocoles de communication.
+[**Ft_irc**](https://cdn.intra.42.fr/pdf/pdf/154982/fr.subject.pdf) est un projet développé en C++ qui consiste à implémenter un serveur IRC (Internet Relay Chat) basique conforme à la norme IRC, personnellement j'ai utilisé [RFC2119](https://modern.ircdocs.horse). Ce projet a pour objectif de vous familiariser avec la gestion des sockets réseau, de vous améliorer en C++, la gestion d’événements et les protocoles de communication.
 
 ## Objectifs du projet
 
@@ -68,7 +68,7 @@ ft_irc
 
 ### [NetCat (nc)](https://www.varonis.com/fr/blog/netcat-commands)
 
-Nc est un client obligatoire demander par le sujet. Il s'utilise depuis un terminal est se lance de cette facon :
+Nc est un client obligatoire demandé par le sujet. Il s'utilise depuis un terminal et se lance de cette facon :
 ```
 nc <addresse du serveur> <port du serveur>
 ```
@@ -76,15 +76,15 @@ Pour ma part
 ```
 nc localhost 8080
 ```
-Depuis nc on doit tout ecrire en brute, c'est a dire que nc ne fait rien a notre place, et ne nous affiche rien par lui meme, c'est donc au serveur d'envoyer les infos sur nc.
+Depuis nc on doit tout écrire en brut, c'est-à-dire que nc ne fait rien à notre place, et ne nous affiche rien par lui-même, c'est donc au serveur d'envoyer les infos sur nc.
 
 #### La structure des commandes nc
 
-Sur nc, la struture est la plus part du temp comme ceci :
+Sur nc, la struture est la plus part du temps comme ceci :
 ``` 
-<COMMAND> <Target> <L'information a transmettre> <autres options>
+<COMMAND> <Target> <L'information à transmettre> <autres options>
 ```
-Par exemple pour la commande privmsg, si on veut parler a ilan et noa:
+Par exemple pour la commande privmsg, si on veut parler à ilan et noa:
 ```
 PRIVMSG ilan,noa hello world
 ```
@@ -97,9 +97,9 @@ Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message `
 
 ### [Hexchat](https://hexchat.github.io)
 
-Hexchat est un des client possible que l'on peux ajouter au projet comme demande par le sujet, j'ai decide de l'utiliser car la premiere fois que j'ai vue IRC c'etait sur le client hexchat, il m'a ete recommande, il permet le transfere des fichiers automatiques (bonus), on peut afficher les logs de communication entre client et serveur et puis je le trouve relativement accessible et facile a comprendre.
+Hexchat est un des clients possibles que l'on peut ajouter au projet comme demandé par le sujet, j'ai décidé de l'utiliser car la première fois que j'ai vu IRC c'était sur le client hexchat, il m'a été recommandé, il permet le transfert des fichiers automatiques (bonus), on peut afficher les logs de communication entre client et serveur et puis je le trouve relativement accessible et facile à comprendre.
 
-Il s'utilise depuis son application, pour la telecharger :
+Il s'utilise depuis son application, pour la télécharger :
 ```
 flatpak install flathub io.github.Hexchat
 ```
@@ -108,7 +108,7 @@ Une fois lancée tu verras :
 
 ![image](https://github.com/user-attachments/assets/f0a3e571-b2e1-46ff-b4d8-90f3efee15ad)
 
-Tu peux soit tester des clients deja relie a des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilise 2600net, soit tu peux te lancer sur la creation de ton client pour ton serveur.
+Tu peux soit tester des clients déjà reliés à des serveurs pour que tu comprennes comment cela doit fonctionner, personnellement j'ai utilisé 2600net, soit tu peux te lancer sur la création de ton client pour ton serveur.
 
 Si c'est le cas alors, tu peux faire :
 
@@ -120,52 +120,52 @@ Si c'est le cas alors, tu peux faire :
 
 -> ```Add``` et tu peux choisir le nom d'appellation de ton serveur
 
--> ```Edit``` tu va trouver ceci :
+-> ```Edit``` tu vas trouver ceci :
 
 ![image](https://github.com/user-attachments/assets/5a4c5ca3-e872-421a-b835-5035ea4ae2b2)
 
-La ligne du haut doit etre modifiée pour qu'elle soit en lien avec les parametres que tu as mis lors du lancement de ton serveur.
+La ligne du haut doit être modifiée pour qu'elle soit en lien avec les paramètres que tu as mis lors du lancement de ton serveur.
 
-Tu lance ton serveur avec ces parametres:
+Tu lances ton serveur avec ces parametres:
 ```
 ./ircserver 8080 123
 ```
-Alors la ligne en haut doit etre
+Alors la ligne en haut doit être
 ```
 localhost/8080
 ```
-Le localhost est dans tout les cas ici car on heberge le serveur sur notre machine et on ne le partage pas a tous et il y a le port sur lequel ton serveur est ouvert.
+Le localhost est dans tout les cas ici car on héberge le serveur sur notre machine et on ne le partage pas à tous et il y a le port sur lequel ton serveur est ouvert.
 
-Ensuite sur la base de l'exemple il faut aussi que tu renseigne le mot de passe au client hexchat pour que de lui meme il donne les commandes a ton serveur:
+Ensuite sur la base de l'exemple il faut aussi que tu renseignes le mot de passe au client hexchat pour que de lui-même il donne les commandes à ton serveur:
 tu dois avoir ceci visuellement:
 
 ![image](https://github.com/user-attachments/assets/5badaa14-87ab-46be-a11b-2dec6a940c9d)
 
-Tu peux faire autrement et tester les autres facons si tu en a envie mais personnelement j'ai choisie ceci.
+Tu peux faire autrement et tester les autres facons si tu en as envie mais personnellement j'ai choisi ceci.
 
-Apres cela tu peux faire ```close``` et ensuite ```connect``` depuis ton Client hexchat cree.
+Après cela tu peux faire ```close``` et ensuite ```connect``` depuis ton Client hexchat crée.
 
-Par la suite tu te retrouve avec un client qui essaye perpetuellement de se connecter a ton serveur.
+Par la suite tu te retrouves avec un client qui essaie perpetuellement de se connecter à ton serveur.
 
 ![image](https://github.com/user-attachments/assets/a2a69d51-3348-41f7-a28b-6e6125b4790b)
 
-Des choses interressantes a savoir:
-- **Window/Raw Logs** -> ceci t'affiche les logs de communication entre le serveur et le client, ca te permet de comprendre ce que tu va recevoir et se que tu lui envoie, je te conseille de regarder le raw log d'autre client que le tiens pour que tu comprennes ce que tu as a faire.
+Des choses intéressantes à savoir:
+- **Window/Raw Logs** -> ceci t'affiche les logs de communication entre le serveur et le client, ça te permet de comprendre ce que tu va recevoir et ce que tu lui envoies, je te conseille de regarder le raw log d'autres clients que le tien pour que tu comprennes ce que tu as à faire.
 
 Voici ce que tu pourrais voir :
 
 ![image](https://github.com/user-attachments/assets/c334bb41-10c6-45af-86e6-e1056ab6be42)
 
-- **Hexchat/Network List** -> tu peux creer plusieurs clients en changeant le nom du client et en te connectant toujours a ton serveur.
+- **Hexchat/Network List** -> tu peux créer plusieurs clients en changeant le nom du client et en te connectant toujours à ton serveur.
 
 
 #### La structure des commandes hexchat
 
-Sur hexchat, la struture est la plus part du temp comme ceci :
+Sur hexchat, la struture est la plupart du temps comme ceci :
 ``` 
-/<command> <Target> <L'information a transmettre> <autres options>
+/<command> <Target> <L'information à transmettre> <autres options>
 ```
-Par exemple pour la commande privmsg, si on veut parler a ilan et noa:
+Par exemple pour la commande privmsg, si on veut parler à ilan et noa:
 ```
 /privmsg ilan,noa hello world
 ```
@@ -173,11 +173,11 @@ Ici hexchat va transformer ma ligne en
 ```
 PRIVMSG ilan,noa :hello world
 ```
-On peux voir ceci depuis la fenetre raw_logs.
+On peut voir ceci depuis la fenêtre raw_logs.
 
 Ici la commande est ```PRIVMSG```, les targets ```ilan et noa``` et le message ```hello world```
 
-La subtilite de hexchat c'est son interpretation des commandes qu'il recoit et t'envoie en respectant la norme IRC et aussi son interpretation des lignes que tu va lui envoyer, par exemple quand des clients sont dans un channel, si hexchat recoit selon la commande ```WHO``` qu'une personne a un ```@``` avant son nickname hexchat l'interprete est le presente comme operateur du channel (la pastille verte a coter du nickanme dans la liste)
+La subtilité de hexchat c'est son interpretation des commandes qu'il recoit et t'envoie en respectant la norme IRC et aussi son interpretation des lignes que tu vas lui envoyer, par exemple quand des clients sont dans un channel, si hexchat recoit selon la commande ```WHO``` qu'une personne a un ```@``` avant son nickname hexchat l'interprête et le présente comme opérateur du channel (la pastille verte à côté du nickanme dans la liste)
 
 </details>
 
@@ -191,8 +191,8 @@ Pour le serveur vous allez avoir besoin d'utiliser:
 
 Les structures :
 - [sockaddr_in](https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html)
-- liee a accept [socklen_t](http://manpagesfr.free.fr/man/man2/accept.2.html)
-- liee a poll [pollfd](http://manpagesfr.free.fr/man/man2/poll.2.html)
+- liée à accept [socklen_t](http://manpagesfr.free.fr/man/man2/accept.2.html)
+- liée à poll [pollfd](http://manpagesfr.free.fr/man/man2/poll.2.html)
 
 Les fonctions :
 - [socket](https://linux.die.net/man/2/socket)
@@ -207,33 +207,33 @@ Les fonctions :
 
 ## La logique de la structure de notre code
 
-On a utilise plusieurs :
+On en a utilisé plusieurs :
 - [std::map](https://cplusplus.com/reference/map/map/) pour stocker les clients, les channels, les clients dans les channels, les grades des clients dans les channels...
     - std::map<int, Client *> _clientBook; -> ici j'index mon objet de ma class Client par rapport au socket du client.
-- [enum](https://en.cppreference.com/w/cpp/language/enum) pour une meilleur lisibilite et une amelioration de la logique
+- [enum](https://en.cppreference.com/w/cpp/language/enum) pour une meilleur lisibilité et une amélioration de la logique
 - [macros](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-define-directive-c-cpp?view=msvc-170) pour les RPL et ERR
 - [find()](https://cplusplus.com/reference/algorithm/find/) bien utile pour trouver des valeurs dans nos maps
 
 ##  La gesstion des signaux :
 
-Il faudra gerer les signaux ctrl D et ctrl C.
-- le ctrl D sera a gerer sur nc, afin de traiter une commande, vous devez en premier lieu la reconstituer en concaténant les paquets reçus.
-- le ctrl C vous permetera d'arreter proprement votre serveur.
+Il faudra gérer les signaux ctrl D et ctrl C.
+- le ctrl D sera à gerer sur nc, afin de traiter une commande, vous devez en premier lieu la reconstituer en concaténant les paquets reçus.
+- le ctrl C vous permetera d'arrêter proprement votre serveur.
 
-Tout ce que je vais dire va etre basse sur la norme [RFC2119](https://modern.ircdocs.horse)
+Tout ce que je vais dire va etre basé sur la norme [RFC2119](https://modern.ircdocs.horse)
 
 ## [La connection au serveur](https://modern.ircdocs.horse/#connection-messages) 
 
 La connection au serveur doit suivre une logique bien precise.
 
-Les commandes a faire:
+Les commandes à faire:
 1) ```PASS``` : va permettre de donner le mot de passe attendu par le serveur.
-2) ```NICK``` : va permettre de definir un nickname.
-3) ```USER``` : va permettre de definir un username.
+2) ```NICK``` : va permettre de définir un nickname.
+3) ```USER``` : va permettre de définir un username.
 
-Hexchat peux t'envoyer aussi ```CAP LS 302```, je te laisse te renseigner.
+Hexchat peut t'envoyer aussi ```CAP LS 302```, je te laisse te renseigner.
 
-Personnellement j'ai fais un switch case d'un enum qui definie les grades de connection:
+Personnellement j'ai fait un switch case d'un enum qui definit les grades de connection:
 
 ```cpp
 enum State {
@@ -257,9 +257,9 @@ switch(state){
 }
 ```
 
-Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur](https://modern.ircdocs.horse/#rplwelcome-001).
+Une fois connecté, le client doit recevoir [des messages de bienvenue du serveur](https://modern.ircdocs.horse/#rplwelcome-001).
 
-## Les commandes a gerer :
+## Les commandes à gérer :
 
 ### [QUIT](https://modern.ircdocs.horse/#quit-message)
 
@@ -278,27 +278,27 @@ Une fois connecte, le client dois recevoir [des messages de bienvenue du serveur
 <summary>Mode Options</summary>
 
 - le - pour enlever le mode et le + pour ajouter
-- i -> activer/desactiver le mode invitation uniquement
-- t -> activer/desactiver l'obligation d'etre operator pour modifier le topic
-- l -> activer/desactiver une limite de client sur le serveur
-- k -> activer/desactiver la connection avcec un mot de passe au channel
-- o -> donner/retirer les permissions d'operateur a un client
+- i -> activer/désactiver le mode invitation uniquement
+- t -> activer/désactiver l'obligation d'être operator pour modifier le topic
+- l -> activer/désactiver une limite de client sur le serveur
+- k -> activer/désactiver la connection avec un mot de passe au channel
+- o -> donner/retirer les permissions d'opérateur à un client
 </details>
 
 ### [PRIVMSG](https://modern.ircdocs.horse/#privmsg-message)
 
 ### [WHO](https://modern.ircdocs.horse/#who-message)
-pas obligatoire qu'il fonctionne de base mais sa logique va servire pour join
+pas obligatoire qu'il fonctionne de base mais sa logique va servir pour JOIN
 
 ## [Les Reponses IRC](https://modern.ircdocs.horse/#numerics)
 
--> Mon fichier macros pour les reponses d'irc : [IRCMacros](manda/includes/IRCMacros.hpp)
+-> Mon fichier macros pour les réponses d'irc : [IRCMacros](manda/includes/IRCMacros.hpp)
 
 ### Les RPL
-Les reponses RPL sont des formats de reponses aux commandes envoyées.
+Les réponses RPL sont des formats de reponses aux commandes envoyées.
 
 ### Les ERR
-Les reponses ERR sont des formats d'erreurs à renvoyer au client.
+Les réponses ERR sont des formats d'erreurs à renvoyer au client.
 
 ---
 
@@ -321,40 +321,40 @@ Pour le realiser, dans l'onglet **Window** tu pourras retrouver **File Transfers
 <details>
 <summary><h2>Le bot</h2></summary>
 
-Dans le sujet il vous est demande de faire un [bot](https://fr.wikipedia.org/wiki/Bot_informatique)
-Personnellement j'ai voulue faire plus qu'un simple agent qui se connecte et ne fait rien.
-Alors j'ai realise un petit jeux avec lequel les clients peuvent jouer.
+Dans le sujet il vous est demandé de faire un [bot](https://fr.wikipedia.org/wiki/Bot_informatique)
+Personnellement j'ai voulu faire plus qu'un simple agent qui se connecte et ne fait rien.
+Alors j'ai réalisé un petit jeu avec lequel les clients peuvent jouer.
 
-Selon mon appellation durant le projet, mon bot vous permez de jouer au jeu du Gamble, je me suis inspire d'un jeux que j'ai vue en regardant une video sur le jeux video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
+Selon mon appellation durant le projet, mon bot vous permez de jouer au jeu du Gamble, je me suis inspiré d'un jeu que j'ai vu en regardant une video sur le jeu video Schudule. J'ai appris après que c'est un jeu de soirée qui s'appelle en réalité [Le Bus Magique](https://psycatgames.com/fr/magazine/party-games/ride-the-bus/).
 
 ### Le principe du jeux
-- tu mise une somme
-- le croupier tire 4 cartes aleatoires allant de As(1) a roi(13)
-- le jeux se base sur 4 tours
-- si tu rate un pronostique tu pers ta mise et ton avancement dans les tours
-- entre chaque tour tu as la possibilte de te retirer et donc prend le multiplicateur actuel
+- tu mises une somme
+- le croupier tire 4 cartes aléatoires allant de As(1) a roi(13)
+- le jeu se base sur 4 tours
+- si tu rates un pronostic tu perds ta mise et ton avancement dans les tours
+- entre chaque tour tu as la possibilté de te retirer et donc prends le multiplicateur actuel
 
 Premier tour:
-- tu parie pour un X2 de ta mise de depart sur es ce que la premiere des 4 cartes est rouge ou noir
+- tu paries pour un X2 de ta mise de depart sur est ce que la premiere des 4 cartes est rouge ou noire
   
-Deuxieme tour:
-- tu parie pour un X3 de ta mise de depart sur es ce que la deuxieme carte est inferieur ou superieur a la premier carte
-- si la deuxieme carte est la meme que la premiere tu gagne dans tous les cas ce tour
+Deuxième tour:
+- tu paries pour un X3 de ta mise de depart sur er ce que la deuxième carte est inferieure ou superieure à la première carte
+- si la deuxième carte est la même que la première tu gagnes dans tous les cas ce tour
 
-Troisieme tour:
-- tu parie pour un X5 de ta mise de depart sur es ce que la troisieme carte est entre la premiere et la deuxieme ou en dehors
-- si la troisieme carte est la meme que la premiere ou la deuxieme la troisieme carte est concidere comme a l'interieur
+Troisième tour:
+- tu paries pour un X5 de ta mise de depart sur es ce que la troisieme carte est entre la premiere et la deuxieme ou en dehors
+- si la troisieme carte est la même que la première ou la deuxième la troisième carte est considérée comme à l'intérieur
 
-Quatrieme tour:
-- tu parie pour un X10 de ta mise de depart sur qu'elle est le symbole de la quatrieme carte, entre carreaux(club), coeur(heart), pique(spade), trefle(diamond)
+Quatrième tour:
+- tu paries pour un X10 de ta mise de départ sur quel est le symbole de la quatrième carte, entre carreaux(club), coeur(heart), pique(spade), trèfle(diamond)
 
-apres le quatrieme tour le jeux s'arrete et tu peux recommencer jusqu'a que tu arretes ou que tu n'ai plus d'argent  
+apres le quatrième tour le jeu s'arrête et tu peux recommencer jusqu'à que tu arretes ou que tu n'aies plus d'argent  
 
 ### Comment jouer sur mon Irc
 ```bash
 ./gamble <port> <password>
 ```
-cette executable va lancer le client **GambleDealer**, qui va creer un salon **GambleRoom**, mettre une limitation de 2 personnes et va activer le mode *invation only* et va attendre qu'un autre client lui envoie en message prive ```GAMBLE```
+cet executable va lancer le client **GambleDealer**, qui va créer un salon **GambleRoom**, mettre une limitation de 2 personnes et va activer le mode *invation only* et va attendre qu'un autre client lui envoie en message privé ```GAMBLE```
 
 nc
 ```nc
@@ -365,7 +365,7 @@ hexchat
 /privmsg GambleDealer GAMBLE
 ```
 
-par la suite le client va recevoir une invatation a rejoindre le channel GambleRoom, il pourra donc faire
+par la suite le client va recevoir une invitation à rejoindre le channel GambleRoom, il pourra donc faire
 
 nc
 ```nc
@@ -376,7 +376,7 @@ hexchat
 /join #GambleRoom
 ```
 
-Une fois arrive dans le channel il recevra se message :
+Une fois arrivé dans le channel il recevra ce message :
 ```
 --------------------------- command ---------------------------
 'PLAY' : for play camble
@@ -384,10 +384,10 @@ Une fois arrive dans le channel il recevra se message :
 'BANK' : for bank amount
 --------------------------- command ---------------------------
 ```
-Chaque Client commence avec 100$ sur son compte si il tombe a 0 il se fera expluser du channel et devra se faire re-inviter et recevra gracieusement 10$.
+Chaque Client commence avec 100$ sur son compte s'il tombe à 0 il se fera expulser du channel et devra se faire re-inviter et recevra gracieusement 10$.
 
-Apres avoir envoyer ```PLAY``` directement depuis le channel #GambleRoom, sa vous lancera en partie et vous demandera de choisir le montant a miser.
-A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
+Apres avoir envoyer ```PLAY``` directement depuis le channel #GambleRoom, ça vous lancera en partie et vous demandera de choisir le montant à miser.
+À tout moment vous pouvez faire ```OUT``` pour sortir du jeu.
 
 ### Classement Jeux du Gamble
 
@@ -405,9 +405,9 @@ A tout moment vous pouvez faire ```OUT``` pour sortir du jeux.
 Readme realise par:
 - Ilan Nowak--Glandier ([inowak--](https://profile.intra.42.fr/users/inowak--))
 
-Projet IRC realise par:
+Projet IRC realisé par:
 - [inowak--](https://profile.intra.42.fr/users/inowak--), Ilan Nowak--Glandier
-- [ncharbog](https://profile.intra.42.fr/users/ncharbog), Noa Charbog
+- [ncharbog](https://profile.intra.42.fr/users/ncharbog), Noa Charbogne
 
 ---
 
