@@ -20,6 +20,8 @@
 - Gestion de commandes IRC de base : NICK, USER, JOIN, PART, PRIVMSG, QUIT, etc.
 - Gestion des modes utilisateurs et channels.
 
+### La structure de mon IRC
+
 ```txt
 ft_irc
 ├── bonus/
