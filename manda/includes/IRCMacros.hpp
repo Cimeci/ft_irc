@@ -15,7 +15,7 @@
 # define RPL_WELCOME(client, nick, user)			(" 001 " + client + " :Welcome to the IRC Network, " + nick + " [!" + user + "@host]\r\n")
 # define RPL_YOURHOST(client, server) 				(" 002 " + client + " :Your host is " + server + ", running version 1\r\n")
 # define RPL_CREATED(client, date) 					(" 003 " + client + " :This server was created " + date + "\r\n")
-# define RPL_MYINFO(client, server) 				(" 004 " + client + " " + server + "<available user modes> <available channel modes> [<channel modes with a parameter>]\r\n")
+# define RPL_MYINFO(client, server) 				(" 004 " + client + " " + server + "<available user modes> <+i,+t,+l,+k,+o> [<channel modes with a parameter>]\r\n")
 
 # define RPL_NOTOPIC(client, channel)				(_serverName + " 331 " + client + " " + channel + " :No topic is set\r\n")
 # define RPL_TOPIC(client, channel, topic)			(_serverName + " 332 " + client + " " + channel + " :" + topic + "\r\n")
