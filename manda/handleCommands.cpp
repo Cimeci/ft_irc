@@ -24,8 +24,6 @@ void Irc::handleClient(int client_socket, std::string input) {
 	size_t space2 = input.find(' ', space1 + 1);
 	size_t space3; for(space3 = space2; space3 < input.size() && input[space3] == ' '; space3++);
 
-	std::cout << BLUE << "[DEBUG] " << RESET << "space1: " << space1 << " | space2: " << space2 << " | space3: " << space3 << std::endl;
-
 	std::string command = input.substr(0, space1);
 
 	std::string target;
@@ -37,8 +35,6 @@ void Irc::handleClient(int client_socket, std::string input) {
 		if (input[space3] == ':') space3++;
 		message = input.substr(space3);
 	}
-	std::cout << BLUE << "[DEBUG] " << RESET << "command: " << command << " | target: " << target << " | message: " << message << std::endl;
-
     if (command == "JOIN") {
         handleJoin(client_socket, target, message);
     }
