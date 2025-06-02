@@ -38,12 +38,13 @@ class Bot{
 
 		void dealer();
 
-		void setStop(bool b) {_stop = b;}
+		void setStop(bool b);
 
-		int getFd() const {return _socketFd;}
-		bool getStop() const {return _stop;}
-		std::map<std::string, size_t> getPlayers() {return _players;}
-		std::string getSender() const {return _sender;}
+		int getFd() const;
+		bool getStop() const;
+		std::map<std::string, size_t> getPlayers();
+		void setPlayers(std::string sender, size_t bank);
+		std::string getSender() const;
 
 };
 

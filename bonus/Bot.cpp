@@ -44,6 +44,21 @@ Bot::Bot(std::string port, std::string password): _port(port), _password(passwor
 
 Bot::~Bot(){}
 
+std::string Bot::getSender() const {return _sender;}
+
+void Bot::setStop(bool b) {_stop = b;}
+
+int Bot::getFd() const {return _socketFd;}
+
+bool Bot::getStop() const {return _stop;}
+
+std::map<std::string, size_t> Bot::getPlayers() {return _players;}
+
+void Bot::setPlayers(std::string sender, size_t bank){
+	if (_players.find(sender) != _players.end())
+		_players[sender] = bank;
+}
+
 void handle_sigint(int sig){
 	(void)sig;
 	std::cout << std::endl;
@@ -96,11 +111,8 @@ void Bot::dealer(){
 					_players[_sender] = 10;
 				std::cout << _sender << " | " << _players[_sender] << std::endl;
 				Gamble gamble(_players[_sender]);
-				_players[_sender] = gamble.playGamble(_socketFd, gamble);
-				if (_players.size() < 2) {
-					continue ;
-				}
-				if (_stop == false)
+				int result = gamble.playGamble(_socketFd, gamble);
+				if (_stop == false || result == 0)
 					sendMessage(_socketFd, "KICK #GambleRoom " + _sender + "\r\n");
 			}
 		}

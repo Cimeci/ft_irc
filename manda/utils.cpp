@@ -57,3 +57,11 @@ std::string getTime(void) {
 		<< now->tm_min;
 	return ss.str();
 }
+
+std::string toUpper(std::string &str)
+{
+	std::string input;
+	for (int i = 0; str[i]; i++)
+		input += toupper(str[i]);
+	return input;
+}

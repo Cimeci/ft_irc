@@ -25,6 +25,7 @@ void Irc::handleClient(int client_socket, std::string input) {
 	size_t space3; for(space3 = space2; space3 < input.size() && input[space3] == ' '; space3++);
 
 	std::string command = input.substr(0, space1);
+	command = toUpper(command);
 
 	std::string target;
 	if (space1 != std::string::npos && input.substr(space1 + 1, space2 - space1 - 1)[0] != ':')

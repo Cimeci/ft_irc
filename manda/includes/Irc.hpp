@@ -100,3 +100,4 @@ class Irc{
 
 std::vector<std::string> ft_split(std::string str, const std::string &c);
 std::string getTime(void);
+std::string toUpper(std::string &str);
