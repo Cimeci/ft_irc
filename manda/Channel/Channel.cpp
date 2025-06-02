@@ -89,6 +89,6 @@ std::string Channel::getModeInString() const{
 size_t Channel::getNbClients() const{ return _clients.size(); }
 
 
-const std::map<int, Client *>& Channel::getClients() const {
+std::map<int, Client *>& Channel::getClients() {
     return _clients;
 }

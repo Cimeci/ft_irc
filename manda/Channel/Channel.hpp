@@ -54,6 +54,6 @@ class Channel{
 		size_t getLimitClients() const;
 		std::string getModeInString() const;
 		size_t getNbClients() const;
-		const std::map<int, Client *> &getClients() const;
+		std::map<int, Client *> &getClients();
 		std::string getName() const;
 };
