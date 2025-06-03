@@ -50,6 +50,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 		//* FIND THE SIGN *//
 		if (modeGroup[0][i] == '+') { Sign = 1; }
 		else if (modeGroup[0][i] == '-') { Sign = -1; }
+		else if (Sign == 0) { sendMessage(fd, ERR_UMODEUNKNOWNFLAG(client->getNickname())); continue; }
 		
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 								//* HANDLE ADD OPTION MODE *//

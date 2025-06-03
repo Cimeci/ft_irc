@@ -82,7 +82,7 @@ class Irc{
 
 		bool checkNickname(const std::string &input);
 
-		void handleClient(int client_socket, std::string input);
+		void handleCommand(int client_socket, std::string input);
 
 		void handleJoin(int fd, const std::string& channelName, const std::string& passChannel);
 		void handlePart(int fd, const std::string& channelName, const std::string& reason);

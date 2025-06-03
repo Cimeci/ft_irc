@@ -14,7 +14,7 @@
 # include "Channel/Channel.hpp"
 # include "Client/Client.hpp"
 
-void Irc::handleClient(int client_socket, std::string input) {
+void Irc::handleCommand(int client_socket, std::string input) {
 
 	size_t end = input.find("\n");
 	if (end != std::string::npos)
@@ -36,6 +36,11 @@ void Irc::handleClient(int client_socket, std::string input) {
 		if (input[space3] == ':') space3++;
 		message = input.substr(space3);
 	}
+
+	std::cout << "command: |" << command << "|" << std::endl; 
+	std::cout << "target: |" << target << "|" << std::endl; 
+	std::cout << "message: |" << message << "|" << std::endl; 
+
     if (command == "JOIN") {
         handleJoin(client_socket, target, message);
     }
