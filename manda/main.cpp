@@ -14,11 +14,13 @@
 
 int main(int argc, char **argv)
 {
-	if (argc != 3) { std::cerr << "./ircserv <port> <password>"; return 1; }
-
+	if (argc != 3) {
+		std::cerr << "./ircserv <port> <password>" << std::endl; 
+		return 1;
+	}
 	Irc irc;
-
-	if (!irc.setParameters(atoi(argv[1]), argv[2])) { return 1; }
-
+	if (!irc.setParameters(atoi(argv[1]), argv[2])) {
+		return 1;
+	}
 	irc.server();
 }

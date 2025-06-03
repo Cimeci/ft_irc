@@ -42,7 +42,6 @@ class Channel;
 # include "../Client/Client.hpp"
 # include "../Channel/Channel.hpp"
 
-# define PORT 6667
 # define BUFFER_SIZE 1024
 # define MAX_PORT 65535
 # define MAX_CLIENTS 1000
@@ -95,13 +94,13 @@ class Irc{
 		void handleInvite(int fd, const std::string &channelName, const std::string &client);
 		void handleKick(int fd, std::string channel, std::string after);
 		
-		void sendMessage(int fd, std::string msg);
-
+		
 		bool valueExist(std::string value);
 		void successfulRegistration(int client_socket);
 		void setServerRunning(bool b);
 };
-
+	
+void sendMessage(int fd, std::string msg);
 std::vector<std::string> ft_split(std::string str, const std::string &c);
 std::string getTime(void);
 std::string toUpper(std::string &str);

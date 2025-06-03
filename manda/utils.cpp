@@ -19,14 +19,14 @@ bool Irc::setParameters(const int port, const std::string &password){
 	}
 	_port = port;
 	if (password.empty()) {
-		std::cerr << "Invalid password" << std::endl;
+		std::cerr << "Password can't be empty" << std::endl;
 		return false;
 	}
 	_password = password;
 	return true;
 }
 
-void Irc::sendMessage(int fd, std::string msg)
+void sendMessage(int fd, std::string msg)
 {
 	std::cout << ORANGE << "[SEND] " << RESET << msg;
 	if (send(fd, msg.c_str(), msg.length(), 0) == -1)
