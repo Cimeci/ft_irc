@@ -12,10 +12,13 @@
 
 # include "includes/Irc.hpp"
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	if (argc != 3) {
-		std::cerr << "./ircserv <port> <password>" << std::endl; 
+		#ifdef BONUS
+			std::cerr << "./ircserv_bonus <port> <password>" << std::endl;
+		#else
+			std::cerr << "./ircserv <port> <password>" << std::endl;
+		#endif
 		return 1;
 	}
 	Irc irc;

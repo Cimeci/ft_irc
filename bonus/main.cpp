@@ -16,7 +16,7 @@
 int main(int argc, char **argv){
 	
 	if (argc != 3 || !argv[1] || !argv[2]){
-		std::cout << RED << "[ERROR] " << RESET << "Invalid format : ./ircserv_bonus serverPort serverPassword" << std::endl;
+		std::cout << RED << "[ERROR] " << RESET << "Invalid format : ./gamble serverPort serverPassword" << std::endl;
 		return (1);
 	}
 	for (size_t i = 0; argv[1][i]; i++){
