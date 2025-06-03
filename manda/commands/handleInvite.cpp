@@ -33,8 +33,7 @@ void Irc::handleInvite(int fd, const std::string &client, const std::string &cha
 		sendMessage(fd, ERR_USERONCHANNEL(_clientBook[fd]->getNickname(), client, channelName)); return ;
 	}
 	else if (_clientBook[fd]->_clientChannels[channel] != Client::OPERATOR) {
-		std::string response = _serverName + ERR_CHANOPRIVSNEEDED(_clientBook[fd]->getNickname(), channelName);
-		send(fd, response.c_str(), response.length(), 0);
+		sendMessage(fd, _serverName + ERR_CHANOPRIVSNEEDED(_clientBook[fd]->getNickname(), channelName));
 	}
 	else {
 		_channels[channelName]->broadcast(INVITE(_clientBook[fd]->getNickname(), _clientBook[fd]->getUsername(), client, channelName), fd);

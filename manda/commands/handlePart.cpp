@@ -36,9 +36,9 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 				else
 					response = PART(client->getNickname(), client->getUsername(), *it, reason);
 				_channels[*it]->broadcast(response, fd);
-				if (_channels[channelName]->getNbClients() < 1) {
-					delete _channels[channelName];
-					_channels.erase(channelName);
+				if (_channels[*it]->getNbClients() < 1) {
+					delete _channels[*it];
+					_channels.erase(*it);
 				}
 			}
 			else

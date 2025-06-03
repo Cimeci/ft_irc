@@ -24,6 +24,7 @@
 # include <sys/socket.h>
 # include <poll.h>
 # include <iostream>
+# include <iomanip>
 # include <cstring>
 # include <vector>
 # include <cstdlib>
@@ -33,6 +34,7 @@
 # include <sstream>
 # include <ctime>
 # include <csignal>
+# include <cctype>
 
 class Client;
 class Channel;
@@ -49,7 +51,7 @@ class Channel;
 class Irc{
 	private:
 		const std::string _serverName;
-		int _server_socket;
+		int _serverSocket;
 		int _port;
 		std::string _password;
 		bool _serverRunning;
@@ -62,7 +64,7 @@ class Irc{
 
 	public:
 		Irc(): _serverName(":irc.climbers.ni"), _serverRunning(true) {}
-		bool setParameters(const int port, const std::string password);
+		bool setParameters(const int port, const std::string &password);
 
 		int server();
 
@@ -78,6 +80,8 @@ class Irc{
 		void handlePassword(int client_socket, std::string input);
 		void handleNickname(int client_socket, std::string input);
 		void handleUsername(int client_socket, std::string input);
+
+		bool checkNickname(const std::string &input);
 
 		void handleClient(int client_socket, std::string input);
 

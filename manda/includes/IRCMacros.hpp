@@ -31,6 +31,7 @@
 # define ERR_NOTEXTTOSEND(client)					(_serverName + " 412 " + client + " :No text to send\r\n")
 # define ERR_UNKNOWNCOMMAND(client, cmd) 			(_serverName + " 421 " + client + " " + cmd + " :Unknown command\r\n")
 # define ERR_NONICKNAMEGIVEN(client) 				(" 431 " + client + " :No nickname given\r\n")
+# define ERR_ERRONEUSNICKNAME(client, nick)         (_serverName + " 432 " + client + " " + nick + " :Erroneus nickname\r\n")
 # define ERR_NICKNAMEINUSE(client, nick) 			(" 433 " + client + " " + nick + " :Nickname is already in use\r\n")
 # define ERR_USERNOTINCHANNEL(client, nick, channel)(" 441 " + client + " " + nick + " " + channel + " :They aren't on that channel\r\n")
 # define ERR_NOTONCHANNEL(client, channel)			(" 442 " + client + " " + channel + " :You're not on that channel\r\n")

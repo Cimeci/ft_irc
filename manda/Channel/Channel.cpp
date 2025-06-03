@@ -31,7 +31,7 @@ bool Channel::isClientInChannel(int client_fd) const {
 void Channel::broadcast(const std::string& message, int sender_fd) {
 	for (std::map<int, Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 		if (it->first != sender_fd) {
-			send(it->first, message.c_str(), message.length(), 0);
+			sendMessage(it->first, message);
 		}
 	}
 }

@@ -12,10 +12,16 @@
 
 # include "includes/Irc.hpp"
 
-bool Irc::setParameters(const int port, const std::string password){
-	if (!(port >= 0 && port <= MAX_PORT))
+bool Irc::setParameters(const int port, const std::string &password){
+	if (!(port >= 0 && port <= MAX_PORT)) {
+		std::cerr << "Invalid port" << std::endl;
     	return false;
+	}
 	_port = port;
+	if (password.empty()) {
+		std::cerr << "Invalid password" << std::endl;
+		return false;
+	}
 	_password = password;
 	return true;
 }
@@ -23,7 +29,8 @@ bool Irc::setParameters(const int port, const std::string password){
 void Irc::sendMessage(int fd, std::string msg)
 {
 	std::cout << ORANGE << "[SEND] " << RESET << msg;
-	send(fd, msg.c_str(), msg.length(), 0);
+	if (send(fd, msg.c_str(), msg.length(), 0) == -1)
+		std::cerr << "send() failed" << std::endl;
 }
 
 std::vector<std::string> ft_split(std::string str, const std::string& c) {
@@ -50,11 +57,11 @@ std::string getTime(void) {
 	std::tm *now = std::localtime(&t);
 
 	std::stringstream ss;
-	ss << (now->tm_year + 1900) << "-"
-		<< (now->tm_mon + 1) << "-"
-		<< now->tm_mday << "_"
-		<< now->tm_hour << ":"
-		<< now->tm_min;
+	ss << std::setw(4) << std::setfill('0') << (now->tm_year + 1900) << "-"
+		<< std::setw(2) << std::setfill('0') << (now->tm_mon + 1) << "-"
+		<< std::setw(2) << std::setfill('0') << now->tm_mday << "_"
+		<< std::setw(2) << std::setfill('0') << now->tm_hour << ":"
+		<< std::setw(2) << std::setfill('0') << now->tm_min;
 	return ss.str();
 }
 

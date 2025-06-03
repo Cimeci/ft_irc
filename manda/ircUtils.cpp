@@ -12,7 +12,7 @@
 
 # include "includes/Irc.hpp"
 
-int Irc::getServerSocket() const {return _server_socket;}
+int Irc::getServerSocket() const {return _serverSocket;}
 
 std::map<int, Client *>& Irc::getClientBook() {return _clientBook;}
 
