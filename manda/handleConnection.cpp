@@ -44,7 +44,7 @@ void Irc::handleNickname(int client_socket, std::string input) {
 		sendMessage(client_socket, _serverName + ERR_NONICKNAMEGIVEN(defaultNick));
 	else if (valueExist(input.substr(5, input.length() - 5)))
 		sendMessage(client_socket, _serverName + ERR_NICKNAMEINUSE(defaultNick, input.substr(5, input.size() - 5)));
-	else if (!checkNickname(input))
+	else if (!checkNickname(input.substr(5, input.length() - 5)))
 		sendMessage(client_socket, ERR_ERRONEUSNICKNAME(defaultNick, input.substr(5, input.size() - 5)));
 	else if (!strcmp(input.substr(0, 5).c_str(), "NICK ") && input.length() > 5) {
 		_clientBook[client_socket]->setNickname(input.substr(5, input.length() - 5));
