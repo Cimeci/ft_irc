@@ -195,8 +195,6 @@ void Irc::handleClientData(int fd) {
 	saveInput += input;
 	if (saveInput.find("\r\n") != std::string::npos)
 		split = ft_split(saveInput, "\r\n");
-	else if (saveInput.find("\n") != std::string::npos)
-		split = ft_split(saveInput, "\n");
 	else
 		return;
 	if (!saveInput.empty())
