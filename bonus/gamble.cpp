@@ -157,8 +157,6 @@ std::string getCommand(std::string input){
 	return input = ft_split(input, " ")[1];
 }
 
-
-
 int Gamble::playGamble(int fd, Gamble gamble)
 {
 	std::srand(std::time(0));
@@ -187,7 +185,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 		gamble.clearCardPack();
 		gamble.setCardsPack();
 		line = recvMessage(fd);
-		if (getCommand(line) == "PART") return (-1);
+		if (line.empty() || getCommand(line) == "PART") return (-1);
 		line = getMessage(line);
 
 		if (line == "BANK"){
@@ -207,7 +205,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				input = "-1";
 				while (!isStringDigit(input) || atoi(input.c_str()) > (int)gamble.getBank()){
 					input = recvMessage(fd);
-					if (getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") return (-1);
 					input = getMessage(input);
 					if (line == "PART") return (-1);
 					std::cout << "input: " << input << " | atoi :" << atoi(input.c_str()) << std::endl;
@@ -224,7 +222,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") return (-1);
 					input = getMessage(input);
 					if (line == "PART") return (-1);
 					if (input == "OUT") {throw std::bad_exception();}
@@ -257,7 +255,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") return (-1);
 					input = getMessage(input);
 					if (line == "PART") return (-1);
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
@@ -287,7 +285,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") return (-1);
 					input = getMessage(input);
 					if (line == "PART") return (-1);
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
@@ -319,7 +317,7 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") return (-1);
 					input = getMessage(input);
 					if (line == "PART") return (-1);
 					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
