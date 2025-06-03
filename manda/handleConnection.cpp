@@ -39,20 +39,24 @@ bool Irc::checkNickname(const std::string &input) {
 void Irc::handleNickname(int client_socket, std::string input) {
 	std::string response;
 	std::string defaultNick = "*";
+	std::string newNick = input.substr(5, input.length() - 5);
 
-	if (input.length() <= 5)
+	if (newNick.empty())
 		sendMessage(client_socket, _serverName + ERR_NONICKNAMEGIVEN(defaultNick));
-	else if (valueExist(input.substr(5, input.length() - 5)))
-		sendMessage(client_socket, _serverName + ERR_NICKNAMEINUSE(defaultNick, input.substr(5, input.size() - 5)));
-	else if (!checkNickname(input.substr(5, input.length() - 5)))
-		sendMessage(client_socket, ERR_ERRONEUSNICKNAME(defaultNick, input.substr(5, input.size() - 5)));
+	else if (valueExist(newNick))
+		sendMessage(client_socket, _serverName + ERR_NICKNAMEINUSE(defaultNick, newNick));
+	else if (!checkNickname(newNick))
+		sendMessage(client_socket, ERR_ERRONEUSNICKNAME(defaultNick, newNick));
 	else if (!strcmp(input.substr(0, 5).c_str(), "NICK ") && input.length() > 5) {
-		_clientBook[client_socket]->setNickname(input.substr(5, input.length() - 5));
-		_nicknameToFd[input.substr(5, input.length() - 5)] = client_socket; 
-		_clientBook[client_socket]->setState(Client::REGISTERED);
+		if (_clientBook[client_socket]->getState() == Client::USER)
+			sendMessage(client_socket, NICK(_clientBook[client_socket]->getNickname(), _clientBook[client_socket]->getUsername(), newNick));
+		else
+			_clientBook[client_socket]->setState(Client::REGISTERED);
+		_clientBook[client_socket]->setNickname(newNick);
+		_nicknameToFd[newNick] = client_socket; 
 	}
 	else
-		sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(defaultNick, input));
+		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(defaultNick, input));
 }
 
 void Irc::successfulRegistration(int client_socket) {

@@ -39,6 +39,9 @@ void Irc::handleClient(int client_socket, std::string input) {
     if (command == "JOIN") {
         handleJoin(client_socket, target, message);
     }
+	else if (command == "NICK") {
+		handleNickname(client_socket, input);
+	}
     else if (command == "PART") {
         handlePart(client_socket, target, message);
     }
@@ -64,6 +67,7 @@ void Irc::handleClient(int client_socket, std::string input) {
 		handleKick(client_socket, target, message);
 	}
 	else {
+		std::cout << "HERE" << std::endl;
 		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(_clientBook[client_socket]->getNickname(), command));
 	}
 }

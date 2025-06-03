@@ -39,9 +39,6 @@
 
 # define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " :Not enough parameters\r\n")
 # define ERR_PASSWDMISMATCH(client) 				(" 464 " + client + " :Password incorrect\r\n")
-
-// ilan //
-
 # define ERR_CHANNELISFULL(nick, channel)			(_serverName + " 471 " + nick + " " + channel + " :Cannot join channel (+l)\r\n")
 # define ERR_UNKNOWNMODE(client, mode)				(_serverName + " 472 " + client + " " + mode + " :is unknown mode char to me\r\n")
 # define ERR_INVITEONLYCHAN(nick, channel)			(_serverName + " 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n")
@@ -49,9 +46,9 @@
 # define ERR_BADCHANMASK(channel) 					(_serverName + " 476 " + channel + " :Bad Channel Mask\r\n")
 # define ERR_CHANOPRIVSNEEDED(nick, channel)		(_serverName + " 482 " + nick + " " + channel + " :You're not channel operator\r\n")
 # define ERR_UMODEUNKNOWNFLAG(client)				(_serverName + " 501 " + client + " :Unknown MODE flag\r\n")
-
 # define ERR_INVALIDMODEPARAM(client, channel, mode, param, reason)(_serverName + " 696 " + client + " " + channel + " " + mode + " " + param + " :" + reason + "\r\n")
 
+# define NICK(nick, user, newNick)                  (":" + nick + "!~" + user + "@localhost NICK :" + newNick + "\r\n")
 # define MODE(nick, user, channel, mode, param)		(":" + nick + "!~" + user + "@localhost MODE " + channel + " " + mode + " " + param + "\r\n")
 # define PART(nick, user, channel, reason)			(":" + nick + "!~" + user + "@localhost PART " + channel + " :" + reason + "\r\n")
 # define KICK(nick, user, channel, target, comment)	(":" + nick + "!~" + user + "@localhost KICK " + channel + " " + target + " :" + comment + "\r\n")
