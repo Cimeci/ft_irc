@@ -227,7 +227,7 @@ void Irc::handleClientData(int fd) {
 					std::string::size_type pos = split[i].find(' ');
 					if (pos != std::string::npos)
 						std::transform(split[i].begin(), split[i].begin() + pos, split[i].begin(), ::toupper);
-					handleClient(fd, split[i]);
+					handleCommand(fd, split[i]);
 					break;
 				}
 				default:
