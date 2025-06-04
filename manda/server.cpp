@@ -68,7 +68,7 @@ int Irc::server() {
         return 1;
     }
 
-    if (listen(_serverSocket, 10) < 0) {
+    if (listen(_serverSocket, MAX_CLIENTS) < 0) {
         std::cerr << "Error listen()\n";
         close(_serverSocket);
         return 1;

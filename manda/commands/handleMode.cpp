@@ -83,7 +83,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 						OptionMode++;
 					}
 					else {
-						sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+l", modeGroup[OptionMode], "Not a valid digit (0 - 9999)"));
+						sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+l", modeGroup[OptionMode], "Not a valid digit (1 - 9999)"));
 					}
 					break;
 				case 3 : // !o
