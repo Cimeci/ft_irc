@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleConnection.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:28:52 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/28 16:20:54 by noacharbogn      ###   ########.fr       */
+/*   Updated: 2025/06/04 11:28:59 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void Irc::handlePassword(int client_socket, std::string input) {
 }
 
 bool Irc::checkNickname(const std::string &input) {
+	if (input.length() > 15)
+		return false;
 	for(int i = 0; i < input[i]; i++) {
 		if (!isalnum(input[i]) && !std::strchr("[]{}\'|", input[i]))
 			return false;
@@ -53,7 +55,7 @@ void Irc::handleNickname(int client_socket, std::string input) {
 		else
 			_clientBook[client_socket]->setState(Client::REGISTERED);
 		_clientBook[client_socket]->setNickname(newNick);
-		_nicknameToFd[newNick] = client_socket; 
+		_nicknameToFd[newNick] = client_socket;
 	}
 	else
 		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(defaultNick, input));
@@ -67,6 +69,7 @@ void Irc::successfulRegistration(int client_socket) {
 	sendMessage(client_socket, _serverName + RPL_YOURHOST(user, _serverName));
 	sendMessage(client_socket, _serverName + RPL_CREATED(user, getTime()));
 	sendMessage(client_socket, _serverName + RPL_MYINFO(user, _serverName));
+	sendMessage(client_socket, _serverName + RPL_ISUPPORT(nick));
 }
 
 void Irc::handleUsername(int client_socket, std::string input) {

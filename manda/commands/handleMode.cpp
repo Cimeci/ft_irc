@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleMode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:38:57 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:37:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/06/04 11:26:46 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 	if (channelName[0] != '#' && channelName[0] != '&') {
 		sendMessage(fd, ERR_NOSUCHNICK(client->getNickname(), channelName)); return ;
 	}
-	
+
 	//* DISPLAY ACTUAL MODE *//
 
 	if (mode.empty()){
@@ -51,7 +51,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 		if (modeGroup[0][i] == '+') { Sign = 1; }
 		else if (modeGroup[0][i] == '-') { Sign = -1; }
 		else if (Sign == 0) { sendMessage(fd, ERR_UMODEUNKNOWNFLAG(client->getNickname())); continue; }
-		
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 								//* HANDLE ADD OPTION MODE *//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 						OptionMode++;
 					}
 					else {
-						sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+l", modeGroup[OptionMode], "Not a valid digit (0 - 9999)"));
+						sendMessage(fd, ERR_INVALIDMODEPARAM(client->getNickname(),channelName, "+l", modeGroup[OptionMode], "Not a valid digit (1 - 9999)"));
 					}
 					break;
 				case 3 : // !o
@@ -133,7 +133,7 @@ void Irc::handleMode(int fd, const std::string &channelName, const std::string &
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 								//* HANDLE REMOVE OPTION MODE *//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+
 		if (Sign == -1 && modeGroup[0][i] != '-'){
 			switch (getOption(modeGroup[0][i])) {
 				case 0 : // !i

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:36:37 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/27 11:09:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/06/04 11:26:37 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int Irc::server() {
 	std::cout << GREEN << "+----------------------------+" << RESET << std::endl;
 	std::cout << GREEN << "|  LAUNCH OF THE IRC SERVER  |" << RESET << std::endl;
 	std::cout << GREEN << "+----------------------------+" << RESET << std::endl;
-	
+
 	//* Initialize Server *//
 	g_irc = this;
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -54,7 +54,7 @@ int Irc::server() {
 		std::cerr << "Error setsockopt()" << std::endl;
 		close(_serverSocket);
 		return 1;
-	}	
+	}
 
     sockaddr_in server_addr;
     std::memset(&server_addr, 0, sizeof(server_addr));
@@ -68,7 +68,7 @@ int Irc::server() {
         return 1;
     }
 
-    if (listen(_serverSocket, 10) < 0) {
+    if (listen(_serverSocket, MAX_CLIENTS) < 0) {
         std::cerr << "Error listen()\n";
         close(_serverSocket);
         return 1;
@@ -82,7 +82,7 @@ int Irc::server() {
 	_pollfds.push_back(server_pollfd);
 
 	//* Server Listen His Port *//
-	
+
 	std::cout << "Server listening on port " << _port << "...\n";
 
 	std::signal(SIGINT, handleSigintServer);
@@ -94,7 +94,7 @@ int Irc::server() {
 		if (poll_count < 0) {
 			break;
 		}
-		
+
 		for (size_t i = 0; i < _pollfds.size(); i++) {
 			if (_pollfds[i].revents == 0)
             	continue;
@@ -188,7 +188,7 @@ void Irc::handleClientData(int fd) {
 		return;
 	}
 
-	
+
 
 	input = std::string(buffer);
 	std::vector<std::string> split;
