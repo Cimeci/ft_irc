@@ -19,18 +19,20 @@ size_t getOption(const char &opt){
 	return (j);
 }
 
-void Irc::handleMode(int fd, const std::string &channelName, const std::string &mode){
+void Irc::handleMode(int fd, std::string channelName, const std::string &mode){
 	Client *client = _clientBook[fd];
 
 	//* ERROR *//
 
 	if (_channels.find(channelName) == _channels.end()) {
-		sendMessage(fd, ERR_NOSUCHCHANNEL(client->getNickname(), channelName)); return ;
+		sendMessage(fd, ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
+		return ;
 	}
 	if (channelName[0] != '#' && channelName[0] != '&') {
-		sendMessage(fd, ERR_NOSUCHNICK(client->getNickname(), channelName)); return ;
+		sendMessage(fd, ERR_NOSUCHNICK(client->getNickname(), channelName));
+		return ;
 	}
-
+	channelName = _channels.find(channelName)->first;
 	//* DISPLAY ACTUAL MODE *//
 
 	if (mode.empty()){

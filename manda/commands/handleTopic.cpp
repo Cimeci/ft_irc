@@ -12,7 +12,7 @@
 
 # include "../includes/Irc.hpp"
 
-void Irc::handleTopic(int fd, const std::string& channelName, const std::string& topic) {
+void Irc::handleTopic(int fd, std::string channelName, const std::string& topic) {
 	Channel* channel = _channels.find(channelName)->second;
 	Client* client = _clientBook[fd];
 	std::string response;
@@ -24,9 +24,12 @@ void Irc::handleTopic(int fd, const std::string& channelName, const std::string&
 			response = _serverName + ERR_NEEDMOREPARAMS(_clientBook[fd]->getNickname());
 		sendMessage(fd, response);
 	}
-	else if (_channels.find(channelName) == _channels.end())
+	else if (_channels.find(channelName) == _channels.end()) {
 		sendMessage(fd, _serverName + ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
-	else if (channel->getClients().find(fd) == channel->getClients().end())
+		return ;
+	}
+	channelName = _channels.find(channelName)->first;
+	if (channel->getClients().find(fd) == channel->getClients().end())
 		sendMessage(fd, _serverName + ERR_NOTONCHANNEL(_clientBook[fd]->getNickname(), channelName));
 	else if (topic.empty()) {
 		if (_channels[channelName]->getTopic().empty())

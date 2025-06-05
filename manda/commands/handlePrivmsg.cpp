@@ -17,28 +17,32 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 	std::string formatted_msg;
 
 	std::vector<std::string> targetGroup = ft_split(target, ",");
+	if (targetGroup.size() < 1)
+			sendMessage(fd, ERR_NORECIPIENT(sender->getNickname()));
 
 	for (size_t i = 0; i < targetGroup.size(); i++)
 	{
-		if (targetGroup[i].empty())
-			sendMessage(fd, ERR_NORECIPIENT(sender->getNickname()));
-		else if (message.empty())
+		std::map<std::string, Channel*, CaseInsensitiveCompare>::iterator it = _channels.find(targetGroup[i]);
+		if (message.empty())
 			sendMessage(fd, ERR_NOTEXTTOSEND(sender->getNickname()));
-		else if (targetGroup[i][0] == '#' || targetGroup[i][0] == '&') {
-			if (sender->_clientChannels.find(_channels[targetGroup[i]]) != sender->_clientChannels.end()) {
-				std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n";
-				_channels[targetGroup[i]]->broadcast(formatted_msg, fd);
+		if ((targetGroup[i][0] == '#' || targetGroup[i][0] == '&')) {
+			if (it != _channels.end()) {
+				if (sender->_clientChannels.find(it->second) != sender->_clientChannels.end()) {
+					std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + it->first + " :" + message + "\r\n";
+					_channels[targetGroup[i]]->broadcast(formatted_msg, fd);
+				}
+				else
+					sendMessage(fd, ERR_CANNOTSENDTOCHAN(sender->getNickname(), target));
 			}
 			else
 				sendMessage(fd, ERR_NOSUCHCHANNEL(sender->getNickname(), target));
 		}
 		else {
-			if (_clientBook.find(_nicknameToFd[targetGroup[i]]) != _clientBook.end()) {
-				sendMessage(_nicknameToFd[targetGroup[i]], ":" + sender->getNickname() + " PRIVMSG " + targetGroup[i] + " :" + message + "\r\n");
-			}
-			else {
+			std::map<std::string, int>::iterator it = _nicknameToFd.find(targetGroup[i]);
+			if (_clientBook.find(it->second) != _clientBook.end())
+				sendMessage(it->second, ":" + sender->getNickname() + " PRIVMSG " + it->first + " :" + message + "\r\n");
+			else
 				sendMessage(fd, ERR_NOSUCHNICK(sender->getNickname(), target));
-			}
 		}
 	}
 }

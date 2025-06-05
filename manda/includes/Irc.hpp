@@ -47,6 +47,27 @@ class Channel;
 # define MAX_CLIENTS 1000
 # define HEXCHAT_OPT "CAP LS 302"
 
+struct CaseInsensitiveCompare
+{
+	bool operator()(const std::string& lhs, const std::string& rhs) const
+	{
+		std::string::const_iterator it1 = lhs.begin();
+		std::string::const_iterator it2 = rhs.begin();
+
+		while (it1 != lhs.end() && it2 != rhs.end()) {
+			char c1 = std::tolower(static_cast<unsigned char>(*it1));
+			char c2 = std::tolower(static_cast<unsigned char>(*it2));
+			if (c1 < c2)
+				return true;
+			else if (c1 > c2)
+				return false;
+			++it1;
+			++it2;
+		}
+		return lhs.length() < rhs.length();
+	}
+};
+
 class Irc{
 	private:
 		const std::string _serverName;
@@ -58,8 +79,8 @@ class Irc{
 		std::vector<pollfd> _pollfds;
 
 		std::map<int, Client *> _clientBook;
-		std::map<std::string, Channel *> _channels;
-		std::map<std::string, int> _nicknameToFd;
+		std::map<std::string, Channel *, CaseInsensitiveCompare> _channels;
+		std::map<std::string, int, CaseInsensitiveCompare> _nicknameToFd;
 
 	public:
 		Irc(): _serverName(":irc.climbers.ni"), _serverRunning(true) {}
@@ -69,7 +90,7 @@ class Irc{
 
 		int getServerSocket() const;
 		std::map<int, Client *>& getClientBook();
-		std::map<std::string, Channel *>& getChannels();
+		std::map<std::string, Channel *, CaseInsensitiveCompare>& getChannels();
 		std::vector<pollfd>& getPollFds();
 
 
@@ -85,13 +106,13 @@ class Irc{
 		void handleCommand(int client_socket, std::string input);
 
 		void handleJoin(int fd, const std::string& channelName, const std::string& passChannel);
-		void handlePart(int fd, const std::string& channelName, const std::string& reason);
-		void handleTopic(int fd, const std::string& channelName, const std::string& topic);
+		void handlePart(int fd, const std::string &channelName, const std::string& reason);
+		void handleTopic(int fd, std::string channelName, const std::string& topic);
 		void handleQuit(int fd, std::string reason);
-		void handleWho(int fd, const std::string& channelName);
+		void handleWho(int fd, std::string channelName);
 		void handlePrivMsg(int fd, const std::string& target, const std::string& message);
-		void handleMode(int fd, const std::string &channelName, const std::string &mode);
-		void handleInvite(int fd, const std::string &channelName, const std::string &client);
+		void handleMode(int fd, std::string channelName, const std::string &mode);
+		void handleInvite(int fd, const std::string &client, std::string channelName);
 		void handleKick(int fd, std::string channel, std::string after);
 
 		bool valueExist(const std::string &value);

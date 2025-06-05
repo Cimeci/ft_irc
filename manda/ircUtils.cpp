@@ -16,7 +16,7 @@ int Irc::getServerSocket() const {return _serverSocket;}
 
 std::map<int, Client *>& Irc::getClientBook() {return _clientBook;}
 
-std::map<std::string, Channel *>& Irc::getChannels() {return _channels;}
+std::map<std::string, Channel *, CaseInsensitiveCompare>& Irc::getChannels() {return _channels;}
 
 std::vector<pollfd>& Irc::getPollFds() {return _pollfds;}
 

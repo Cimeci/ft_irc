@@ -12,7 +12,7 @@
 
 # include "../includes/Irc.hpp"
 
-void Irc::handleWho(int fd, const std::string& channelName){
+void Irc::handleWho(int fd, std::string channelName){
 	//* send actual member list //
 	std::string names;
 	Client *client = _clientBook[fd];
@@ -20,6 +20,9 @@ void Irc::handleWho(int fd, const std::string& channelName){
 	if (_channels.find(channelName) == _channels.end()){
 		sendMessage(fd, ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
 		return ;
+	}
+	else {
+		channelName = _channels.find(channelName)->first;
 	}
 	const std::map<int, Client *>& members = _channels[channelName]->getClients();
 	for (std::map<int, Client *>::const_iterator it = members.begin(); it != members.end(); ++it) {

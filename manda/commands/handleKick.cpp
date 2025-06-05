@@ -57,9 +57,10 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 			sendMessage(fd, _serverName + ERR_NOTONCHANNEL(_clientBook[fd]->getNickname(), channelName));
 			return ;
 		}
+		channelName = _channels.find(channelName)->first;
 		for (std::vector<std::string>::iterator it = target.begin(); it != target.end(); ++it) {
 			for (std::map<int, Client *>::iterator cit = _clientBook.begin(); cit != _clientBook.end(); ++cit) {
-				if (cit->second->getNickname() == *it)
+				if (compareEquality(cit->second->getNickname(), *it) == true)
 					targetFd = cit->first;
 			}
 			if (targetFd == -1 || channel->getClients().find(targetFd) == channel->getClients().end()) {
@@ -70,9 +71,9 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 			int gradeTarget = _clientBook[targetFd]->_clientChannels[_channels[channelName]];
 			if (gradeSource > gradeTarget || (gradeSource == 1 && gradeTarget == 1)) {
 				if (comment.empty())
-					response = KICK(_clientBook[fd]->getNickname(), _clientBook[fd]->getUsername(), channelName, *it, _clientBook[fd]->getNickname());
+					response = KICK(_clientBook[fd]->getNickname(), _clientBook[fd]->getUsername(), channelName, _clientBook[targetFd]->getNickname(), _clientBook[fd]->getNickname());
 				else
-					response = KICK(_clientBook[fd]->getNickname(), _clientBook[fd]->getUsername(), channelName, *it, comment);
+					response = KICK(_clientBook[fd]->getNickname(), _clientBook[fd]->getUsername(), channelName, _clientBook[targetFd]->getNickname(), comment);
 				_channels[channelName]->broadcast(response, fd);
 				sendMessage(fd, response);
 				_channels[channelName]->removeClient(targetFd);

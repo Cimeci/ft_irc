@@ -12,7 +12,7 @@
 
 # include "../includes/Irc.hpp"
 
-void Irc::handleInvite(int fd, const std::string &client, const std::string &channelName){
+void Irc::handleInvite(int fd, const std::string &client, std::string channelName){
 	Channel* channel = _channels.find(channelName)->second;
 	if (client.empty() || channelName.empty()){
 		sendMessage(fd, ERR_NEEDMOREPARAMS(_clientBook[fd]->getNickname()));
@@ -22,8 +22,10 @@ void Irc::handleInvite(int fd, const std::string &client, const std::string &cha
 	}
 	else if (_channels.find(channelName) == _channels.end()) {
 		sendMessage(fd, ERR_NOSUCHCHANNEL(_clientBook[fd]->getNickname(), channelName));
+		return ;
 	}
-	else if (_clientBook[fd]->_clientChannels.find(_channels[channelName]) == _clientBook[fd]->_clientChannels.end()){
+	channelName = _channels.find(channelName)->first;
+	if (_clientBook[fd]->_clientChannels.find(_channels[channelName]) == _clientBook[fd]->_clientChannels.end()){
 		sendMessage(fd, ERR_NOTONCHANNEL(_clientBook[fd]->getNickname(), channelName));
 	}
 	else if (_channels[channelName]-> getInvitation() == true && _clientBook[fd]->_clientChannels[_channels[channelName]] != Client::OPERATOR) {

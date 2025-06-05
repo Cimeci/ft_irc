@@ -28,6 +28,7 @@
 
 # define ERR_NOSUCHNICK(client, channel)			(_serverName + " 401 " + client + " " + channel + " :" + "No such nick/channel" + "\r\n")
 # define ERR_NOSUCHCHANNEL(client, channel)			(_serverName + " 403 " + client + " " + channel + " :No such channel\r\n")
+# define ERR_CANNOTSENDTOCHAN(client, channel)      (_serverName + " 404 " + client + " " + channel + " :Cannot send to channel\r\n")
 # define ERR_NORECIPIENT(client)					(_serverName + " 411 " + client + " :No recipient given (PRIVMSG)\r\n")
 # define ERR_NOTEXTTOSEND(client)					(_serverName + " 412 " + client + " :No text to send\r\n")
 # define ERR_UNKNOWNCOMMAND(client, cmd) 			(_serverName + " 421 " + client + " " + cmd + " :Unknown command\r\n")

@@ -32,9 +32,9 @@ void Irc::handlePart(int fd, const std::string& channelName, const std::string& 
 				_channels[*it]->removeClient(fd);
 				client->_clientChannels.erase(_channels[*it]);
 				if (reason.empty())
-					response = PART(client->getNickname(), client->getUsername(), *it, "Leaving");
+					response = PART(client->getNickname(), client->getUsername(), _channels.find(*it)->first, "Leaving");
 				else
-					response = PART(client->getNickname(), client->getUsername(), *it, reason);
+					response = PART(client->getNickname(), client->getUsername(), _channels.find(*it)->first, reason);
 				_channels[*it]->broadcast(response, fd);
 				if (_channels[*it]->getNbClients() < 1) {
 					delete _channels[*it];

@@ -34,12 +34,11 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 		}
 		
 		//* First join channel = new channel *//
-
-		if (_channels.find(channelGroup[i]) == _channels.end()) {
+		std::map<std::string, Channel *, CaseInsensitiveCompare>::iterator it = _channels.find(channelGroup[i]);
+		if (it == _channels.end()) {
 			#ifdef BONUS
-				if (channelName == "#GambleRoom" && client->getNickname() != "GambleDealer") {
+				if (channelName == "#GambleRoom" && client->getNickname() != "GambleDealer")
 					sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
-				}
 			#endif
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
 			_channels[channelGroup[i]]->addClient(fd, *client);
@@ -50,37 +49,38 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 
 		//* Error limit client (+l) *//
 
-		else if (_channels[channelGroup[i]]->getLimitClients() <= _channels[channelGroup[i]]->getNbClients()){
-			sendMessage(fd, ERR_CHANNELISFULL(client->getNickname(), channelGroup[i])); continue;
+		else if (_channels[it->first]->getLimitClients() <= _channels[it->first]->getNbClients()){
+			sendMessage(fd, ERR_CHANNELISFULL(client->getNickname(), it->first)); continue;
 		}
 		
 		//* Error invitation for join the channel (+i) *//
 
-		else if (_channels[channelGroup[i]]->getInvitation() == true && client->_invitationChannels[_channels[channelGroup[i]]] == false){
-			sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
+		else if (_channels[it->first]->getInvitation() == true && client->_invitationChannels[_channels[it->first]] == false){
+			sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), it->first)); continue ;
 		}
 
 		//* Join the channel if the channel request a password *//
 		
-		else if (!passChanGroup.empty() && j < passChanGroup.size() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[channelGroup[i]]->getPassword()){
-			_channels[channelGroup[i]]->addClient(fd, *client);
-			client->_clientChannels[_channels[channelGroup[i]]] = Client::MEMBER;
+		else if (!passChanGroup.empty() && j < passChanGroup.size() && !passChanGroup[j].empty() && passChanGroup[j] == _channels[it->first]->getPassword()){
+			_channels[it->first]->addClient(fd, *client);
+			client->_clientChannels[_channels[it->first]] = Client::MEMBER;
 			j++;
 		}
 
 		//* Error password incorrect for join the channel (+k) *//
 
-		else if (!_channels[channelGroup[i]]->getPassword().empty()){
-			sendMessage(fd, ERR_BADCHANNELKEY(client->getNickname(), channelGroup[i])); continue ;
+		else if (!_channels[it->first]->getPassword().empty()){
+			sendMessage(fd, ERR_BADCHANNELKEY(client->getNickname(), it->first)); continue ;
 		}
 		
 		//* Join the channel *//
 		
 		else {
-			_channels[channelGroup[i]]->addClient(fd, *client);
-			client->_clientChannels[_channels[channelGroup[i]]] = Client::MEMBER;
+			_channels[it->first]->addClient(fd, *client);
+			client->_clientChannels[_channels[it->first]] = Client::MEMBER;
 		}
-		
+		if (it != _channels.end())
+			channelGroup[i] = it->first;
 		//* reset invitation *//
 		client->_invitationChannels[_channels[channelGroup[i]]] = false;
 		
