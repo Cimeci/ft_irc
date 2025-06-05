@@ -39,6 +39,7 @@
 # define ERR_USERONCHANNEL(client, nick, channel)	(" 443 " + client + " " + nick + " " + channel + " :is already on channel\r\n")
 
 # define ERR_NEEDMOREPARAMS(client) 				(" 461 " + client + " :Not enough parameters\r\n")
+# define ERR_ALREADYREGISTERED(client)               (_serverName + " 462 " + client + " :You may not reregister\r\n")
 # define ERR_PASSWDMISMATCH(client) 				(" 464 " + client + " :Password incorrect\r\n")
 # define ERR_CHANNELISFULL(nick, channel)			(_serverName + " 471 " + nick + " " + channel + " :Cannot join channel (+l)\r\n")
 # define ERR_UNKNOWNMODE(client, mode)				(_serverName + " 472 " + client + " " + mode + " :is unknown mode char to me\r\n")

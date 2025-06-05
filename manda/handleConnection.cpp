@@ -43,7 +43,10 @@ void Irc::handleNickname(int client_socket, std::string input) {
 	std::string defaultNick = "*";
 	
 	if (input.substr(0, input.find(" ")) != "NICK") {
-		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(defaultNick, input));
+		if (input.substr(0, input.find(" ")) == "PASS")
+			sendMessage(client_socket, ERR_ALREADYREGISTERED(_clientBook[client_socket]->getNickname()));
+		else
+			sendMessage(client_socket, ERR_UNKNOWNCOMMAND(defaultNick, input));
 		return ;
 	}
 	if (input.length() < 6) {
@@ -80,8 +83,14 @@ void Irc::handleUsername(int client_socket, std::string input) {
 	std::string response;
 	std::string user;
 
-	if (input.substr(0, input.find(" ")) != "USER")
-		sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(_clientBook[client_socket]->getNickname(), input));
+	if (input.substr(0, input.find(" ")) != "USER") {
+		if (input.substr(0, input.find(" ")) == "PASS")
+			sendMessage(client_socket, ERR_ALREADYREGISTERED(_clientBook[client_socket]->getNickname()));
+		else if (input.substr(0, input.find(" ")) == "NICK")
+			handleNickname(client_socket, input);
+		else
+			sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(_clientBook[client_socket]->getNickname(), input));
+	}
 	else if (input.length() < 6)
 		sendMessage(client_socket, _serverName + ERR_NEEDMOREPARAMS(_clientBook[client_socket]->getNickname()));
 	else if (!strcmp(input.substr(0, 5).c_str(), "USER ") && input.size() > 5) {

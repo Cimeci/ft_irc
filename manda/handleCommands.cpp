@@ -71,8 +71,8 @@ void Irc::handleCommand(int client_socket, std::string input) {
 	else if (command == "KICK") {
 		handleKick(client_socket, target, message);
 	}
-	else {
-		std::cout << "HERE" << std::endl;
+	else if (command == "PASS" || command == "USER")
+		sendMessage(client_socket, ERR_ALREADYREGISTERED(_clientBook[client_socket]->getNickname()));
+	else 
 		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(_clientBook[client_socket]->getNickname(), command));
-	}
 }
