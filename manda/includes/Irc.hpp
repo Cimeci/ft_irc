@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 15:30:48 by inowak--          #+#    #+#             */
-/*   Updated: 2025/05/26 14:35:43 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/06/04 11:23:19 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ class Irc{
 		std::map<int, Client *>& getClientBook();
 		std::map<std::string, Channel *>& getChannels();
 		std::vector<pollfd>& getPollFds();
-		
+
 
 		void handleNewConnection();
 		void handleClientData(int fd);
@@ -93,13 +93,13 @@ class Irc{
 		void handleMode(int fd, const std::string &channelName, const std::string &mode);
 		void handleInvite(int fd, const std::string &channelName, const std::string &client);
 		void handleKick(int fd, std::string channel, std::string after);
-		
-		
-		bool valueExist(std::string value);
+
+		bool valueExist(const std::string &value);
 		void successfulRegistration(int client_socket);
 		void setServerRunning(bool b);
+		bool compareEquality(const std::string &s1, const std::string &s2);
 };
-	
+
 void sendMessage(int fd, std::string msg);
 std::vector<std::string> ft_split(std::string str, const std::string &c);
 std::string getTime(void);
