@@ -20,12 +20,12 @@ void Irc::handlePassword(int client_socket, std::string input) {
 		&& !strcmp(_password.c_str(), input.substr(5, input.size() - 5).c_str())) {
 		_clientBook[client_socket]->setState(Client::AUTHENTICATED);
 	}
+	else if (input.substr(0, input.find(" ")) != "PASS")
+		sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(defaultNick, input));
 	else if (input.length() < 6)
 		sendMessage(client_socket, _serverName + ERR_NEEDMOREPARAMS(defaultNick));
 	else if (!strcmp(input.substr(0, 5).c_str(), "PASS "))
 		sendMessage(client_socket, _serverName + ERR_PASSWDMISMATCH(defaultNick));
-	else
-		sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(defaultNick, input));
 }
 
 bool Irc::checkNickname(const std::string &input) {
@@ -41,11 +41,17 @@ bool Irc::checkNickname(const std::string &input) {
 void Irc::handleNickname(int client_socket, std::string input) {
 	std::string response;
 	std::string defaultNick = "*";
-	std::string newNick = input.substr(5, input.length() - 5);
-
-	if (newNick.empty())
+	
+	if (input.substr(0, input.find(" ")) != "NICK") {
+		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(defaultNick, input));
+		return ;
+	}
+	if (input.length() < 6) {
 		sendMessage(client_socket, _serverName + ERR_NONICKNAMEGIVEN(defaultNick));
-	else if (valueExist(newNick))
+		return ;
+	}
+	std::string newNick = input.substr(5, input.length() - 5);
+	if (valueExist(newNick))
 		sendMessage(client_socket, _serverName + ERR_NICKNAMEINUSE(defaultNick, newNick));
 	else if (!checkNickname(newNick))
 		sendMessage(client_socket, ERR_ERRONEUSNICKNAME(defaultNick, newNick));
@@ -57,8 +63,6 @@ void Irc::handleNickname(int client_socket, std::string input) {
 		_clientBook[client_socket]->setNickname(newNick);
 		_nicknameToFd[newNick] = client_socket;
 	}
-	else
-		sendMessage(client_socket, ERR_UNKNOWNCOMMAND(defaultNick, input));
 }
 
 void Irc::successfulRegistration(int client_socket) {
@@ -76,7 +80,9 @@ void Irc::handleUsername(int client_socket, std::string input) {
 	std::string response;
 	std::string user;
 
-	if (input.length() <= 5)
+	if (input.substr(0, input.find(" ")) != "USER")
+		sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(_clientBook[client_socket]->getNickname(), input));
+	else if (input.length() < 6)
 		sendMessage(client_socket, _serverName + ERR_NEEDMOREPARAMS(_clientBook[client_socket]->getNickname()));
 	else if (!strcmp(input.substr(0, 5).c_str(), "USER ") && input.size() > 5) {
 		user = input.substr(input.find(" ") + 1, input.size());
@@ -84,8 +90,6 @@ void Irc::handleUsername(int client_socket, std::string input) {
 		_clientBook[client_socket]->setUsername(user);
 		_clientBook[client_socket]->setState(Client::USER);
 		successfulRegistration(client_socket);
-		std::cout << ORANGE << _clientBook[client_socket]->getUsername() << " has been connected on Irc server" << RESET << std::endl;
+		std::cout << ORANGE << _clientBook[client_socket]->getUsername() << " has connected to Irc server" << RESET << std::endl;
 	}
-	else
-		sendMessage(client_socket, _serverName + ERR_UNKNOWNCOMMAND(_clientBook[client_socket]->getNickname(), input));
 }
