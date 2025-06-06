@@ -18,15 +18,15 @@
 # define RPL_MYINFO(client, server) 				(" 004 " + client + " " + server + " o itkol kol\r\n")
 # define RPL_ISUPPORT(client)						(" 005 " + client + " CASEMAPPING=ascii MODES=5 CHANMODES=o,tkl,i CHANTYPES=#& NICKLEN=15 PREFIX=(o)@ NETWORK=IRC :are supported by this server\r\n")
 
+# define RPL_ENDOFWHO(nick, channel) 				(_serverName + " 315 " + nick + " " + channel + " :End of /WHO list.\r\n")
 # define RPL_NOTOPIC(client, channel)				(_serverName + " 331 " + client + " " + channel + " :No topic is set\r\n")
 # define RPL_TOPIC(client, channel, topic)			(_serverName + " 332 " + client + " " + channel + " :" + topic + "\r\n")
 # define RPL_TOPICWHOTIME(client, channel, user, t)	(" 333 " + client + " " + channel + " " + client + "!~" + user + "@localhost " + t + "\r\n")
 # define RPL_CHANNELMODEIS(nick, channel, modes) 	(_serverName + " 324 " + nick + " " + channel + " " + modes + "\r\n")
 # define RPL_INVITING(client, nick, channel) 		(_serverName + " 341 " + client + " " + nick + " " + channel + "\r\n")
 # define RPL_NAMEREPLY(nick, symbol, channel)		(_serverName + " 353 " + nick + " " + symbol + " " + channel + " :" + names + "\r\n")
-# define RPL_ENDOFNAMES(nick, channel) 				(_serverName + " 366 " + nick + " " + channel + " :End of /NAMES list.\r\n")
 
-# define ERR_NOSUCHNICK(client, channel)			(_serverName + " 401 " + client + " " + channel + " :" + "No such nick/channel" + "\r\n")
+# define ERR_NOSUCHNICK(client, channel)			(_serverName + " 401 " + client + " " + channel + " :No such nick/channel\r\n")
 # define ERR_NOSUCHCHANNEL(client, channel)			(_serverName + " 403 " + client + " " + channel + " :No such channel\r\n")
 # define ERR_CANNOTSENDTOCHAN(client, channel)      (_serverName + " 404 " + client + " " + channel + " :Cannot send to channel\r\n")
 # define ERR_NORECIPIENT(client)					(_serverName + " 411 " + client + " :No recipient given (PRIVMSG)\r\n")

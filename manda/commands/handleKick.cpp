@@ -64,7 +64,7 @@ void	Irc::handleKick(int fd, std::string input, std::string after) {
 					targetFd = cit->first;
 			}
 			if (targetFd == -1 || channel->getClients().find(targetFd) == channel->getClients().end()) {
-				sendMessage(fd, _serverName + ERR_NOSUCHNICK(_clientBook[fd]->getNickname(), *it));
+				sendMessage(fd, ERR_NOSUCHNICK(_clientBook[fd]->getNickname(), *it));
 				continue ;
 			}
 			int gradeSource = _clientBook[fd]->_clientChannels[_channels[channelName]];

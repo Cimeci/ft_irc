@@ -25,14 +25,14 @@ void Irc::handlePrivMsg(int fd, const std::string& target, const std::string& me
 		std::map<std::string, Channel*, CaseInsensitiveCompare>::iterator it = _channels.find(targetGroup[i]);
 		if (message.empty())
 			sendMessage(fd, ERR_NOTEXTTOSEND(sender->getNickname()));
-		if ((targetGroup[i][0] == '#' || targetGroup[i][0] == '&')) {
+		else if ((targetGroup[i][0] == '#' || targetGroup[i][0] == '&')) {
 			if (it != _channels.end()) {
 				if (sender->_clientChannels.find(it->second) != sender->_clientChannels.end()) {
 					std::string formatted_msg = ":" + sender->getNickname() + " PRIVMSG " + it->first + " :" + message + "\r\n";
 					_channels[targetGroup[i]]->broadcast(formatted_msg, fd);
 				}
 				else
-					sendMessage(fd, ERR_CANNOTSENDTOCHAN(sender->getNickname(), target));
+					sendMessage(fd, ERR_CANNOTSENDTOCHAN(sender->getNickname(), it->first));
 			}
 			else
 				sendMessage(fd, ERR_NOSUCHCHANNEL(sender->getNickname(), target));

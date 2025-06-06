@@ -23,6 +23,7 @@ void Irc::handleTopic(int fd, std::string channelName, const std::string& topic)
 		else
 			response = _serverName + ERR_NEEDMOREPARAMS(_clientBook[fd]->getNickname());
 		sendMessage(fd, response);
+		return ;
 	}
 	else if (_channels.find(channelName) == _channels.end()) {
 		sendMessage(fd, _serverName + ERR_NOSUCHCHANNEL(client->getNickname(), channelName));

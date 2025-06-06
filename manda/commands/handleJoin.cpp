@@ -18,6 +18,10 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 	std::vector<std::string> channelGroup = ft_split(channelName, ",");
 	std::vector<std::string> passChanGroup = ft_split(passChannel, ",");
 	size_t j = 0;
+	if (channelGroup.size() < 1) {
+		sendMessage(fd, _serverName + ERR_NEEDMOREPARAMS(client->getNickname()));
+		return ;
+	}
 	for (size_t i = 0; i < channelGroup.size(); i++)
 	{
 

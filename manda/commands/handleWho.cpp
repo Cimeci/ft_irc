@@ -17,21 +17,23 @@ void Irc::handleWho(int fd, std::string channelName){
 	std::string names;
 	Client *client = _clientBook[fd];
 	
-	if (_channels.find(channelName) == _channels.end()){
+	if (channelName.empty()) {
+		sendMessage(fd, RPL_ENDOFWHO(client->getNickname(), "*"));
+	}
+	else if (_channels.find(channelName) == _channels.end()){
 		sendMessage(fd, ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
-		return ;
 	}
 	else {
 		channelName = _channels.find(channelName)->first;
+		const std::map<int, Client *>& members = _channels[channelName]->getClients();
+		for (std::map<int, Client *>::const_iterator it = members.begin(); it != members.end(); ++it) {
+			char prefix = it->second->getPrefix(it->second->_clientChannels[_channels[channelName]]);
+			if (prefix != '\0')
+				names += prefix + it->second->getNickname() + " ";
+			else
+				names += it->second->getNickname() + " ";
+		}
+		sendMessage(fd, RPL_NAMEREPLY(client->getNickname(), _channels[channelName]->getSymbol(), channelName));
+		sendMessage(fd, RPL_ENDOFWHO(client->getNickname(), channelName));
 	}
-	const std::map<int, Client *>& members = _channels[channelName]->getClients();
-	for (std::map<int, Client *>::const_iterator it = members.begin(); it != members.end(); ++it) {
-		char prefix = it->second->getPrefix(it->second->_clientChannels[_channels[channelName]]);
-		if (prefix != '\0')
-			names += prefix + it->second->getNickname() + " ";
-		else
-			names += it->second->getNickname() + " ";
-	}
-	sendMessage(fd, RPL_NAMEREPLY(client->getNickname(), _channels[channelName]->getSymbol(), channelName));
-	sendMessage(fd, RPL_ENDOFNAMES(client->getNickname(), channelName));
 }
