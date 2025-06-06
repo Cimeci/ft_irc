@@ -43,7 +43,8 @@ class Bot{
 		int getFd() const;
 		bool getStop() const;
 		std::map<std::string, size_t> getPlayers();
-		void setPlayers(std::string sender, size_t bank);
+		void setPlayerBank(std::string sender, size_t bank);
+		size_t getPlayerBank(std::string sender);
 		std::string getSender() const;
 
 };

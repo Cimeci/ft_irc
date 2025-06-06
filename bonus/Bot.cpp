@@ -54,9 +54,15 @@ bool Bot::getStop() const {return _stop;}
 
 std::map<std::string, size_t> Bot::getPlayers() {return _players;}
 
-void Bot::setPlayers(std::string sender, size_t bank){
+void Bot::setPlayerBank(std::string sender, size_t bank){
 	if (_players.find(sender) != _players.end())
 		_players[sender] = bank;
+}
+
+size_t Bot::getPlayerBank(std::string sender){
+	if (_players.find(sender) != _players.end())
+		return _players[sender];
+	return (0);
 }
 
 void handle_sigint(int sig){
@@ -110,13 +116,14 @@ void Bot::dealer(){
 				else if (_players[_sender] == 0)
 					_players[_sender] = 10;
 				std::cout << _sender << " | " << _players[_sender] << std::endl;
-				Gamble gamble(_players[_sender]);
+				Gamble gamble;
 				int result = gamble.playGamble(_socketFd, gamble);
-				if (_stop == false || result == 0)
+				if (_stop == false && result == 0){
 					sendMessage(_socketFd, "KICK #GambleRoom " + _sender + "\r\n");
+				}
+
 			}
 		}
 	}
-	sendMessage(_socketFd, "QUIT\r\n");
 	close(_socketFd);
 }

@@ -24,11 +24,8 @@ const char* GAMBLEEXCEPTION::what() const throw() {
 GAMBLEEXCEPTION::~GAMBLEEXCEPTION() throw() {}
 
 
-Gamble::Gamble(size_t bank): bank(bank){setCardsPack();}
+Gamble::Gamble(){setCardsPack();} 
 Gamble::~Gamble(){}
-
-size_t Gamble::getBank() const {return bank;}
-void Gamble::setBank(size_t newAmount){bank = newAmount;}
 
 std::vector<std::string> Gamble::getCardPack() const{return cardsPack;}
 std::string Gamble::getCard(const size_t index) const{return cardsPack[index];}
@@ -178,41 +175,41 @@ int Gamble::playGamble(int fd, Gamble gamble)
 	sendChannelMessage(fd, "--------------------------- command ---------------------------");
 
 	while (line != "EXIT" && g_bot->getStop() == false){
+		multiple = 1;
+		bet = 0;
 		input = ",";
-		if (gamble.getBank() == 0){
+		if (g_bot->getPlayerBank(g_bot->getSender()) == 0){
 			sendChannelMessage (fd, "[you're broke, goodbye]"); return(0);
 		}
 		gamble.clearCardPack();
 		gamble.setCardsPack();
 		line = recvMessage(fd);
-		if (line.empty() || getCommand(line) == "PART") return (-1);
+		if (line.empty() || getCommand(line) == "PART") {return (-1);}
 		line = getMessage(line);
 
 		if (line == "BANK"){
-			sendChannelMessage(fd, "You have " + size_t_to_string(gamble.getBank()) + " in your bank account");
+			sendChannelMessage(fd, "You have " + size_t_to_string(g_bot->getPlayerBank(g_bot->getSender())) + " in your bank account");
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		if (line == "PLAY")
 		{
-			bet = 0;
-			multiple = 1;
 			try {
 
-				sendChannelMessage(fd, "You have " + size_t_to_string(gamble.getBank()) + " in your bank account");
+				sendChannelMessage(fd, "You have " + size_t_to_string(g_bot->getPlayerBank(g_bot->getSender())) + " in your bank account");
 				sendChannelMessage(fd, "Enter the amount to bet : ");
 				input = "-1";
-				while (!isStringDigit(input) || atoi(input.c_str()) > (int)gamble.getBank()){
+				while (!isStringDigit(input) || atoi(input.c_str()) > (int)g_bot->getPlayerBank(g_bot->getSender())){
 					input = recvMessage(fd);
-					if (line.empty() || getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") {return (-1);}
 					input = getMessage(input);
-					if (line == "PART") return (-1);
 					std::cout << "input: " << input << " | atoi :" << atoi(input.c_str()) << std::endl;
 					if (input == "OUT") {throw std::bad_exception();}
 					if (g_bot->getStop() != false){ return (1); }
 				}
 				bet = atoi(input.c_str());
+
 				sendChannelMessage(fd, "Let's Play");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,11 +219,10 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (line.empty() || getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") {return (-1);}
 					input = getMessage(input);
-					if (line == "PART") return (-1);
 					if (input == "OUT") {throw std::bad_exception();}
-					gamble.setBank(gamble.getBank() - bet);
+					g_bot->setPlayerBank(g_bot->getSender() , g_bot->getPlayerBank(g_bot->getSender()) - bet);
 					if (input == "RED")
 					{
 						if (gamble.getCard(0)[0] == 'R'){
@@ -255,10 +251,9 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (line.empty() || getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") {g_bot->setPlayerBank(g_bot->getSender() ,g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple); usleep(100000);return (-1);}
 					input = getMessage(input);
-					if (line == "PART") return (-1);
-					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
+					if (input == "OUT") {g_bot->setPlayerBank(g_bot->getSender() ,g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple); throw std::bad_exception();}
 					if (input == "LOWER")
 					{
 						if (gamble.gambleAtoi(gamble.getCard(1)[2]) <= gamble.gambleAtoi(gamble.getCard(0)[2])){
@@ -285,10 +280,9 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (line.empty() || getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") {g_bot->setPlayerBank(g_bot->getSender() ,g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple); usleep(100000);return (-1);}
 					input = getMessage(input);
-					if (line == "PART") return (-1);
-					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
+					if (input == "OUT") {g_bot->setPlayerBank(g_bot->getSender() ,g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple); throw std::bad_exception();}
 					int max = gamble.gambleAtoi(gamble.getCard(0)[2]) > gamble.gambleAtoi(gamble.getCard(1)[2]) ? gamble.gambleAtoi(gamble.getCard(0)[2]) : gamble.gambleAtoi(gamble.getCard(1)[2]);
 					int min = gamble.gambleAtoi(gamble.getCard(0)[2]) < gamble.gambleAtoi(gamble.getCard(1)[2]) ? gamble.gambleAtoi(gamble.getCard(0)[2]) : gamble.gambleAtoi(gamble.getCard(1)[2]);
 					if (input == "INSIDE")
@@ -317,10 +311,9 @@ int Gamble::playGamble(int fd, Gamble gamble)
 				{
 					if (g_bot->getStop() != false) return (1);
 					input = recvMessage(fd);
-					if (line.empty() || getCommand(input) == "PART") return (-1);
+					if (line.empty() || getCommand(input) == "PART") {g_bot->setPlayerBank(g_bot->getSender() ,g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple); usleep(100000);return (-1);}
 					input = getMessage(input);
-					if (line == "PART") return (-1);
-					if (input == "OUT") {gamble.setBank(gamble.getBank() + bet * multiple);throw std::bad_exception();}
+					if (input == "OUT") {g_bot->setPlayerBank(g_bot->getSender() ,g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple); throw std::bad_exception();}
 					if (input == "CLUB")
 					{
 						if (gamble.getCard(3)[1] == 'C'){
@@ -358,27 +351,20 @@ int Gamble::playGamble(int fd, Gamble gamble)
 						else {throw GAMBLEEXCEPTION("[FAILED] : card " + gamble.getEmojiFromCardCode(gamble.getCard(3)) + " isn't a diamond");}
 					}
 				}
-				std::stringstream ss;
-				ss << gamble.getBank();
-				std::string message = "You have won the max bet ! You have " + ss.str() + " in your bank account.";
+				std::string message = "You have won the max bet ! You have " + size_t_to_string(g_bot->getPlayerBank(g_bot->getSender())) + " in your bank account.";
 				sendChannelMessage(fd, message);
 				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				g_bot->setPlayers(g_bot->getSender() , gamble.getBank() + bet * multiple);
-				gamble.setBank(gamble.getBank() + bet * multiple);
+				g_bot->setPlayerBank(g_bot->getSender() , g_bot->getPlayerBank(g_bot->getSender()) + bet * multiple);
 			}
 			catch (GAMBLEEXCEPTION &e){
 				sendChannelMessage(fd, e.what());
-				std::stringstream ss;
-				ss << gamble.getBank();
-				std::string message = "You have failed your current game with " + ss.str() + " in your bank account.";
+				std::string message = "You have failed your current game with " + size_t_to_string(g_bot->getPlayerBank(g_bot->getSender())) + " in your bank account.";
 				sendChannelMessage(fd, message);
 			}
 			catch (std::bad_exception &e){
-				std::stringstream ss;
-				ss << gamble.getBank();
-				std::string message = "You have exited your current game with " + ss.str() + " in your bank account.";
+				std::string message = "You have exited your current game with " + size_t_to_string(g_bot->getPlayerBank(g_bot->getSender())) + " in your bank account.";
 				sendChannelMessage(fd, message);
 			}
 		}

@@ -31,15 +31,11 @@ class GAMBLEEXCEPTION : public std::exception {
 class Gamble{
 
 	private:
-		size_t bank;
 		std::vector<std::string> cardsPack;
 	
 	public:
-		Gamble(size_t bank);
+		Gamble();
 		~Gamble();
-
-		size_t getBank() const;
-		void setBank(size_t newAmount);
 		
 		std::vector<std::string> getCardPack() const;
 		void setCardsPack();

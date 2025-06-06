@@ -37,8 +37,9 @@ void Irc::handleJoin(int fd, const std::string& channelName, const std::string& 
 		std::map<std::string, Channel *, CaseInsensitiveCompare>::iterator it = _channels.find(channelGroup[i]);
 		if (it == _channels.end()) {
 			#ifdef BONUS
-				if (channelName == "#GambleRoom" && client->getNickname() != "GambleDealer")
+				if (channelName == "#GambleRoom" && client->getNickname() != "GambleDealer"){
 					sendMessage(fd, ERR_INVITEONLYCHAN(client->getNickname(), channelGroup[i])); continue ;
+				}
 			#endif
 			_channels[channelGroup[i]] = new Channel(channelGroup[i]);
 			_channels[channelGroup[i]]->addClient(fd, *client);
