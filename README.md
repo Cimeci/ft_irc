@@ -395,6 +395,7 @@ Apres avoir envoyer ```PLAY``` directement depuis le channel #GambleRoom, ça vo
 | login 42 | Argent total |
 |----------|--------------|
 | [stetrel](https://profile.intra.42.fr/users/stetrel) | 18446744073709551516(bug) 	  |
+| [matheo(ami ilan)](https://profile.intra.42.fr/users/inowak--) | 1950 	  |
 | [alaualik](https://profile.intra.42.fr/users/alaualik) | 1080 	  |
 | [matde-ol](https://profile.intra.42.fr/users/matde-ol) | 1050	      |
 | [mblanch](https://profile.intra.42.fr/users/mblanch)(🥇​)  | 1000		  |
